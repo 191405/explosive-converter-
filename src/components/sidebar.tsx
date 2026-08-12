@@ -1,0 +1,93 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
+import { FileDown, Image, FileText, Zap } from "lucide-react";
+
+const NAV_ITEMS = [
+  { href: "/", label: "Home", icon: Zap },
+  { href: "/pdf", label: "PDF Studio", icon: FileText },
+  { href: "/image", label: "Image Convert", icon: Image },
+  { href: "/compress", label: "Video Compress", icon: FileDown },
+];
+
+export function Sidebar() {
+  const pathname = usePathname();
+
+  return (
+    <>
+      {/* Desktop Floating Sidebar */}
+      <aside className="hidden md:flex flex-col w-[260px] h-[calc(100vh-48px)] fixed left-6 top-6 p-5 glass-panel z-40 justify-between">
+        <div>
+          <Link href="/" className="flex items-center gap-3 mb-10 pl-2 group">
+            <motion.div 
+              whileHover={{ scale: 1.05, rotate: 10 }}
+              whileTap={{ scale: 0.95 }}
+              className="p-2 rounded-xl bg-white text-black transition-all"
+            >
+              <Zap size={20} className="fill-black" />
+            </motion.div>
+            <span className="text-lg font-bold tracking-tight text-white group-hover:text-glow transition-all">
+              Explosive
+            </span>
+          </Link>
+
+          <nav className="flex flex-col gap-2">
+            {NAV_ITEMS.map((item) => {
+              const isActive = pathname === item.href;
+              const Icon = item.icon;
+              return (
+                <Link key={item.href} href={item.href} className="relative group">
+                  <div
+                    className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-colors relative z-10 ${
+                      isActive ? "text-white" : "text-[#888888] group-hover:text-white"
+                    }`}
+                  >
+                    <Icon size={18} strokeWidth={isActive ? 2 : 1.5} />
+                    <span className={`text-sm ${isActive ? "font-semibold" : "font-medium"}`}>
+                      {item.label}
+                    </span>
+                  </div>
+                  {isActive && (
+                    <motion.div
+                      layoutId="sidebar-active"
+                      className="absolute inset-0 bg-white/[0.08] border border-white/[0.05] rounded-lg z-0"
+                      transition={{ type: "spring", stiffness: 400, damping: 35 }}
+                    />
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+
+        <div className="pt-6 border-t border-white/[0.05] text-[10px] font-mono text-[#444444] text-center uppercase tracking-[0.2em]">
+          100% Client-Side
+        </div>
+      </aside>
+
+      {/* Mobile Floating Bottom Bar */}
+      <nav className="md:hidden fixed bottom-6 left-6 right-6 h-16 glass-panel z-50 flex items-center justify-around px-2">
+        {NAV_ITEMS.map((item) => {
+          const isActive = pathname === item.href;
+          const Icon = item.icon;
+          return (
+            <Link key={item.href} href={item.href} className="relative flex flex-col items-center justify-center p-2 w-14 h-14">
+              <div className={`relative z-10 transition-colors ${isActive ? "text-white" : "text-[#888888]"}`}>
+                <Icon size={20} strokeWidth={isActive ? 2 : 1.5} />
+              </div>
+              {isActive && (
+                <motion.div
+                  layoutId="mobile-active"
+                  className="absolute inset-1 bg-white/[0.08] border border-white/[0.05] rounded-lg z-0"
+                  transition={{ type: "spring", stiffness: 400, damping: 35 }}
+                />
+              )}
+            </Link>
+          );
+        })}
+      </nav>
+    </>
+  );
+}
