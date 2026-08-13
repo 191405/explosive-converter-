@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { FileDown, Image, FileText, Zap } from "lucide-react";
+import { FileDown, Image, FileText, Zap, Search } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home", icon: Zap },
@@ -62,8 +63,24 @@ export function Sidebar() {
           </nav>
         </div>
 
-        <div className="pt-6 border-t border-white/[0.05] text-[10px] font-mono text-[#444444] text-center uppercase tracking-[0.2em]">
-          100% Client-Side
+        <div className="flex flex-col gap-4">
+          <div className="pt-6 border-t border-border-subtle flex items-center justify-between">
+            <div className="text-[10px] font-mono text-text-tertiary uppercase tracking-[0.2em]">
+              100% Client-Side
+            </div>
+            <ThemeToggle />
+          </div>
+          
+          <button
+            onClick={() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
+            className="flex items-center justify-between px-3 py-2 text-xs rounded-lg bg-text-primary/5 text-text-secondary hover:bg-text-primary/10 transition-colors border border-border-subtle"
+          >
+            <div className="flex items-center gap-2">
+              <Search size={14} />
+              <span>Quick Search</span>
+            </div>
+            <kbd className="font-mono bg-bg-surface px-1.5 py-0.5 rounded border border-border-subtle">⌘K</kbd>
+          </button>
         </div>
       </aside>
 
@@ -74,19 +91,21 @@ export function Sidebar() {
           const Icon = item.icon;
           return (
             <Link key={item.href} href={item.href} className="relative flex flex-col items-center justify-center p-2 w-14 h-14">
-              <div className={`relative z-10 transition-colors ${isActive ? "text-white" : "text-[#888888]"}`}>
+              <div className={`relative z-10 transition-colors ${isActive ? "text-text-primary" : "text-text-secondary"}`}>
                 <Icon size={20} strokeWidth={isActive ? 2 : 1.5} />
               </div>
               {isActive && (
                 <motion.div
                   layoutId="mobile-active"
-                  className="absolute inset-1 bg-white/[0.08] border border-white/[0.05] rounded-lg z-0"
+                  className="absolute inset-1 bg-text-primary/[0.08] border border-text-primary/[0.05] rounded-lg z-0"
                   transition={{ type: "spring", stiffness: 400, damping: 35 }}
                 />
               )}
             </Link>
           );
         })}
+        <div className="w-px h-8 bg-border-subtle mx-1" />
+        <ThemeToggle />
       </nav>
     </>
   );

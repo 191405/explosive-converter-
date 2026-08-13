@@ -5,6 +5,7 @@ import { NeoDropzone } from "@/components/dropzone";
 import { PDFDocument, degrees } from "pdf-lib";
 import { motion, AnimatePresence } from "framer-motion";
 import { Merge, Scissors, RotateCw, FileDown, Trash2, FileText, X } from "lucide-react";
+import { toast } from "sonner";
 
 function formatBytes(bytes: number): string {
   if (bytes === 0) return "0 B";
@@ -83,7 +84,7 @@ export default function PDFTool() {
       setDownloadUrl(URL.createObjectURL(blob));
     } catch (err) {
       console.error(err);
-      alert("Failed to merge. Ensure all files are valid PDFs.");
+      toast.error("Failed to merge. Ensure all files are valid PDFs.");
     } finally {
       setIsProcessing(false);
     }
@@ -114,7 +115,7 @@ export default function PDFTool() {
       });
 
       if (indices.length === 0) {
-        alert("No valid pages in range. Use format: 1-3,5,7-9");
+        toast.error("No valid pages in range. Use format: 1-3,5,7-9");
         setIsProcessing(false);
         return;
       }
@@ -130,7 +131,7 @@ export default function PDFTool() {
       setDownloadUrl(URL.createObjectURL(blob));
     } catch (err) {
       console.error(err);
-      alert("Failed to extract pages.");
+      toast.error("Failed to extract pages.");
     } finally {
       setIsProcessing(false);
     }
@@ -153,7 +154,7 @@ export default function PDFTool() {
       setDownloadUrl(URL.createObjectURL(blob));
     } catch (err) {
       console.error(err);
-      alert("Failed to rotate pages.");
+      toast.error("Failed to rotate pages.");
     } finally {
       setIsProcessing(false);
     }
