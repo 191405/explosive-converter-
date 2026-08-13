@@ -52,9 +52,9 @@ export default function Home() {
       >
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-tight text-glow">
           Client-Side<br />
-          <span className="text-white/40">Superpowers.</span>
+          <span className="text-text-primary/40">Superpowers.</span>
         </h1>
-        <p className="text-lg md:text-xl text-white/50 leading-relaxed font-light">
+        <p className="text-lg md:text-xl text-text-primary/50 leading-relaxed font-light">
           Lightning-fast, privacy-first file conversion powered by WebAssembly.
           <br className="hidden md:block" />
           No uploads. No servers. No limits.
@@ -78,20 +78,20 @@ export default function Home() {
                   whileTap={{ scale: 0.98 }}
                   className="glass-panel p-8 flex flex-col items-start gap-5 h-full cursor-pointer relative overflow-hidden"
                 >
-                  <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                  <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-text-primary/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                   
-                  <div className="p-3 rounded-lg bg-white/[0.03] border border-white/[0.05] text-white group-hover:bg-white group-hover:text-black transition-colors duration-300">
+                  <div className="p-3 rounded-lg bg-text-primary/[0.03] border border-text-primary/[0.05] text-text-primary group-hover:bg-text-primary group-hover:text-bg-base transition-colors duration-300">
                     <Icon size={24} strokeWidth={1.5} />
                   </div>
                   
                   <div>
                     <h2 className="text-xl font-bold tracking-tight mb-2">{tool.title}</h2>
-                    <p className="text-sm text-white/50 leading-relaxed font-light">
+                    <p className="text-sm text-text-primary/50 leading-relaxed font-light">
                       {tool.desc}
                     </p>
                   </div>
                   
-                  <span className="mt-auto text-xs font-semibold text-white/30 group-hover:text-white transition-colors tracking-widest uppercase">
+                  <span className="mt-auto text-xs font-semibold text-text-primary/30 group-hover:text-text-primary transition-colors tracking-widest uppercase">
                     Open Tool →
                   </span>
                 </motion.div>
@@ -106,22 +106,22 @@ export default function Home() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4, duration: 1 }}
-        className="flex flex-wrap justify-center gap-8 sm:gap-12 text-xs font-mono text-white/40 tracking-wider w-full max-w-4xl"
+        className="flex flex-wrap justify-center gap-8 sm:gap-12 text-xs font-mono text-text-primary/40 tracking-wider w-full max-w-4xl"
       >
         <span className="flex items-center gap-2">
-          <ShieldCheck size={14} className="text-white/60" />
+          <ShieldCheck size={14} className="text-text-primary/60" />
           100% PRIVATE
         </span>
         <span className="flex items-center gap-2">
-          <HardDrive size={14} className="text-white/60" />
+          <HardDrive size={14} className="text-text-primary/60" />
           NO LIMITS
         </span>
         <span className="flex items-center gap-2">
-          <WifiOff size={14} className="text-white/60" />
+          <WifiOff size={14} className="text-text-primary/60" />
           OFFLINE READY
         </span>
         <span className="flex items-center gap-2">
-          <Zap size={14} className="text-white/60" />
+          <Zap size={14} className="text-text-primary/60" />
           WASM SPEED
         </span>
       </motion.section>

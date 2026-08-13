@@ -177,7 +177,7 @@ export default function PDFTool() {
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-4xl sm:text-5xl font-black text-glow tracking-tight">PDF Studio</h1>
-        <p className="text-white/50 font-light text-lg">Merge, split, extract & rotate PDFs — entirely in your browser.</p>
+        <p className="text-text-primary/50 font-light text-lg">Merge, split, extract & rotate PDFs — entirely in your browser.</p>
       </div>
 
       {/* Mode Selector */}
@@ -195,7 +195,7 @@ export default function PDFTool() {
                 if (m.value === "merge") { setTotalPages(null); }
               }}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm transition-all flex-1 min-w-[100px] justify-center ${
-                active ? "bg-white text-black font-semibold shadow-lg" : "text-white/50 hover:text-white font-medium hover:bg-white/[0.05]"
+                active ? "bg-text-primary text-bg-base font-semibold shadow-lg" : "text-text-primary/50 hover:text-text-primary font-medium hover:bg-text-primary/[0.05]"
               }`}
             >
               <Icon size={16} strokeWidth={active ? 2 : 1.5} />
@@ -212,7 +212,7 @@ export default function PDFTool() {
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -5 }}
-          className="text-sm text-white/40 text-center font-mono tracking-wide"
+          className="text-sm text-text-primary/40 text-center font-mono tracking-wide"
         >
           {modes.find((m) => m.value === mode)?.desc}
         </motion.p>
@@ -231,21 +231,21 @@ export default function PDFTool() {
       {/* File list */}
       {files.length > 0 && (
         <div className="w-full max-w-2xl glass-panel p-6 flex flex-col gap-6">
-          <div className="flex items-center justify-between border-b border-white/[0.05] pb-4">
+          <div className="flex items-center justify-between border-b border-text-primary/[0.05] pb-4">
             <h3 className="font-semibold text-lg tracking-tight">
               {files.length} file{files.length !== 1 ? "s" : ""}{" "}
-              <span className="text-white/40 font-mono text-xs ml-2">{formatBytes(totalInputSize)}</span>
+              <span className="text-text-primary/40 font-mono text-xs ml-2">{formatBytes(totalInputSize)}</span>
             </h3>
-            <button onClick={clearAll} className="text-xs text-white/40 hover:text-white transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-md hover:bg-white/[0.05]">
+            <button onClick={clearAll} className="text-xs text-text-primary/40 hover:text-text-primary transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-md hover:bg-text-primary/[0.05]">
               <Trash2 size={14} /> Clear all
             </button>
           </div>
 
           {/* Page info for split/rotate */}
           {totalPages && (mode === "split" || mode === "rotate") && (
-            <div className="bg-white/[0.03] border border-white/[0.05] px-4 py-3 rounded-lg text-sm text-white/60 flex items-center gap-2">
-              <FileText size={16} className="text-white/40" />
-              Document has <span className="text-white font-semibold">{totalPages}</span> pages
+            <div className="bg-text-primary/[0.03] border border-text-primary/[0.05] px-4 py-3 rounded-lg text-sm text-text-primary/60 flex items-center gap-2">
+              <FileText size={16} className="text-text-primary/40" />
+              Document has <span className="text-text-primary font-semibold">{totalPages}</span> pages
             </div>
           )}
 
@@ -258,20 +258,20 @@ export default function PDFTool() {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, x: -10 }}
                   key={`${file.name}-${index}`}
-                  className="bg-white/[0.02] border border-white/[0.04] flex items-center justify-between px-4 py-3 rounded-lg hover:bg-white/[0.04] transition-colors"
+                  className="bg-text-primary/[0.02] border border-text-primary/[0.04] flex items-center justify-between px-4 py-3 rounded-lg hover:bg-text-primary/[0.04] transition-colors"
                 >
                   <div className="flex items-center gap-4 min-w-0">
-                    <div className="p-2 rounded bg-white/[0.05] text-white/70 shrink-0">
+                    <div className="p-2 rounded bg-text-primary/[0.05] text-text-primary/70 shrink-0">
                       <FileText size={16} />
                     </div>
                     <div className="min-w-0">
                       <p className="text-sm font-medium truncate">{file.name}</p>
-                      <p className="text-[11px] text-white/40 font-mono mt-0.5">{formatBytes(file.size)}</p>
+                      <p className="text-[11px] text-text-primary/40 font-mono mt-0.5">{formatBytes(file.size)}</p>
                     </div>
                   </div>
                   <button
                     onClick={() => removeFile(index)}
-                    className="text-white/30 hover:text-white hover:bg-white/10 p-1.5 rounded-md transition-all shrink-0"
+                    className="text-text-primary/30 hover:text-text-primary hover:bg-text-primary/10 p-1.5 rounded-md transition-all shrink-0"
                   >
                     <X size={16} />
                   </button>
@@ -285,15 +285,15 @@ export default function PDFTool() {
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
-              className="flex flex-col sm:flex-row items-center gap-4 bg-white/[0.02] p-4 rounded-lg border border-white/[0.04]"
+              className="flex flex-col sm:flex-row items-center gap-4 bg-text-primary/[0.02] p-4 rounded-lg border border-text-primary/[0.04]"
             >
-              <label className="text-sm text-white/60 whitespace-nowrap font-medium">Pages to extract:</label>
+              <label className="text-sm text-text-primary/60 whitespace-nowrap font-medium">Pages to extract:</label>
               <input
                 type="text"
                 value={pageRange}
                 onChange={(e) => setPageRange(e.target.value)}
                 placeholder="e.g. 1-3,5,7-9"
-                className="input-base px-4 py-2 w-full sm:w-48 text-sm outline-none placeholder:text-white/20"
+                className="input-base px-4 py-2 w-full sm:w-48 text-sm outline-none placeholder:text-text-primary/20"
               />
             </motion.div>
           )}
@@ -303,18 +303,18 @@ export default function PDFTool() {
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
-              className="flex items-center justify-between gap-4 bg-white/[0.02] p-4 rounded-lg border border-white/[0.04]"
+              className="flex items-center justify-between gap-4 bg-text-primary/[0.02] p-4 rounded-lg border border-text-primary/[0.04]"
             >
-              <span className="text-sm text-white/60 font-medium">Rotation Angle:</span>
-              <div className="flex p-1 rounded-lg bg-black/40 border border-white/[0.05]">
+              <span className="text-sm text-text-primary/60 font-medium">Rotation Angle:</span>
+              <div className="flex p-1 rounded-lg bg-text-primary/40 border border-text-primary/[0.05]">
                 {([90, 180, 270] as const).map((angle) => (
                   <button
                     key={angle}
                     onClick={() => setRotateAngle(angle)}
                     className={`px-4 py-1.5 text-sm font-semibold rounded-md transition-all ${
                       rotateAngle === angle
-                        ? "bg-white text-black shadow-sm"
-                        : "text-white/50 hover:text-white hover:bg-white/[0.05]"
+                        ? "bg-text-primary text-bg-base shadow-sm"
+                        : "text-text-primary/50 hover:text-text-primary hover:bg-text-primary/[0.05]"
                     }`}
                   >
                     {angle}°
@@ -348,14 +348,14 @@ export default function PDFTool() {
               </button>
             ) : (
               <a href={downloadUrl} download={resultName} className="w-full sm:w-auto">
-                <button className="btn-primary px-8 py-3 w-full flex items-center justify-center gap-2 text-sm bg-white text-black">
+                <button className="btn-primary px-8 py-3 w-full flex items-center justify-center gap-2 text-sm bg-text-primary text-bg-base">
                   <FileDown size={16} />
                   Download Result <span className="opacity-60 font-mono text-[10px] ml-1">({formatBytes(resultSize)})</span>
                 </button>
               </a>
             )}
             {mode === "merge" && !downloadUrl && files.length < 2 && (
-              <span className="text-xs text-white/40">Add at least 2 files</span>
+              <span className="text-xs text-text-primary/40">Add at least 2 files</span>
             )}
           </div>
         </div>

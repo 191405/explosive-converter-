@@ -47,7 +47,7 @@ export function NeoDropzone({
       className={`
         w-full max-w-2xl mx-auto p-8 sm:p-12 flex flex-col items-center justify-center
         cursor-pointer transition-all duration-300 relative overflow-hidden glass-panel
-        ${isDragActive ? "border-white/40 bg-white/[0.05]" : "border-white/[0.06]"}
+        ${isDragActive ? "border-text-primary/40 bg-text-primary/[0.05]" : "border-text-primary/[0.06]"}
       `}
     >
       <input {...getInputProps()} />
@@ -59,14 +59,14 @@ export function NeoDropzone({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-gradient-to-b from-white/[0.05] to-transparent pointer-events-none"
+            className="absolute inset-0 bg-gradient-to-b from-text-primary/[0.05] to-transparent pointer-events-none"
           />
         )}
       </AnimatePresence>
 
       <motion.div
         animate={{ y: isDragActive ? -5 : 0 }}
-        className={`mb-4 transition-colors duration-300 ${isDragActive ? "text-white" : "text-white/40"}`}
+        className={`mb-4 transition-colors duration-300 ${isDragActive ? "text-text-primary" : "text-text-primary/40"}`}
       >
         {icon || (
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -76,17 +76,17 @@ export function NeoDropzone({
           </svg>
         )}
       </motion.div>
-      <h3 className={`text-xl font-semibold tracking-tight transition-colors duration-300 ${isDragActive ? "text-white" : "text-white/80"}`}>
+      <h3 className={`text-xl font-semibold tracking-tight transition-colors duration-300 ${isDragActive ? "text-text-primary" : "text-text-primary/80"}`}>
         {isDragActive ? "Drop to add files" : label}
       </h3>
       {sublabel && (
-        <p className="text-sm text-white/40 mt-2 font-light">
+        <p className="text-sm text-text-primary/40 mt-2 font-light">
           {sublabel}
         </p>
       )}
 
       {fileCount > 0 && (
-        <span className="absolute top-4 right-4 bg-white/10 text-white text-xs px-3 py-1 rounded-full font-medium border border-white/10 backdrop-blur-md">
+        <span className="absolute top-4 right-4 bg-text-primary/10 text-text-primary text-xs px-3 py-1 rounded-full font-medium border border-text-primary/10 backdrop-blur-md">
           {fileCount} file{fileCount !== 1 ? "s" : ""} added
         </span>
       )}

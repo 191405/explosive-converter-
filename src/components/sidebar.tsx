@@ -25,11 +25,11 @@ export function Sidebar() {
             <motion.div 
               whileHover={{ scale: 1.05, rotate: 10 }}
               whileTap={{ scale: 0.95 }}
-              className="p-2 rounded-xl bg-white text-black transition-all"
+              className="p-2 rounded-xl bg-text-primary text-bg-base transition-all"
             >
               <Zap size={20} className="fill-black" />
             </motion.div>
-            <span className="text-lg font-bold tracking-tight text-white group-hover:text-glow transition-all">
+            <span className="text-lg font-bold tracking-tight text-text-primary group-hover:text-glow transition-all">
               Explosive
             </span>
           </Link>
@@ -42,7 +42,7 @@ export function Sidebar() {
                 <Link key={item.href} href={item.href} className="relative group">
                   <div
                     className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-colors relative z-10 ${
-                      isActive ? "text-white" : "text-[#888888] group-hover:text-white"
+                      isActive ? "text-text-primary" : "text-[#888888] group-hover:text-text-primary"
                     }`}
                   >
                     <Icon size={18} strokeWidth={isActive ? 2 : 1.5} />
@@ -53,7 +53,7 @@ export function Sidebar() {
                   {isActive && (
                     <motion.div
                       layoutId="sidebar-active"
-                      className="absolute inset-0 bg-white/[0.08] border border-white/[0.05] rounded-lg z-0"
+                      className="absolute inset-0 bg-text-primary/[0.08] border border-text-primary/[0.05] rounded-lg z-0"
                       transition={{ type: "spring", stiffness: 400, damping: 35 }}
                     />
                   )}

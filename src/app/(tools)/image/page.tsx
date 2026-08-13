@@ -93,23 +93,23 @@ export default function ImageConvertPage() {
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-4xl sm:text-5xl font-black text-glow tracking-tight">Image Convert</h1>
-        <p className="text-white/50 font-light text-lg">Instantly convert and resize between PNG, JPG & WEBP with zero uploads.</p>
+        <p className="text-text-primary/50 font-light text-lg">Instantly convert and resize between PNG, JPG & WEBP with zero uploads.</p>
       </div>
 
       {/* Main Settings Panel */}
       <div className="w-full max-w-xl glass-panel p-6 flex flex-col gap-6">
         {/* Format Selector */}
         <div>
-          <label className="text-xs font-semibold text-white/50 uppercase tracking-widest mb-3 block">Target Format</label>
-          <div className="flex bg-white/[0.03] p-1.5 rounded-lg border border-white/[0.05]">
+          <label className="text-xs font-semibold text-text-primary/50 uppercase tracking-widest mb-3 block">Target Format</label>
+          <div className="flex bg-text-primary/[0.03] p-1.5 rounded-lg border border-text-primary/[0.05]">
             {["webp", "jpeg", "png", "bmp"].map((f) => (
               <button
                 key={f}
                 onClick={() => setFormat(f as any)}
                 className={`flex-1 py-2 text-sm font-semibold rounded-md transition-all uppercase tracking-wider ${
                   format === f
-                    ? "bg-white text-black shadow-md"
-                    : "text-white/40 hover:text-white hover:bg-white/[0.05]"
+                    ? "bg-text-primary text-bg-base shadow-md"
+                    : "text-text-primary/40 hover:text-text-primary hover:bg-text-primary/[0.05]"
                 }`}
               >
                 {f}
@@ -128,8 +128,8 @@ export default function ImageConvertPage() {
               className="flex flex-col gap-3 overflow-hidden"
             >
               <div className="flex justify-between text-xs font-semibold uppercase tracking-widest">
-                <span className="text-white/50">Quality</span>
-                <span className="text-white">{quality}%</span>
+                <span className="text-text-primary/50">Quality</span>
+                <span className="text-text-primary">{quality}%</span>
               </div>
               <input
                 type="range"
@@ -138,16 +138,16 @@ export default function ImageConvertPage() {
                 step="5"
                 value={quality}
                 onChange={(e) => setQuality(Number(e.target.value))}
-                className="w-full accent-white h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer"
+                className="w-full accent-white h-1.5 bg-text-primary/10 rounded-full appearance-none cursor-pointer"
               />
             </motion.div>
           )}
         </AnimatePresence>
 
         {/* Resize Options */}
-        <div className="pt-2 border-t border-white/[0.05]">
-          <label className="text-xs font-semibold text-white/50 uppercase tracking-widest mb-3 block">Resize Mode</label>
-          <div className="flex bg-white/[0.03] p-1.5 rounded-lg border border-white/[0.05] mb-4">
+        <div className="pt-2 border-t border-text-primary/[0.05]">
+          <label className="text-xs font-semibold text-text-primary/50 uppercase tracking-widest mb-3 block">Resize Mode</label>
+          <div className="flex bg-text-primary/[0.03] p-1.5 rounded-lg border border-text-primary/[0.05] mb-4">
             {[
               { id: "none", label: "Original" },
               { id: "scale", label: "Scale %" },
@@ -158,8 +158,8 @@ export default function ImageConvertPage() {
                 onClick={() => setResizeMode(m.id as any)}
                 className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${
                   resizeMode === m.id
-                    ? "bg-white text-black shadow-md"
-                    : "text-white/40 hover:text-white hover:bg-white/[0.05]"
+                    ? "bg-text-primary text-bg-base shadow-md"
+                    : "text-text-primary/40 hover:text-text-primary hover:bg-text-primary/[0.05]"
                 }`}
               >
                 {m.label}
@@ -174,7 +174,7 @@ export default function ImageConvertPage() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="flex items-center gap-4 bg-white/[0.02] p-3 rounded-lg border border-white/[0.05]"
+                className="flex items-center gap-4 bg-text-primary/[0.02] p-3 rounded-lg border border-text-primary/[0.05]"
               >
                 <input
                   type="range"
@@ -183,9 +183,9 @@ export default function ImageConvertPage() {
                   step="10"
                   value={scalePercent}
                   onChange={(e) => setScalePercent(Number(e.target.value))}
-                  className="flex-1 accent-white h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer"
+                  className="flex-1 accent-white h-1.5 bg-text-primary/10 rounded-full appearance-none cursor-pointer"
                 />
-                <span className="text-sm font-mono text-white min-w-[3rem] text-right">{scalePercent}%</span>
+                <span className="text-sm font-mono text-text-primary min-w-[3rem] text-right">{scalePercent}%</span>
               </motion.div>
             )}
 
@@ -195,10 +195,10 @@ export default function ImageConvertPage() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="flex items-center gap-3 bg-white/[0.02] p-3 rounded-lg border border-white/[0.05]"
+                className="flex items-center gap-3 bg-text-primary/[0.02] p-3 rounded-lg border border-text-primary/[0.05]"
               >
                 <div className="flex flex-col flex-1 gap-1">
-                  <label className="text-[10px] text-white/40 uppercase tracking-widest">Width</label>
+                  <label className="text-[10px] text-text-primary/40 uppercase tracking-widest">Width</label>
                   <input
                     type="number"
                     value={exactWidth || ""}
@@ -210,14 +210,14 @@ export default function ImageConvertPage() {
                 
                 <button
                   onClick={() => setLockAspect(!lockAspect)}
-                  className={`mt-4 p-2 rounded-md transition-colors ${lockAspect ? "text-white bg-white/10" : "text-white/30 hover:text-white/60"}`}
+                  className={`mt-4 p-2 rounded-md transition-colors ${lockAspect ? "text-text-primary bg-text-primary/10" : "text-text-primary/30 hover:text-text-primary/60"}`}
                   title={lockAspect ? "Unlock aspect ratio" : "Lock aspect ratio"}
                 >
                   {lockAspect ? <LinkIcon size={14} /> : <Unlink size={14} />}
                 </button>
 
                 <div className="flex flex-col flex-1 gap-1">
-                  <label className="text-[10px] text-white/40 uppercase tracking-widest">Height</label>
+                  <label className="text-[10px] text-text-primary/40 uppercase tracking-widest">Height</label>
                   <input
                     type="number"
                     value={exactHeight || ""}
@@ -245,11 +245,11 @@ export default function ImageConvertPage() {
       {/* File List & Results */}
       {files.length > 0 && (
         <div className="w-full max-w-2xl glass-panel p-6 flex flex-col gap-6">
-          <div className="flex items-center justify-between border-b border-white/[0.05] pb-4">
+          <div className="flex items-center justify-between border-b border-text-primary/[0.05] pb-4">
             <h3 className="font-semibold text-lg tracking-tight">
               {files.length} Image{files.length !== 1 ? "s" : ""}
             </h3>
-            <button onClick={clearAll} className="text-xs text-white/40 hover:text-white transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-md hover:bg-white/[0.05]">
+            <button onClick={clearAll} className="text-xs text-text-primary/40 hover:text-text-primary transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-md hover:bg-text-primary/[0.05]">
               <Trash2 size={14} /> Clear all
             </button>
           </div>
@@ -266,16 +266,16 @@ export default function ImageConvertPage() {
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, x: -10 }}
                     key={`${file.name}-${index}`}
-                    className="bg-white/[0.02] border border-white/[0.04] p-3 rounded-lg hover:bg-white/[0.04] transition-colors"
+                    className="bg-text-primary/[0.02] border border-text-primary/[0.04] p-3 rounded-lg hover:bg-text-primary/[0.04] transition-colors"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4 min-w-0 flex-1">
-                        <div className="p-2 rounded bg-white/[0.05] text-white/70 shrink-0">
+                        <div className="p-2 rounded bg-text-primary/[0.05] text-text-primary/70 shrink-0">
                           <ImageIcon size={16} />
                         </div>
                         <div className="min-w-0 pr-4">
                           <p className="text-sm font-medium truncate">{file.name}</p>
-                          <p className="text-[11px] text-white/40 font-mono mt-0.5">{formatBytes(file.size)}</p>
+                          <p className="text-[11px] text-text-primary/40 font-mono mt-0.5">{formatBytes(file.size)}</p>
                         </div>
                       </div>
                       
@@ -283,23 +283,23 @@ export default function ImageConvertPage() {
                         <div className="flex items-center gap-4 shrink-0">
                           <div className="text-right hidden sm:block">
                             <span className="text-xs font-semibold text-[#34d399] uppercase tracking-wider block">Done</span>
-                            <span className="text-[10px] text-white/40 font-mono">{formatBytes(res.size || 0)}</span>
+                            <span className="text-[10px] text-text-primary/40 font-mono">{formatBytes(res.size || 0)}</span>
                           </div>
                           <a href={res.url} download={res.newName}>
-                            <button className="btn-primary px-3 py-1.5 text-xs bg-white text-black flex items-center gap-1.5">
+                            <button className="btn-primary px-3 py-1.5 text-xs bg-text-primary text-bg-base flex items-center gap-1.5">
                               <Download size={14} /> Save
                             </button>
                           </a>
                         </div>
                       ) : isProcessing ? (
-                        <div className="flex items-center gap-2 text-white/50 text-xs font-semibold uppercase tracking-widest shrink-0">
+                        <div className="flex items-center gap-2 text-text-primary/50 text-xs font-semibold uppercase tracking-widest shrink-0">
                           <svg className="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
                           Processing
                         </div>
                       ) : (
                         <button
                           onClick={() => removeFile(index)}
-                          className="text-white/30 hover:text-white p-1.5 rounded-md hover:bg-white/10 transition-colors shrink-0"
+                          className="text-text-primary/30 hover:text-text-primary p-1.5 rounded-md hover:bg-text-primary/10 transition-colors shrink-0"
                         >
                           <X size={16} />
                         </button>
@@ -313,7 +313,7 @@ export default function ImageConvertPage() {
 
           {/* Action bar */}
           {!hasResults && (
-            <div className="pt-4 mt-2 border-t border-white/[0.05]">
+            <div className="pt-4 mt-2 border-t border-text-primary/[0.05]">
               <button
                 onClick={processAll}
                 disabled={isAnyProcessing}
