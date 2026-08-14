@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { FileDown, Image, FileText, Zap, Search } from "lucide-react";
+import { FileDown, Image, FileText, Zap, Search, Music, Scissors, Video } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const NAV_ITEMS = [
@@ -11,6 +11,9 @@ const NAV_ITEMS = [
   { href: "/pdf", label: "PDF Studio", icon: FileText },
   { href: "/image", label: "Image Convert", icon: Image },
   { href: "/compress", label: "Video Compress", icon: FileDown },
+  { href: "/audio", label: "Audio Convert", icon: Music },
+  { href: "/trim", label: "Audio Trimmer", icon: Scissors },
+  { href: "/record", label: "Screen Recorder", icon: Video },
 ];
 
 export function Sidebar() {

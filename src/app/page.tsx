@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { FileText, Image, FileDown, ShieldCheck, Zap, WifiOff, HardDrive } from "lucide-react";
+import { FileText, Image, FileDown, Music, Scissors, Video, ShieldCheck, Zap, WifiOff, HardDrive } from "lucide-react";
 
 const tools = [
   {
@@ -22,6 +22,24 @@ const tools = [
     title: "Video Compress",
     desc: "Shrink video files using FFmpeg WASM — no server, just your browser.",
     icon: FileDown,
+  },
+  {
+    href: "/audio",
+    title: "Audio Converter",
+    desc: "Extract audio from video or convert between MP3, WAV, AAC, FLAC & OGG.",
+    icon: Music,
+  },
+  {
+    href: "/trim",
+    title: "Audio Trimmer",
+    desc: "Interactive waveform trimmer with real-time preview & lossless WAV export.",
+    icon: Scissors,
+  },
+  {
+    href: "/record",
+    title: "Screen Recorder",
+    desc: "Record desktop, tabs, windows or camera with mic & system audio.",
+    icon: Video,
   },
 ];
 

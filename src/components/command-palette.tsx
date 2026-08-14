@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Command } from "cmdk";
 import { useRouter } from "next/navigation";
-import { Zap, Image as ImageIcon, FileDown, FileText } from "lucide-react";
+import { Zap, Image as ImageIcon, FileDown, FileText, Music, Scissors, Video } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function CommandPalette() {
@@ -84,6 +84,27 @@ export function CommandPalette() {
                   >
                     <FileDown size={16} className="text-text-secondary" />
                     Video Compress
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/audio"))}
+                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm text-text-primary aria-selected:bg-text-primary/10 cursor-pointer transition-colors"
+                  >
+                    <Music size={16} className="text-text-secondary" />
+                    Audio Converter
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/trim"))}
+                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm text-text-primary aria-selected:bg-text-primary/10 cursor-pointer transition-colors"
+                  >
+                    <Scissors size={16} className="text-text-secondary" />
+                    Audio Trimmer
+                  </Command.Item>
+                  <Command.Item
+                    onSelect={() => runCommand(() => router.push("/record"))}
+                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm text-text-primary aria-selected:bg-text-primary/10 cursor-pointer transition-colors"
+                  >
+                    <Video size={16} className="text-text-secondary" />
+                    Screen Recorder
                   </Command.Item>
                 </Command.Group>
               </Command.List>
