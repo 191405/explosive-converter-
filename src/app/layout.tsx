@@ -78,6 +78,9 @@ export const metadata: Metadata = {
     description:
       "Privacy-first in-memory media processing. Convert video, audio, images, and PDFs directly in your browser with zero uploads.",
   },
+  verification: {
+    google: "w4UVOlECyiP4Dmq5bhe59smLzIO1USAxJUl-UFRmMCI",
+  },
   icons: {
     icon: "/favicon.ico",
   },
