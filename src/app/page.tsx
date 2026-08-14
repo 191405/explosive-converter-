@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   FileText,
   Image as ImageIcon,
@@ -10,101 +10,111 @@ import {
   Music,
   Scissors,
   Video,
-  ShieldCheck,
-  Zap,
-  WifiOff,
-  HardDrive,
   Monitor,
-  Sparkles,
   Lock,
+  ArrowRight,
+  Shield,
+  Layers,
+  Cpu,
 } from "lucide-react";
 import { toast } from "sonner";
 
 interface ToolItem {
   href: string;
   title: string;
-  category: "audio" | "video" | "document" | "image" | "studio";
-  categoryLabel: string;
-  desc: string;
+  description: string;
   icon: any;
-  tags: string[];
+  engine: string;
+  supportedFormats: string;
   desktopOnly?: boolean;
 }
 
-const tools: ToolItem[] = [
-  {
-    href: "/pdf",
-    title: "PDF Studio",
-    category: "document",
-    categoryLabel: "Document",
-    desc: "Merge, split, and manipulate PDF documents securely with zero server uploads.",
-    icon: FileText,
-    tags: ["Merge", "Split", "Encrypted"],
-    desktopOnly: false,
-  },
-  {
-    href: "/image",
-    title: "Image Transcoder",
-    category: "image",
-    categoryLabel: "Graphics",
-    desc: "Instantly transcode between PNG, JPG, WEBP, and BMP with precision quality control.",
-    icon: ImageIcon,
-    tags: ["Lossless", "Batch", "Resize"],
-    desktopOnly: false,
-  },
-  {
-    href: "/compress",
-    title: "Video Compressor",
-    category: "video",
-    categoryLabel: "Video Lab",
-    desc: "Shrink video files using multi-threaded WebAssembly with CRF rate control.",
-    icon: FileDown,
-    tags: ["H.264", "WASM", "No Size Limit"],
-    desktopOnly: false,
-  },
-  {
-    href: "/audio",
-    title: "Audio Converter",
-    category: "audio",
-    categoryLabel: "Audio Lab",
-    desc: "Extract audio tracks from video or convert between MP3, WAV, AAC, FLAC & OGG.",
-    icon: Music,
-    tags: ["Extract Video", "320kbps", "FLAC/WAV"],
-    desktopOnly: false,
-  },
-  {
-    href: "/trim",
-    title: "Audio Waveform Trimmer",
-    category: "audio",
-    categoryLabel: "Audio Lab",
-    desc: "Interactive visual waveform cutter with millisecond trim precision & lossless export.",
-    icon: Scissors,
-    tags: ["Waveform", "Real-time", "PCM 16-bit"],
-    desktopOnly: false,
-  },
-  {
-    href: "/record",
-    title: "Screen & Camera Studio",
-    category: "studio",
-    categoryLabel: "Studio Capture",
-    desc: "High-frame-rate screen, window, and webcam capture with microphone mixing.",
-    icon: Video,
-    tags: ["Display Media", "WebM/MP4", "VU Meter"],
-    desktopOnly: true,
-  },
-];
+interface ToolGroup {
+  id: string;
+  category: string;
+  summary: string;
+  tools: ToolItem[];
+}
 
-const categories = [
-  { id: "all", label: "All Utilities" },
-  { id: "audio", label: "Audio Lab" },
-  { id: "video", label: "Video" },
-  { id: "image", label: "Graphics" },
-  { id: "document", label: "Documents" },
-  { id: "studio", label: "Studio" },
+const TOOL_GROUPS: ToolGroup[] = [
+  {
+    id: "audio",
+    category: "Audio Processing",
+    summary: "Conversion, track extraction, and lossless waveform editing.",
+    tools: [
+      {
+        href: "/audio",
+        title: "Audio Converter & Extractor",
+        description: "Extract audio streams from video files or transcode between audio formats with bitrate and sample rate configuration.",
+        icon: Music,
+        engine: "FFmpeg WASM (libmp3lame, opus)",
+        supportedFormats: "MP3, WAV, AAC, FLAC, OGG, M4A",
+        desktopOnly: false,
+      },
+      {
+        href: "/trim",
+        title: "Audio Waveform Trimmer",
+        description: "Interactive visual waveform cutting with millisecond range controls and lossless client-side PCM audio slicing.",
+        icon: Scissors,
+        engine: "Web Audio API (AudioBuffer)",
+        supportedFormats: "MP3, WAV, AAC, FLAC, OGG",
+        desktopOnly: false,
+      },
+    ],
+  },
+  {
+    id: "video-graphics",
+    category: "Video & Graphics",
+    summary: "Compression and image format transcoding.",
+    tools: [
+      {
+        href: "/compress",
+        title: "Video Compressor",
+        description: "Reduce video bitrate and file size using H.264 encoding with adjustable Constant Rate Factor (CRF) and preset speed.",
+        icon: FileDown,
+        engine: "FFmpeg WASM (libx264)",
+        supportedFormats: "MP4, MOV, MKV, WebM, AVI",
+        desktopOnly: false,
+      },
+      {
+        href: "/image",
+        title: "Image Transcoder",
+        description: "Batch transcode image formats, adjust compression quality, and apply proportional or exact dimension scaling.",
+        icon: ImageIcon,
+        engine: "HTML5 Canvas Transcoder",
+        supportedFormats: "PNG, JPG, WEBP, BMP, SVG",
+        desktopOnly: false,
+      },
+    ],
+  },
+  {
+    id: "documents-capture",
+    category: "Documents & Recording",
+    summary: "Document manipulation and display media capture.",
+    tools: [
+      {
+        href: "/pdf",
+        title: "PDF Studio",
+        description: "Split document page ranges, merge multiple PDF files, and reorder document structures locally.",
+        icon: FileText,
+        engine: "PDF-Lib Core",
+        supportedFormats: "PDF",
+        desktopOnly: false,
+      },
+      {
+        href: "/record",
+        title: "Screen & Camera Recorder",
+        description: "Capture application windows, full displays, or webcams with synchronized microphone and system audio streams.",
+        icon: Video,
+        engine: "MediaRecorder API",
+        supportedFormats: "WebM, MP4 (VP9 / Opus)",
+        desktopOnly: true,
+      },
+    ],
+  },
 ];
 
 export default function Home() {
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -116,208 +126,149 @@ export default function Home() {
     return () => window.removeEventListener("resize", checkIsMobile);
   }, []);
 
-  const filteredTools = tools.filter(
-    (t) => selectedCategory === "all" || t.category === selectedCategory
-  );
-
   const handleToolClick = (e: React.MouseEvent, tool: ToolItem) => {
     if (tool.desktopOnly && isMobile) {
       e.preventDefault();
-      toast.info("Desktop Exclusive", {
-        description: "Screen & Window Recording requires a desktop browser (Chrome, Firefox, or Edge on PC/Mac).",
+      toast.info("Desktop Exclusive Tool", {
+        description: "Screen & Window Recording requires desktop display capture APIs (Chrome, Firefox, or Edge on PC/Mac).",
         icon: <Monitor className="w-4 h-4 text-text-primary" />,
       });
     }
   };
 
   return (
-    <div className="flex flex-col items-center w-full gap-10 sm:gap-16">
-      {/* ── Hero Section ── */}
-      <motion.section
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="text-center space-y-4 max-w-3xl pt-2 sm:pt-12"
-      >
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-text-primary/[0.04] border border-text-primary/[0.08] text-[11px] font-mono tracking-wider text-text-primary/70 mb-2">
-          <Sparkles size={12} className="text-text-primary" />
-          <span>ZERO-SERVER • CLIENT-SIDE ARCHITECTURE</span>
+    <div className="flex flex-col items-center w-full gap-12 sm:gap-16 max-w-5xl mx-auto">
+      {/* ── Headline & Overview ── */}
+      <section className="w-full text-left pt-2 sm:pt-10 border-b border-border-subtle pb-8">
+        <div className="flex flex-col gap-3 max-w-3xl">
+          <div className="flex items-center gap-2 text-xs font-mono text-text-tertiary uppercase tracking-wider">
+            <span>Media & Document Suite</span>
+            <span>•</span>
+            <span>Client-Side Engine</span>
+          </div>
+
+          <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-text-primary">
+            Local Media & Document Processing
+          </h1>
+
+          <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-normal">
+            A privacy-focused suite of media conversion and document utilities running entirely inside your browser. 
+            All operations execute on your device’s processor with zero server uploads or external network requests.
+          </p>
         </div>
 
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-tight text-glow">
-          Client-Side<br />
-          <span className="text-text-primary/40">Superpowers.</span>
-        </h1>
+        {/* Technical Specs Strip */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-8 pt-6 border-t border-border-subtle">
+          <div className="flex items-start gap-3 p-3 rounded-lg bg-bg-surface border border-border-subtle">
+            <Shield size={18} className="text-text-secondary mt-0.5 shrink-0" />
+            <div>
+              <span className="text-xs font-semibold text-text-primary block">Private by Design</span>
+              <span className="text-[11px] text-text-tertiary font-mono">Files never leave memory</span>
+            </div>
+          </div>
 
-        <p className="text-sm sm:text-lg text-text-primary/60 leading-relaxed font-light px-4 max-w-2xl mx-auto">
-          High-performance media manipulation suite running WebAssembly and native browser engines.
-          Zero uploads, absolute privacy.
-        </p>
-      </motion.section>
+          <div className="flex items-start gap-3 p-3 rounded-lg bg-bg-surface border border-border-subtle">
+            <Cpu size={18} className="text-text-secondary mt-0.5 shrink-0" />
+            <div>
+              <span className="text-xs font-semibold text-text-primary block">WebAssembly Execution</span>
+              <span className="text-[11px] text-text-tertiary font-mono">Native C/C++ codecs in browser</span>
+            </div>
+          </div>
 
-      {/* ── Category Filter Bar ── */}
-      <div className="w-full flex justify-center px-2">
-        <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-bg-surface/80 border border-border-subtle backdrop-blur-md overflow-x-auto scrollbar-none max-w-full">
-          {categories.map((cat) => {
-            const isSelected = selectedCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold tracking-tight transition-all shrink-0 cursor-pointer ${
-                  isSelected
-                    ? "bg-text-primary text-bg-base shadow-sm"
-                    : "text-text-secondary hover:text-text-primary hover:bg-text-primary/[0.03]"
-                }`}
-              >
-                {cat.label}
-              </button>
-            );
-          })}
+          <div className="flex items-start gap-3 p-3 rounded-lg bg-bg-surface border border-border-subtle">
+            <Layers size={18} className="text-text-secondary mt-0.5 shrink-0" />
+            <div>
+              <span className="text-xs font-semibold text-text-primary block">Offline Capable</span>
+              <span className="text-[11px] text-text-tertiary font-mono">Works without internet once loaded</span>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* ── Tools Grid ── */}
-      <motion.section
-        layout
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full"
-      >
-        <AnimatePresence mode="popLayout">
-          {filteredTools.map((tool) => {
-            const Icon = tool.icon;
-            const isGreyedOut = tool.desktopOnly && isMobile;
+      {/* ── Organized Tool Sections ── */}
+      <section className="flex flex-col gap-12 w-full">
+        {TOOL_GROUPS.map((group) => (
+          <div key={group.id} className="flex flex-col gap-4">
+            {/* Group Header */}
+            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 pb-2 border-b border-border-subtle">
+              <h2 className="text-lg font-semibold tracking-tight text-text-primary">
+                {group.category}
+              </h2>
+              <span className="text-xs text-text-tertiary font-mono">
+                {group.summary}
+              </span>
+            </div>
 
-            return (
-              <motion.div
-                key={tool.href}
-                layout
-                initial={{ opacity: 0, scale: 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.96 }}
-                transition={{ duration: 0.25 }}
-                className="h-full"
-              >
-                <Link
-                  href={tool.href}
-                  onClick={(e) => handleToolClick(e, tool)}
-                  className={`group block h-full outline-none select-none ${
-                    isGreyedOut ? "cursor-not-allowed" : "cursor-pointer"
-                  }`}
-                >
-                  <div
-                    className={`glass-panel p-6 flex flex-col items-start gap-4 h-full relative overflow-hidden transition-all duration-300 ${
-                      isGreyedOut
-                        ? "opacity-45 grayscale bg-bg-surface/40 border-border-subtle"
-                        : "hover:border-border-focus"
+            {/* Tools Grid for this Group */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {group.tools.map((tool) => {
+                const Icon = tool.icon;
+                const isGreyedOut = tool.desktopOnly && isMobile;
+
+                return (
+                  <Link
+                    key={tool.href}
+                    href={tool.href}
+                    onClick={(e) => handleToolClick(e, tool)}
+                    className={`group block outline-none select-none ${
+                      isGreyedOut ? "cursor-not-allowed" : "cursor-pointer"
                     }`}
                   >
-                    {/* Hover Glow */}
-                    {!isGreyedOut && (
-                      <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-text-primary/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                    )}
+                    <div
+                      className={`h-full p-5 sm:p-6 rounded-xl border transition-all duration-200 flex flex-col justify-between gap-5 ${
+                        isGreyedOut
+                          ? "bg-bg-surface/30 border-border-subtle opacity-40 grayscale"
+                          : "bg-bg-surface/80 border-border-subtle hover:border-border-focus hover:bg-bg-surface-hover shadow-sm"
+                      }`}
+                    >
+                      {/* Top Info */}
+                      <div className="flex flex-col gap-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 rounded-lg bg-text-primary/[0.04] border border-border-subtle text-text-primary">
+                              <Icon size={18} strokeWidth={1.75} />
+                            </div>
+                            <h3 className="text-base font-semibold tracking-tight text-text-primary">
+                              {tool.title}
+                            </h3>
+                          </div>
 
-                    {/* Top Row: Icon & Badges */}
-                    <div className="flex items-center justify-between w-full">
-                      <div
-                        className={`p-2.5 rounded-lg border transition-colors ${
-                          isGreyedOut
-                            ? "bg-text-primary/[0.02] border-text-primary/[0.05] text-text-primary/40"
-                            : "bg-text-primary/[0.03] border-text-primary/[0.05] text-text-primary group-hover:bg-text-primary group-hover:text-bg-base"
-                        }`}
-                      >
-                        <Icon size={22} strokeWidth={1.5} />
+                          {tool.desktopOnly && (
+                            <span className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-text-primary/5 text-text-tertiary border border-border-subtle">
+                              <Monitor size={10} />
+                              {isMobile ? "Desktop Only" : "Desktop"}
+                            </span>
+                          )}
+                        </div>
+
+                        <p className="text-xs text-text-secondary leading-relaxed font-normal">
+                          {tool.description}
+                        </p>
                       </div>
 
-                      {/* Desktop Only / Platform Badge */}
-                      {tool.desktopOnly ? (
-                        <span
-                          className={`flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded border ${
-                            isGreyedOut
-                              ? "bg-text-primary/5 text-text-tertiary border-text-primary/10"
-                              : "bg-text-primary/10 text-text-primary/80 border-text-primary/20"
-                          }`}
-                        >
-                          <Monitor size={11} />
-                          {isMobile ? "Desktop Only" : "Desktop Optimized"}
-                        </span>
-                      ) : (
-                        <span className="text-[10px] font-mono uppercase tracking-widest text-text-tertiary">
-                          {tool.categoryLabel}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Title & Description */}
-                    <div>
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <h2 className="text-lg font-bold tracking-tight text-text-primary">
-                          {tool.title}
-                        </h2>
-                        {isGreyedOut && (
-                          <Lock size={13} className="text-text-tertiary shrink-0" />
-                        )}
+                      {/* Technical Footer Metadata */}
+                      <div className="pt-3 border-t border-border-subtle flex flex-col gap-2">
+                        <div className="flex items-center justify-between text-[11px] font-mono text-text-tertiary">
+                          <span>Engine: <span className="text-text-secondary">{tool.engine}</span></span>
+                        </div>
+                        <div className="flex items-center justify-between text-[11px] font-mono text-text-tertiary">
+                          <span>Formats: <span className="text-text-secondary">{tool.supportedFormats}</span></span>
+                          <span className={`inline-flex items-center gap-1 font-sans text-xs font-medium transition-colors ${
+                            isGreyedOut ? "text-text-tertiary" : "text-text-primary group-hover:underline"
+                          }`}>
+                            {isGreyedOut ? "Requires Desktop" : "Open"}
+                            {!isGreyedOut && <ArrowRight size={12} />}
+                          </span>
+                        </div>
                       </div>
-                      <p className="text-xs text-text-primary/50 leading-relaxed font-light">
-                        {tool.desc}
-                      </p>
                     </div>
-
-                    {/* Feature Pills */}
-                    <div className="flex flex-wrap gap-1.5 pt-1">
-                      {tool.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-[10px] font-mono px-2 py-0.5 rounded bg-text-primary/[0.03] border border-text-primary/[0.05] text-text-primary/40"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Action Link Footer */}
-                    <div className="mt-auto pt-3 flex items-center justify-between w-full border-t border-text-primary/[0.04]">
-                      <span
-                        className={`text-[11px] font-semibold tracking-widest uppercase transition-colors ${
-                          isGreyedOut
-                            ? "text-text-tertiary flex items-center gap-1"
-                            : "text-text-primary/30 group-hover:text-text-primary"
-                        }`}
-                      >
-                        {isGreyedOut ? "Requires Desktop Screen" : "Launch Utility →"}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
-      </motion.section>
-
-      {/* ── Verified Infrastructure Strip ── */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
-        className="flex flex-wrap justify-center gap-6 sm:gap-12 text-[11px] font-mono text-text-primary/40 tracking-wider w-full max-w-4xl pt-6 border-t border-border-subtle"
-      >
-        <span className="flex items-center gap-1.5">
-          <ShieldCheck size={14} className="text-text-primary/60" />
-          100% PRIVATE
-        </span>
-        <span className="flex items-center gap-1.5">
-          <HardDrive size={14} className="text-text-primary/60" />
-          UNLIMITED RAM SIZES
-        </span>
-        <span className="flex items-center gap-1.5">
-          <WifiOff size={14} className="text-text-primary/60" />
-          OFFLINE READY
-        </span>
-        <span className="flex items-center gap-1.5">
-          <Zap size={14} className="text-text-primary/60" />
-          WASM & WEB AUDIO
-        </span>
-      </motion.section>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </section>
     </div>
   );
 }
