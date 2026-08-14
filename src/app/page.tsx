@@ -141,10 +141,19 @@ export default function Home() {
       {/* ── Headline & Overview ── */}
       <section className="w-full text-left pt-2 sm:pt-10 border-b border-border-subtle pb-8">
         <div className="flex flex-col gap-3 max-w-3xl">
-          <div className="flex items-center gap-2 text-xs font-mono text-text-tertiary uppercase tracking-wider">
-            <span>Media & Document Suite</span>
-            <span>•</span>
-            <span>Client-Side Engine</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-xs font-mono text-text-tertiary uppercase tracking-wider">
+              <span>Media & Document Suite</span>
+              <span>•</span>
+              <span>Client-Side Engine</span>
+            </div>
+
+            <button
+              onClick={() => window.dispatchEvent(new Event("open-system-tour"))}
+              className="text-xs font-mono text-text-secondary hover:text-text-primary underline underline-offset-4 cursor-pointer"
+            >
+              System Guide →
+            </button>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-text-primary">

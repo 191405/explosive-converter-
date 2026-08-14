@@ -56,6 +56,15 @@ export function CommandPalette() {
                 <Command.Empty className="py-6 text-center text-sm text-text-secondary">
                   No tools found.
                 </Command.Empty>
+                <Command.Group heading="Help & Architecture" className="text-xs font-mono text-text-tertiary px-2 py-1 uppercase tracking-wider mb-2">
+                  <Command.Item
+                    onSelect={() => runCommand(() => window.dispatchEvent(new Event("open-system-tour")))}
+                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm text-text-primary aria-selected:bg-text-primary/10 cursor-pointer transition-colors"
+                  >
+                    <FileText size={16} className="text-text-secondary" />
+                    Architecture & System Guide
+                  </Command.Item>
+                </Command.Group>
                 <Command.Group heading="Tools" className="text-xs font-mono text-text-tertiary px-2 py-1 uppercase tracking-wider mb-2">
                   <Command.Item
                     onSelect={() => runCommand(() => router.push("/"))}
