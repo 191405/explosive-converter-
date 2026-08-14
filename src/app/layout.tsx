@@ -20,10 +20,67 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_URL = "https://explosivetools.dpdns.org";
+
 export const metadata: Metadata = {
-  title: "Explosive Converter — Client-Side File Tools",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Explosive Converter — Client-Side File Tools & Media Processing",
+    template: "%s | Explosive Tools",
+  },
   description:
-    "Lightning-fast, privacy-first file conversion powered by WebAssembly. Merge PDFs, convert images, and compress videos — all in your browser.",
+    "Lightning-fast, 100% private in-browser media converter and document suite powered by WebAssembly. Compress videos, transcode images, convert audio, trim waveforms, merge PDFs, and record screens with zero server uploads.",
+  keywords: [
+    "file converter",
+    "client-side converter",
+    "video compressor",
+    "pdf merger",
+    "pdf splitter",
+    "audio converter",
+    "waveform trimmer",
+    "image transcode",
+    "screen recorder",
+    "ffmpeg wasm",
+    "private file tools",
+    "free online converter",
+    "offline converter",
+  ],
+  authors: [{ name: "Explosive Tools" }],
+  creator: "Explosive Tools",
+  publisher: "Explosive Tools",
+  applicationName: "Explosive Converter",
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: SITE_URL,
+    siteName: "Explosive Tools",
+    title: "Explosive Converter — 100% Private Client-Side File Suite",
+    description:
+      "Convert audio, compress video, transcode images, manipulate PDFs, and record screens with zero server uploads. Powered by WebAssembly.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Explosive Converter — Client-Side File Tools",
+    description:
+      "Privacy-first in-memory media processing. Convert video, audio, images, and PDFs directly in your browser with zero uploads.",
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
@@ -31,11 +88,41 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Explosive Converter",
+    "url": "https://explosivetools.dpdns.org",
+    "description": "100% private, client-side WebAssembly media converter and document processing suite. Convert audio, compress video, transcode images, and manipulate PDFs in memory.",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+    },
+    "featureList": [
+      "Zero-Server File Processing",
+      "Offline Capable WebAssembly Execution",
+      "Video Compression with CRF Controls",
+      "Audio Extraction and Transcoding",
+      "Lossless Waveform Audio Trimming",
+      "PDF Merge, Split and Rotation",
+      "High-Frame-Rate Screen and Camera Recording",
+    ],
+  };
+
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full`}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="min-h-full flex font-sans" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <CinematicBackground />
