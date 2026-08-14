@@ -1,34 +1,38 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import { useDropzone, type DropzoneOptions, type FileRejection } from "react-dropzone";
 import { motion, AnimatePresence } from "framer-motion";
+import { UploadCloud } from "lucide-react";
+import { toast } from "sonner";
 
 interface NeoDropzoneProps extends Omit<DropzoneOptions, "onDrop"> {
   onDropAccepted: (files: File[]) => void;
   label?: string;
   sublabel?: string;
   icon?: React.ReactNode;
+  currentCount?: number;
 }
 
 export function NeoDropzone({
   onDropAccepted,
-  label = "Drop files here",
+  label = "Drop files here or browse",
   sublabel,
   icon,
+  currentCount,
   ...props
 }: NeoDropzoneProps) {
-  const [fileCount, setFileCount] = useState(0);
-
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
       if (acceptedFiles.length > 0) {
-        setFileCount((prev) => prev + acceptedFiles.length);
         onDropAccepted(acceptedFiles);
       }
       if (fileRejections.length > 0) {
-        console.error("Rejected files:", fileRejections);
-        alert("Some files were rejected. Please check the file types.");
+        console.warn("Rejected files:", fileRejections);
+        const reason = fileRejections[0]?.errors[0]?.message || "Unsupported file format.";
+        toast.error("File rejected", {
+          description: `${reason} Please check the supported formats.`,
+        });
       }
     },
     [onDropAccepted]
@@ -42,12 +46,17 @@ export function NeoDropzone({
   return (
     <motion.div
       {...(getRootProps() as any)}
-      whileHover={{ scale: 1.01 }}
-      whileTap={{ scale: 0.99 }}
+      whileHover={{ scale: 1.005 }}
+      whileTap={{ scale: 0.995 }}
       className={`
         w-full max-w-2xl mx-auto p-8 sm:p-12 flex flex-col items-center justify-center
-        cursor-pointer transition-all duration-300 relative overflow-hidden glass-panel
-        ${isDragActive ? "border-text-primary/40 bg-text-primary/[0.05]" : "border-text-primary/[0.06]"}
+        cursor-pointer transition-all duration-200 relative overflow-hidden rounded-2xl
+        border-2 border-dashed
+        ${
+          isDragActive
+            ? "border-text-primary bg-text-primary/[0.08] shadow-lg"
+            : "border-border-subtle bg-bg-surface/60 hover:border-border-focus hover:bg-bg-surface"
+        }
       `}
     >
       <input {...getInputProps()} />
@@ -59,35 +68,35 @@ export function NeoDropzone({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-gradient-to-b from-text-primary/[0.05] to-transparent pointer-events-none"
+            className="absolute inset-0 bg-gradient-to-b from-text-primary/[0.06] to-transparent pointer-events-none"
           />
         )}
       </AnimatePresence>
 
       <motion.div
-        animate={{ y: isDragActive ? -5 : 0 }}
-        className={`mb-4 transition-colors duration-300 ${isDragActive ? "text-text-primary" : "text-text-primary/40"}`}
+        animate={{ y: isDragActive ? -4 : 0 }}
+        className={`mb-3 p-3 rounded-2xl transition-colors duration-200 ${
+          isDragActive
+            ? "bg-text-primary text-bg-base"
+            : "bg-text-primary/[0.04] text-text-primary/70 border border-border-subtle"
+        }`}
       >
-        {icon || (
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="17 8 12 3 7 8" />
-            <line x1="12" y1="3" x2="12" y2="15" />
-          </svg>
-        )}
+        {icon || <UploadCloud size={28} strokeWidth={1.75} />}
       </motion.div>
-      <h3 className={`text-xl font-semibold tracking-tight transition-colors duration-300 ${isDragActive ? "text-text-primary" : "text-text-primary/80"}`}>
-        {isDragActive ? "Drop to add files" : label}
+
+      <h3 className="text-base sm:text-lg font-bold tracking-tight text-text-primary text-center">
+        {isDragActive ? "Release to process files" : label}
       </h3>
+
       {sublabel && (
-        <p className="text-sm text-text-primary/40 mt-2 font-light">
+        <p className="text-xs text-text-tertiary mt-1.5 font-mono text-center max-w-md px-2">
           {sublabel}
         </p>
       )}
 
-      {fileCount > 0 && (
-        <span className="absolute top-4 right-4 bg-text-primary/10 text-text-primary text-xs px-3 py-1 rounded-full font-medium border border-text-primary/10 backdrop-blur-md">
-          {fileCount} file{fileCount !== 1 ? "s" : ""} added
+      {typeof currentCount === "number" && currentCount > 0 && (
+        <span className="mt-3 text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-text-primary/10 text-text-primary border border-border-subtle">
+          {currentCount} file{currentCount !== 1 ? "s" : ""} selected
         </span>
       )}
     </motion.div>
