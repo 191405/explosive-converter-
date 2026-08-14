@@ -101,10 +101,15 @@ export function CommandPalette() {
                   </Command.Item>
                   <Command.Item
                     onSelect={() => runCommand(() => router.push("/record"))}
-                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm text-text-primary aria-selected:bg-text-primary/10 cursor-pointer transition-colors"
+                    className="flex items-center justify-between px-3 py-3 rounded-lg text-sm text-text-primary aria-selected:bg-text-primary/10 cursor-pointer transition-colors"
                   >
-                    <Video size={16} className="text-text-secondary" />
-                    Screen Recorder
+                    <div className="flex items-center gap-3">
+                      <Video size={16} className="text-text-secondary" />
+                      Screen Recorder
+                    </div>
+                    <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-text-primary/5 text-text-tertiary">
+                      Desktop
+                    </span>
                   </Command.Item>
                 </Command.Group>
               </Command.List>

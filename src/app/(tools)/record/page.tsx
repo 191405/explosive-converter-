@@ -23,6 +23,7 @@ export default function ScreenRecordPage() {
   const [sourceType, setSourceType] = useState<"screen" | "webcam">("screen");
   const [enableMic, setEnableMic] = useState(true);
   const [enableSystemAudio, setEnableSystemAudio] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -45,7 +46,11 @@ export default function ScreenRecordPage() {
 
   // Clean up streams on unmount
   useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
     return () => {
+      window.removeEventListener("resize", checkMobile);
       stopAllMedia();
     };
   }, []);
@@ -227,15 +232,24 @@ export default function ScreenRecordPage() {
   return (
     <div className="w-full max-w-4xl flex flex-col items-center gap-10">
       {/* Header */}
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl sm:text-5xl font-black text-glow tracking-tight flex items-center justify-center gap-3">
-          <Video className="w-9 h-9 sm:w-11 sm:h-11" strokeWidth={1.75} />
+      <div className="text-center space-y-2 sm:space-y-4">
+        <h1 className="text-3xl sm:text-5xl font-black text-glow tracking-tight flex items-center justify-center gap-3">
+          <Video className="w-8 h-8 sm:w-11 sm:h-11" strokeWidth={1.75} />
           Screen & Camera Studio
         </h1>
-        <p className="text-text-primary/50 font-light text-lg max-w-2xl mx-auto">
+        <p className="text-text-primary/50 font-light text-sm sm:text-lg max-w-2xl mx-auto px-2">
           Record screen captures, presentation windows, or webcam with crystal-clear audio directly to WebM/MP4.
         </p>
       </div>
+
+      {isMobile && (
+        <div className="w-full max-w-xl p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs flex items-center gap-3">
+          <Monitor size={18} className="shrink-0 text-amber-400" />
+          <span>
+            <strong>Desktop Notice:</strong> Full desktop screen and application window capture requires a desktop browser. On mobile devices, camera recording is available.
+          </span>
+        </div>
+      )}
 
       {!stream && !downloadUrl ? (
         <div className="w-full max-w-xl glass-panel p-8 flex flex-col gap-6">

@@ -3,17 +3,17 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { FileDown, Image, FileText, Zap, Search, Music, Scissors, Video } from "lucide-react";
+import { FileDown, Image, FileText, Zap, Search, Music, Scissors, Video, Monitor } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home", shortLabel: "Home", icon: Zap },
   { href: "/pdf", label: "PDF Studio", shortLabel: "PDF", icon: FileText },
-  { href: "/image", label: "Image Convert", shortLabel: "Image", icon: Image },
-  { href: "/compress", label: "Video Compress", shortLabel: "Video", icon: FileDown },
-  { href: "/audio", label: "Audio Convert", shortLabel: "Audio", icon: Music },
+  { href: "/image", label: "Image Transcoder", shortLabel: "Image", icon: Image },
+  { href: "/compress", label: "Video Compressor", shortLabel: "Video", icon: FileDown },
+  { href: "/audio", label: "Audio Converter", shortLabel: "Audio", icon: Music },
   { href: "/trim", label: "Audio Trimmer", shortLabel: "Trim", icon: Scissors },
-  { href: "/record", label: "Screen Recorder", shortLabel: "Record", icon: Video },
+  { href: "/record", label: "Screen Recorder", shortLabel: "Record", icon: Video, desktopOnly: true },
 ];
 
 export function Sidebar() {
@@ -24,17 +24,22 @@ export function Sidebar() {
       {/* ── Desktop Floating Sidebar ── */}
       <aside className="hidden md:flex flex-col w-[260px] h-[calc(100vh-48px)] fixed left-6 top-6 p-5 glass-panel z-40 justify-between">
         <div>
-          <Link href="/" className="flex items-center gap-3 mb-10 pl-2 group">
+          <Link href="/" className="flex items-center gap-3 mb-8 pl-2 group">
             <motion.div 
               whileHover={{ scale: 1.05, rotate: 10 }}
               whileTap={{ scale: 0.95 }}
-              className="p-2 rounded-xl bg-text-primary text-bg-base transition-all"
+              className="p-2 rounded-xl bg-text-primary text-bg-base transition-all shadow-md"
             >
               <Zap size={20} className="fill-current" />
             </motion.div>
-            <span className="text-lg font-bold tracking-tight text-text-primary group-hover:text-glow transition-all">
-              Explosive
-            </span>
+            <div>
+              <span className="text-lg font-bold tracking-tight text-text-primary group-hover:text-glow transition-all block leading-tight">
+                Explosive
+              </span>
+              <span className="text-[10px] font-mono text-text-tertiary tracking-widest uppercase">
+                Studio Suite
+              </span>
+            </div>
           </Link>
 
           <nav className="flex flex-col gap-1.5">
@@ -44,14 +49,21 @@ export function Sidebar() {
               return (
                 <Link key={item.href} href={item.href} className="relative group">
                   <div
-                    className={`flex items-center gap-3.5 px-3.5 py-2.5 rounded-lg transition-colors relative z-10 ${
+                    className={`flex items-center justify-between px-3.5 py-2.5 rounded-lg transition-colors relative z-10 ${
                       isActive ? "text-text-primary font-semibold" : "text-[#888888] hover:text-text-primary font-medium"
                     }`}
                   >
-                    <Icon size={17} strokeWidth={isActive ? 2 : 1.5} />
-                    <span className="text-sm">
-                      {item.label}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <Icon size={17} strokeWidth={isActive ? 2 : 1.5} />
+                      <span className="text-sm">
+                        {item.label}
+                      </span>
+                    </div>
+                    {item.desktopOnly && (
+                      <span className="text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-text-primary/5 text-text-tertiary border border-border-subtle">
+                        Desktop
+                      </span>
+                    )}
                   </div>
                   {isActive && (
                     <motion.div
@@ -67,7 +79,7 @@ export function Sidebar() {
         </div>
 
         <div className="flex flex-col gap-4">
-          <div className="pt-6 border-t border-border-subtle flex items-center justify-between">
+          <div className="pt-5 border-t border-border-subtle flex items-center justify-between">
             <div className="text-[10px] font-mono text-text-tertiary uppercase tracking-[0.2em]">
               100% Client-Side
             </div>
@@ -123,6 +135,8 @@ export function Sidebar() {
                 className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl shrink-0 transition-all ${
                   isActive
                     ? "text-text-primary font-semibold bg-text-primary/10"
+                    : item.desktopOnly
+                    ? "text-text-tertiary opacity-60"
                     : "text-text-secondary hover:text-text-primary"
                 }`}
               >
@@ -130,6 +144,11 @@ export function Sidebar() {
                 <span className="text-xs tracking-tight whitespace-nowrap">
                   {item.shortLabel}
                 </span>
+                {item.desktopOnly && (
+                  <span className="text-[8px] font-mono bg-text-primary/10 px-1 py-0.2 rounded text-text-tertiary">
+                    PC
+                  </span>
+                )}
                 {isActive && (
                   <motion.div
                     layoutId="mobile-pill-active"
