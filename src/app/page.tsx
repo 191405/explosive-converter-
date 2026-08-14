@@ -224,26 +224,26 @@ export default function Home() {
                     }`}
                   >
                     <div
-                      className={`h-full p-5 sm:p-6 rounded-xl border transition-all duration-200 flex flex-col justify-between gap-5 ${
+                      className={`h-full p-5 sm:p-6 rounded-2xl border transition-all duration-200 flex flex-col justify-between gap-5 relative overflow-hidden ${
                         isGreyedOut
-                          ? "bg-bg-surface/30 border-border-subtle opacity-40 grayscale"
-                          : "bg-bg-surface/80 border-border-subtle hover:border-border-focus hover:bg-bg-surface-hover shadow-sm"
+                          ? "bg-bg-surface/30 border-border-subtle opacity-40 grayscale shadow-none"
+                          : "bg-bg-surface border-border-focus/40 hover:border-text-primary/40 hover:bg-bg-surface-hover shadow-md hover:shadow-xl hover:-translate-y-0.5"
                       }`}
                     >
                       {/* Top Info */}
-                      <div className="flex flex-col gap-3">
+                      <div className="flex flex-col gap-3.5">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="p-2 rounded-lg bg-text-primary/[0.04] border border-border-subtle text-text-primary">
-                              <Icon size={18} strokeWidth={1.75} />
+                            <div className="p-2.5 rounded-xl bg-text-primary text-bg-base font-bold shadow-sm group-hover:scale-105 transition-transform">
+                              <Icon size={18} strokeWidth={2} />
                             </div>
-                            <h3 className="text-base font-semibold tracking-tight text-text-primary">
+                            <h3 className="text-base font-bold tracking-tight text-text-primary group-hover:text-glow transition-all">
                               {tool.title}
                             </h3>
                           </div>
 
                           {tool.desktopOnly && (
-                            <span className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-text-primary/5 text-text-tertiary border border-border-subtle">
+                            <span className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md bg-text-primary/5 text-text-tertiary border border-border-subtle">
                               <Monitor size={10} />
                               {isMobile ? "Desktop Only" : "Desktop"}
                             </span>
@@ -255,19 +255,29 @@ export default function Home() {
                         </p>
                       </div>
 
-                      {/* Technical Footer Metadata */}
-                      <div className="pt-3 border-t border-border-subtle flex flex-col gap-2">
-                        <div className="flex items-center justify-between text-[11px] font-mono text-text-tertiary">
-                          <span>Engine: <span className="text-text-secondary">{tool.engine}</span></span>
+                      {/* Technical Footer & Action CTA */}
+                      <div className="pt-4 border-t border-border-subtle flex flex-col gap-3">
+                        <div className="flex flex-col gap-1 text-[11px] font-mono text-text-tertiary">
+                          <div className="flex items-center justify-between">
+                            <span>Engine:</span>
+                            <span className="text-text-secondary truncate max-w-[200px]">{tool.engine}</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span>Formats:</span>
+                            <span className="text-text-secondary truncate max-w-[200px]">{tool.supportedFormats}</span>
+                          </div>
                         </div>
-                        <div className="flex items-center justify-between text-[11px] font-mono text-text-tertiary">
-                          <span>Formats: <span className="text-text-secondary">{tool.supportedFormats}</span></span>
-                          <span className={`inline-flex items-center gap-1 font-sans text-xs font-medium transition-colors ${
-                            isGreyedOut ? "text-text-tertiary" : "text-text-primary group-hover:underline"
+
+                        {/* Distinct Clickable Button Affordance */}
+                        <div className="pt-2 flex items-center justify-end">
+                          <div className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wide flex items-center gap-1.5 transition-all ${
+                            isGreyedOut
+                              ? "bg-text-primary/5 text-text-tertiary border border-border-subtle"
+                              : "bg-text-primary text-bg-base shadow-md group-hover:bg-text-primary/90 group-hover:gap-2"
                           }`}>
-                            {isGreyedOut ? "Requires Desktop" : "Open"}
-                            {!isGreyedOut && <ArrowRight size={12} />}
-                          </span>
+                            <span>{isGreyedOut ? "Desktop Required" : "Launch Utility"}</span>
+                            {!isGreyedOut && <ArrowRight size={13} strokeWidth={2.5} />}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -278,6 +288,29 @@ export default function Home() {
           </div>
         ))}
       </section>
+
+      {/* ── Footer / Suggestions Bar ── */}
+      <footer className="w-full pt-8 pb-4 border-t border-border-subtle flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-text-tertiary">
+        <div>
+          <span>Explosive Converter • 100% Client-Side Suite</span>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => window.dispatchEvent(new Event("open-system-tour"))}
+            className="hover:text-text-primary transition-colors cursor-pointer"
+          >
+            System Guide
+          </button>
+          <span>•</span>
+          <button
+            onClick={() => window.dispatchEvent(new Event("open-feedback-modal"))}
+            className="hover:text-text-primary transition-colors cursor-pointer underline underline-offset-4 font-semibold text-text-secondary"
+          >
+            Send Feedback & Suggestions
+          </button>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -78,13 +78,21 @@ export function Sidebar() {
           </nav>
         </div>
 
-        <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-2">
           <button
             onClick={() => window.dispatchEvent(new Event("open-system-tour"))}
             className="flex items-center gap-2 px-3 py-2 text-xs rounded-lg text-text-secondary hover:text-text-primary hover:bg-text-primary/5 transition-colors border border-border-subtle cursor-pointer text-left"
           >
             <FileText size={14} className="text-text-tertiary" />
             <span>Architecture & Guide</span>
+          </button>
+
+          <button
+            onClick={() => window.dispatchEvent(new Event("open-feedback-modal"))}
+            className="flex items-center gap-2 px-3 py-2 text-xs rounded-lg text-text-secondary hover:text-text-primary hover:bg-text-primary/5 transition-colors border border-border-subtle cursor-pointer text-left"
+          >
+            <Zap size={14} className="text-text-tertiary" />
+            <span>Suggest & Feedback</span>
           </button>
 
           <button
@@ -98,7 +106,7 @@ export function Sidebar() {
             <kbd className="font-mono bg-bg-surface px-1.5 py-0.5 rounded border border-border-subtle">⌘K</kbd>
           </button>
 
-          <div className="pt-3 border-t border-border-subtle flex items-center justify-between">
+          <div className="pt-2.5 border-t border-border-subtle flex items-center justify-between">
             <div className="text-[10px] font-mono text-text-tertiary uppercase tracking-[0.2em]">
               100% Client-Side
             </div>

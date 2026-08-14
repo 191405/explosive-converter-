@@ -7,6 +7,7 @@ import { CinematicBackground } from "@/components/cinematic-bg";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CommandPalette } from "@/components/command-palette";
 import { OnboardingTutorial } from "@/components/onboarding-tutorial";
+import { FeedbackModal } from "@/components/feedback-modal";
 import { Toaster } from "sonner";
 
 const geistSans = Geist({
@@ -48,6 +49,7 @@ export default function RootLayout({
           </div>
           <CommandPalette />
           <OnboardingTutorial />
+          <FeedbackModal />
           <Toaster position="bottom-right" theme="system" richColors />
         </ThemeProvider>
       </body>

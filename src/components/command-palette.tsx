@@ -64,6 +64,13 @@ export function CommandPalette() {
                     <FileText size={16} className="text-text-secondary" />
                     Architecture & System Guide
                   </Command.Item>
+                  <Command.Item
+                    onSelect={() => runCommand(() => window.dispatchEvent(new Event("open-feedback-modal")))}
+                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm text-text-primary aria-selected:bg-text-primary/10 cursor-pointer transition-colors"
+                  >
+                    <Zap size={16} className="text-text-secondary" />
+                    Send Suggestion / Feedback
+                  </Command.Item>
                 </Command.Group>
                 <Command.Group heading="Tools" className="text-xs font-mono text-text-tertiary px-2 py-1 uppercase tracking-wider mb-2">
                   <Command.Item
