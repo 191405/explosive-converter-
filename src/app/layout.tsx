@@ -40,8 +40,8 @@ export default function RootLayout({
           <Sidebar />
           
           {/* Main Content Area */}
-          <div className="flex-1 flex flex-col md:ml-[300px] pb-32 md:pb-0 min-h-screen relative z-10">
-            <main className="flex-1 flex flex-col items-center px-6 py-12 w-full max-w-5xl mx-auto overflow-x-hidden">
+          <div className="flex-1 flex flex-col md:ml-[300px] pt-16 md:pt-0 pb-24 md:pb-12 min-h-screen relative z-10">
+            <main className="flex-1 flex flex-col items-center px-4 sm:px-6 py-6 md:py-12 w-full max-w-5xl mx-auto overflow-x-hidden">
               {children}
             </main>
           </div>

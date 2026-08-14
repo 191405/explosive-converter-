@@ -141,38 +141,38 @@ export default function AudioConvertPage() {
   return (
     <div className="w-full max-w-4xl flex flex-col items-center gap-10">
       {/* Header */}
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl sm:text-5xl font-black text-glow tracking-tight flex items-center justify-center gap-3">
-          <Music className="w-9 h-9 sm:w-11 sm:h-11" strokeWidth={1.75} />
+      <div className="text-center space-y-2 sm:space-y-4">
+        <h1 className="text-3xl sm:text-5xl font-black text-glow tracking-tight flex items-center justify-center gap-2.5">
+          <Music className="w-7 h-7 sm:w-11 sm:h-11" strokeWidth={1.75} />
           Audio Converter
         </h1>
-        <p className="text-text-primary/50 font-light text-lg max-w-2xl mx-auto">
-          Rip audio from any video (MP4, MKV, MOV) or convert between high-res audio formats with zero server uploads.
+        <p className="text-text-primary/50 font-light text-sm sm:text-lg max-w-2xl mx-auto px-2">
+          Rip audio from video or convert between high-res audio formats with zero uploads.
         </p>
       </div>
 
       {!ready ? (
-        <div className="glass-panel p-8 rounded-xl flex flex-col items-center gap-4 animate-pulse max-w-md w-full">
+        <div className="glass-panel p-6 sm:p-8 rounded-xl flex flex-col items-center gap-4 animate-pulse max-w-md w-full">
           <svg className="animate-spin text-text-primary/50" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
           </svg>
-          <p className="text-text-primary/50 font-medium tracking-wide text-sm">Loading FFmpeg WASM Audio Engine...</p>
+          <p className="text-text-primary/50 font-medium tracking-wide text-xs sm:text-sm">Loading FFmpeg WASM Audio Engine...</p>
         </div>
       ) : (
         <>
           {/* Main Controls Panel */}
-          <div className="w-full max-w-xl glass-panel p-6 flex flex-col gap-6">
+          <div className="w-full max-w-xl glass-panel p-4 sm:p-6 flex flex-col gap-4 sm:gap-6">
             {/* Format Selector */}
             <div>
-              <div className="flex justify-between items-center mb-3">
-                <label className="text-xs font-semibold text-text-primary/50 uppercase tracking-widest">
-                  Target Audio Format
+              <div className="flex justify-between items-center mb-2.5">
+                <label className="text-[11px] sm:text-xs font-semibold text-text-primary/50 uppercase tracking-widest">
+                  Target Format
                 </label>
-                <span className="text-[11px] font-mono text-text-primary/40 uppercase">
+                <span className="text-[10px] font-mono text-text-primary/40 uppercase">
                   {format === "wav" || format === "flac" ? "Lossless" : "Compressed"}
                 </span>
               </div>
-              <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 bg-text-primary/[0.03] p-1.5 rounded-lg border border-text-primary/[0.05]">
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 bg-text-primary/[0.03] p-1 rounded-lg border border-text-primary/[0.05]">
                 {(["mp3", "wav", "aac", "flac", "ogg", "m4a"] as AudioFormat[]).map((f) => (
                   <button
                     key={f}

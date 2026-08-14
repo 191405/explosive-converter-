@@ -91,12 +91,21 @@ body {
 /* Sleek Glass Panel */
 .glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(20px) saturate(1.2);
-  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
   border: 1px solid var(--glass-border);
   border-radius: 12px;
   box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  transform: translateZ(0);
+}
+
+@media (max-width: 768px) {
+  .glass-panel {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 12px -2px rgba(0, 0, 0, 0.15);
+  }
 }
 
 .glass-panel:hover {
@@ -185,6 +194,9 @@ body {
 }
 
 /* Scrollbar styling */
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 999px; }

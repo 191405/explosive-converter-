@@ -60,21 +60,21 @@ const itemVariants: any = {
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center w-full gap-24">
+    <div className="flex flex-col items-center w-full gap-12 sm:gap-20">
       {/* ── Hero ── */}
       <motion.section 
-        initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
-        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="text-center space-y-8 max-w-3xl pt-10 sm:pt-20"
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="text-center space-y-4 sm:space-y-6 max-w-3xl pt-4 sm:pt-16"
       >
-        <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-tight text-glow">
+        <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-tight text-glow">
           Client-Side<br />
           <span className="text-text-primary/40">Superpowers.</span>
         </h1>
-        <p className="text-lg md:text-xl text-text-primary/50 leading-relaxed font-light">
-          Lightning-fast, privacy-first file conversion powered by WebAssembly.
-          <br className="hidden md:block" />
+        <p className="text-base sm:text-xl text-text-primary/60 leading-relaxed font-light px-2">
+          Lightning-fast, privacy-first file tools powered by WebAssembly.
+          <br className="hidden sm:block" />
           No uploads. No servers. No limits.
         </p>
       </motion.section>
@@ -84,7 +84,7 @@ export default function Home() {
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-6 w-full"
       >
         {tools.map((tool) => {
           const Icon = tool.icon;
@@ -92,24 +92,24 @@ export default function Home() {
             <motion.div key={tool.href} variants={itemVariants} className="h-full">
               <Link href={tool.href} className="group block h-full outline-none">
                 <motion.div 
-                  whileHover={{ y: -4 }}
+                  whileHover={{ y: -3 }}
                   whileTap={{ scale: 0.98 }}
-                  className="glass-panel p-8 flex flex-col items-start gap-5 h-full cursor-pointer relative overflow-hidden"
+                  className="glass-panel p-5 sm:p-7 flex flex-col items-start gap-4 h-full cursor-pointer relative overflow-hidden"
                 >
-                  <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-text-primary/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                  <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-text-primary/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                   
-                  <div className="p-3 rounded-lg bg-text-primary/[0.03] border border-text-primary/[0.05] text-text-primary group-hover:bg-text-primary group-hover:text-bg-base transition-colors duration-300">
-                    <Icon size={24} strokeWidth={1.5} />
+                  <div className="p-2.5 rounded-lg bg-text-primary/[0.03] border border-text-primary/[0.05] text-text-primary group-hover:bg-text-primary group-hover:text-bg-base transition-colors duration-200">
+                    <Icon size={22} strokeWidth={1.5} />
                   </div>
                   
                   <div>
-                    <h2 className="text-xl font-bold tracking-tight mb-2">{tool.title}</h2>
-                    <p className="text-sm text-text-primary/50 leading-relaxed font-light">
+                    <h2 className="text-lg sm:text-xl font-bold tracking-tight mb-1.5">{tool.title}</h2>
+                    <p className="text-xs sm:text-sm text-text-primary/50 leading-relaxed font-light">
                       {tool.desc}
                     </p>
                   </div>
                   
-                  <span className="mt-auto text-xs font-semibold text-text-primary/30 group-hover:text-text-primary transition-colors tracking-widest uppercase">
+                  <span className="mt-auto text-[11px] font-semibold text-text-primary/30 group-hover:text-text-primary transition-colors tracking-widest uppercase pt-2">
                     Open Tool →
                   </span>
                 </motion.div>
@@ -123,22 +123,22 @@ export default function Home() {
       <motion.section 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.4, duration: 1 }}
-        className="flex flex-wrap justify-center gap-8 sm:gap-12 text-xs font-mono text-text-primary/40 tracking-wider w-full max-w-4xl"
+        transition={{ delay: 0.2, duration: 0.6 }}
+        className="flex flex-wrap justify-center gap-4 sm:gap-10 text-[11px] sm:text-xs font-mono text-text-primary/40 tracking-wider w-full max-w-4xl pt-4 border-t border-border-subtle"
       >
-        <span className="flex items-center gap-2">
+        <span className="flex items-center gap-1.5">
           <ShieldCheck size={14} className="text-text-primary/60" />
           100% PRIVATE
         </span>
-        <span className="flex items-center gap-2">
+        <span className="flex items-center gap-1.5">
           <HardDrive size={14} className="text-text-primary/60" />
           NO LIMITS
         </span>
-        <span className="flex items-center gap-2">
+        <span className="flex items-center gap-1.5">
           <WifiOff size={14} className="text-text-primary/60" />
           OFFLINE READY
         </span>
-        <span className="flex items-center gap-2">
+        <span className="flex items-center gap-1.5">
           <Zap size={14} className="text-text-primary/60" />
           WASM SPEED
         </span>
