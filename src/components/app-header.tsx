@@ -7,17 +7,9 @@ import {
   Zap,
   Search,
   Terminal,
-  HelpCircle,
-  MessageSquarePlus,
   Menu,
-  X,
-  LayoutGrid,
   ChevronDown,
-  ShieldCheck,
-  Radio,
-  Binary,
-  Video,
-  FileText,
+  LayoutGrid,
 } from "lucide-react";
 import { Sidebar, SIDEBAR_CATEGORIES } from "@/components/sidebar";
 
@@ -34,58 +26,72 @@ export function AppHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full bg-[#08090d]/95 backdrop-blur-md border-b border-white/[0.08] select-none">
-        <div className="flex items-center justify-between h-14 px-3 sm:px-6 max-w-7xl mx-auto">
-          {/* Brand & Category Navigation */}
-          <div className="flex items-center gap-3 sm:gap-5">
-            {/* Mobile / Global Sidebar Drawer Trigger */}
+      {/* Floating Minimalist Pill Header */}
+      <header className="sticky top-3 z-40 w-full px-3 sm:px-6 select-none">
+        <div className="max-w-5xl mx-auto flex items-center justify-between h-12 px-3 sm:px-5 rounded-full bg-[#0a0c12]/85 backdrop-blur-xl border border-white/[0.08] shadow-2xl shadow-black/80 transition-all">
+          
+          {/* Brand Mark */}
+          <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarDrawerOpen(true)}
-              className="p-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white border border-white/[0.07] transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="p-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white border border-white/[0.07] transition-all flex items-center gap-1.5 cursor-pointer"
               aria-label="Open tool directory sidebar"
             >
-              <Menu size={16} />
-              <span className="text-xs font-semibold font-sans hidden sm:inline">Directory</span>
+              <Menu size={14} />
+              <span className="text-[11px] font-semibold font-sans hidden sm:inline px-1">Directory</span>
             </button>
 
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="h-7 w-7 rounded-lg bg-amber-400 text-black flex items-center justify-center font-bold text-xs shadow-md shadow-amber-400/10 group-hover:bg-amber-300 transition-colors">
-                <Zap size={15} className="fill-current" />
+              <div className="h-6 w-6 rounded-full bg-amber-400 text-black flex items-center justify-center font-bold text-[11px] shadow-sm shadow-amber-400/20 group-hover:scale-105 transition-transform">
+                <Zap size={13} className="fill-current" />
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="text-sm font-semibold tracking-tight text-white font-sans group-hover:text-amber-300 transition-colors">
+                <span className="text-xs sm:text-sm font-semibold tracking-tight text-white font-sans group-hover:text-amber-300 transition-colors">
                   Explosive
                 </span>
-                <span className="text-[10px] font-mono text-zinc-400 font-medium px-1.5 py-0.5 rounded bg-white/[0.06] hidden xs:inline">
+                <span className="text-[9px] font-mono text-zinc-400 font-medium px-1.5 py-0.5 rounded-full bg-white/[0.06] hidden md:inline">
                   Studio
                 </span>
               </div>
             </Link>
+          </div>
 
-            {/* Desktop Category Dropdown Tab */}
-            <div className="relative hidden md:block">
+          {/* Center Navigation Links (Aethera Pill Style) */}
+          <nav className="hidden lg:flex items-center gap-1 text-[11px] font-medium text-zinc-400">
+            <Link
+              href="/"
+              className={`px-3 py-1 rounded-full transition-colors ${
+                pathname === "/" ? "text-white bg-white/[0.06]" : "hover:text-zinc-200"
+              }`}
+            >
+              Overview
+            </Link>
+
+            <span className="text-zinc-600 text-[9px]">•</span>
+
+            {/* Desktop Category Dropdown Trigger */}
+            <div className="relative">
               <button
                 onClick={() => setCategoryDropdownOpen(!categoryDropdownOpen)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.03] hover:bg-white/[0.07] text-zinc-300 hover:text-white border border-white/[0.06] transition-all text-xs font-sans cursor-pointer"
+                className="flex items-center gap-1 px-3 py-1 rounded-full hover:text-zinc-200 transition-colors cursor-pointer"
               >
-                <LayoutGrid size={13} className="text-amber-400" />
-                <span>Workstation Suites</span>
+                <span>Suites</span>
                 <ChevronDown
-                  size={13}
-                  className={`text-zinc-500 transition-transform duration-150 ${
-                    categoryDropdownOpen ? "rotate-180 text-amber-400" : ""
+                  size={11}
+                  className={`transition-transform duration-150 ${
+                    categoryDropdownOpen ? "rotate-180 text-amber-400" : "text-zinc-500"
                   }`}
                 />
               </button>
 
-              {/* Desktop Category Dropdown Flyout */}
+              {/* Desktop Category Flyout */}
               {categoryDropdownOpen && (
                 <>
                   <div
                     className="fixed inset-0 z-40"
                     onClick={() => setCategoryDropdownOpen(false)}
                   />
-                  <div className="absolute left-0 top-full mt-2 w-[520px] rounded-2xl bg-[#0c0d15] border border-white/[0.1] shadow-2xl shadow-black/80 p-3 z-50 grid grid-cols-2 gap-2 animate-in fade-in zoom-in-95 duration-100">
+                  <div className="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-[480px] rounded-2xl bg-[#0c0e15]/95 backdrop-blur-2xl border border-white/[0.1] shadow-2xl shadow-black/90 p-3 z-50 grid grid-cols-2 gap-2 animate-in fade-in zoom-in-95 duration-100">
                     {SIDEBAR_CATEGORIES.map((cat) => {
                       const CatIcon = cat.icon;
                       return (
@@ -93,20 +99,20 @@ export function AppHeader() {
                           key={cat.id}
                           className="p-2.5 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:border-amber-400/30 hover:bg-white/[0.04] transition-all"
                         >
-                          <div className="flex items-center gap-2 mb-1.5 text-xs font-semibold text-zinc-200">
-                            <CatIcon size={14} className="text-amber-400" />
+                          <div className="flex items-center gap-1.5 mb-1.5 text-xs font-semibold text-zinc-200">
+                            <CatIcon size={13} className="text-amber-400" />
                             <span>{cat.name}</span>
                           </div>
                           <div className="flex flex-col gap-1">
-                            {cat.items.map((tool) => (
+                            {cat.items.slice(0, 3).map((item) => (
                               <Link
-                                key={tool.href}
-                                href={tool.href}
+                                key={item.href}
+                                href={item.href}
                                 onClick={() => setCategoryDropdownOpen(false)}
-                                className="flex items-center justify-between px-2 py-1 rounded text-[11px] text-zinc-400 hover:text-white hover:bg-white/[0.05] transition-colors"
+                                className="text-[11px] text-zinc-400 hover:text-white truncate flex items-center justify-between"
                               >
-                                <span className="truncate">{tool.label}</span>
-                                <span className="text-[9px] font-mono text-zinc-500">{tool.tag}</span>
+                                <span>{item.label}</span>
+                                <span className="text-[9px] font-mono text-zinc-500">{item.tag}</span>
                               </Link>
                             ))}
                           </div>
@@ -118,107 +124,69 @@ export function AppHeader() {
               )}
             </div>
 
-            {/* Quick Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-1">
-              <Link
-                href="/metadata"
-                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
-                  pathname === "/metadata"
-                    ? "text-white bg-white/[0.08]"
-                    : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.03]"
-                }`}
-              >
-                Forensics
-              </Link>
-              <Link
-                href="/dsp"
-                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
-                  pathname === "/dsp"
-                    ? "text-white bg-white/[0.08]"
-                    : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.03]"
-                }`}
-              >
-                Spatial DSP
-              </Link>
-              <Link
-                href="/hex-diff"
-                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
-                  pathname === "/hex-diff"
-                    ? "text-white bg-white/[0.08]"
-                    : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.03]"
-                }`}
-              >
-                Hex Diff
-              </Link>
-              <Link
-                href="/crypto-vault"
-                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
-                  pathname === "/crypto-vault"
-                    ? "text-white bg-white/[0.08]"
-                    : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.03]"
-                }`}
-              >
-                Crypto Vault
-              </Link>
-            </nav>
-          </div>
+            <span className="text-zinc-600 text-[9px]">•</span>
 
-          {/* Global Command Search Bar & Actions */}
+            <a href="/#guidelines" className="px-3 py-1 rounded-full hover:text-zinc-200 transition-colors">
+              Guidelines
+            </a>
+
+            <span className="text-zinc-600 text-[9px]">•</span>
+
+            <a href="/#comparison" className="px-3 py-1 rounded-full hover:text-zinc-200 transition-colors">
+              Security
+            </a>
+
+            <span className="text-zinc-600 text-[9px]">•</span>
+
+            <a href="/#faq" className="px-3 py-1 rounded-full hover:text-zinc-200 transition-colors">
+              FAQ
+            </a>
+          </nav>
+
+          {/* Quick Actions (Right) */}
           <div className="flex items-center gap-2">
             <button
-              onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))}
-              className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-zinc-400 hover:text-zinc-200 border border-white/[0.07] transition-all text-xs font-sans cursor-pointer justify-between"
+              onClick={() =>
+                document.dispatchEvent(
+                  new KeyboardEvent("keydown", { key: "k", metaKey: true })
+                )
+              }
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.04] hover:bg-white/[0.08] text-zinc-400 hover:text-zinc-200 border border-white/[0.06] text-[11px] font-sans transition-all cursor-pointer"
+              title="Search tool registry (⌘K)"
             >
-              <div className="flex items-center gap-1.5">
-                <Search size={13} className="text-zinc-500" />
-                <span className="hidden sm:inline">Search directory...</span>
-                <span className="sm:hidden">Search</span>
-              </div>
-              <kbd className="hidden sm:inline text-[10px] font-mono bg-white/[0.06] text-zinc-400 px-1.5 py-0.5 rounded">
+              <Search size={12} className="text-amber-400/80" />
+              <span className="hidden sm:inline">Search</span>
+              <kbd className="hidden sm:inline-block text-[9px] font-mono text-zinc-500 px-1 rounded bg-white/[0.04]">
                 ⌘K
               </kbd>
             </button>
 
             <button
-              onClick={() => window.dispatchEvent(new Event("toggle-console-drawer"))}
-              className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 hover:text-white border border-white/[0.07] transition-colors text-xs font-mono cursor-pointer"
-              title="Toggle Console (`~`)"
+              onClick={() => {
+                const event = new CustomEvent("toggle-console");
+                window.dispatchEvent(event);
+              }}
+              className="p-1.5 rounded-full bg-white/[0.03] hover:bg-white/[0.07] text-zinc-400 hover:text-white border border-white/[0.05] transition-colors cursor-pointer"
+              title="Toggle Hardware Terminal (~)"
             >
-              <Terminal size={12} className="text-amber-400" />
-              <span>Terminal</span>
-            </button>
-
-            <button
-              onClick={() => window.dispatchEvent(new Event("open-system-tour"))}
-              className="p-2 sm:p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-zinc-400 hover:text-white border border-white/[0.07] transition-colors cursor-pointer"
-              title="System Guidelines & Instructions"
-            >
-              <HelpCircle size={14} />
-            </button>
-
-            <button
-              onClick={() => window.dispatchEvent(new Event("open-feedback-modal"))}
-              className="p-2 sm:p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-zinc-400 hover:text-white border border-white/[0.07] transition-colors cursor-pointer"
-              title="Send Feedback"
-            >
-              <MessageSquarePlus size={14} />
+              <Terminal size={13} />
             </button>
           </div>
         </div>
       </header>
 
-      {/* ── Slide-Over Sidebar Drawer (Mobile & Desktop) ── */}
+      {/* Slide-over Mobile & Global Sidebar Drawer */}
       {sidebarDrawerOpen && (
         <div className="fixed inset-0 z-50 flex">
-          {/* Backdrop */}
+          {/* Backdrop Blur Overlay */}
           <div
             className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
             onClick={() => setSidebarDrawerOpen(false)}
           />
 
-          {/* Drawer Container */}
-          <div className="relative w-full max-w-[320px] sm:max-w-[360px] h-full z-10 shadow-2xl animate-in slide-in-from-left duration-200">
-            <Sidebar isOpen={sidebarDrawerOpen} onClose={() => setSidebarDrawerOpen(false)} />
+          {/* Drawer Content Panel */}
+          <div className="relative w-full max-w-sm bg-[#08090d] border-r border-white/[0.08] h-full shadow-2xl flex flex-col z-10 animate-in slide-in-from-left duration-200">
+            <Sidebar onClose={() => setSidebarDrawerOpen(false)} />
           </div>
         </div>
       )}

@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ShieldCheck,
   Radio,
@@ -36,6 +37,8 @@ import {
   Server,
   Layers,
   FileCode,
+  ShieldAlert,
+  Flame,
 } from "lucide-react";
 import { SIDEBAR_CATEGORIES } from "@/components/sidebar";
 
@@ -43,7 +46,7 @@ export default function HomePage() {
   const [activeCategoryTab, setActiveCategoryTab] = useState<string>("all");
   const [catalogSearch, setCatalogSearch] = useState<string>("");
 
-  // Flatten all tools with their category metadata
+  // Flatten all tools with category metadata
   const allTools = useMemo(() => {
     return SIDEBAR_CATEGORIES.flatMap((cat) =>
       cat.items.map((tool) => ({
@@ -69,305 +72,277 @@ export default function HomePage() {
   }, [allTools, activeCategoryTab, catalogSearch]);
 
   return (
-    <div className="flex flex-col gap-12 sm:gap-16 w-full max-w-6xl mx-auto py-4 sm:py-8 font-sans text-zinc-300">
-      {/* ── 1. Hero & Value Proposition Section ── */}
-      <section className="flex flex-col items-center text-center gap-6 pt-4 pb-6">
-        {/* Architecture Pill */}
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-zinc-300 text-xs font-mono">
-          <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
-          <span>Client-Side WebAssembly SIMD Architecture</span>
-          <span className="text-zinc-500">•</span>
+    <div className="flex flex-col gap-16 sm:gap-24 w-full max-w-5xl mx-auto py-6 sm:py-12 font-sans text-zinc-300">
+      
+      {/* ── 1. Ethereal Hero Section (Aethera & Sukoya Style) ── */}
+      <section className="relative flex flex-col items-center text-center gap-8 pt-4 pb-4">
+        
+        {/* Subtle Ambient Golden / Tungsten Glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none -z-10" />
+
+        {/* Minimalist Micro-Badge */}
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-zinc-300 text-xs font-mono tracking-wide shadow-sm">
+          <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
+          <span>Client-Side SIMD Architecture</span>
+          <span className="text-zinc-600">·</span>
           <span className="text-amber-400 font-semibold">100% In-Memory Sandbox</span>
         </div>
 
-        {/* Main Headline */}
-        <div className="flex flex-col gap-3 max-w-3xl">
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.1]">
-            High-Performance Media & File Engineering Studio
+        {/* Cinematic Main Headline */}
+        <div className="flex flex-col gap-4 max-w-3xl">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-light tracking-tight text-white leading-[1.12]">
+            A New Standard in Local <br className="hidden sm:inline" />
+            <span className="font-semibold text-white">Media & Forensic Engineering</span>
           </h1>
-          <p className="text-sm sm:text-base text-zinc-400 leading-relaxed font-sans max-w-2xl mx-auto">
-            A comprehensive suite of client-side forensic, acoustic, visual, and cryptographic workstations. Process media, extract signals, scrub metadata, and transcode formats locally in browser memory.
+          <p className="text-sm sm:text-base text-zinc-400 leading-relaxed font-sans max-w-2xl mx-auto font-light">
+            Execute high-throughput media transformations, deep forensic telemetry, audio DSP, and cryptographic hashing natively on your device. Zero cloud staging. Zero telemetry.
           </p>
         </div>
 
-        {/* Action Controls */}
-        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+        {/* Floating Minimalist Action Pills */}
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
           <button
-            onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))}
-            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-bold text-xs sm:text-sm shadow-lg shadow-amber-400/15 transition-all cursor-pointer"
+            onClick={() =>
+              document.dispatchEvent(
+                new KeyboardEvent("keydown", { key: "k", metaKey: true })
+              )
+            }
+            className="flex items-center gap-2.5 px-6 py-3 rounded-full bg-amber-400 hover:bg-amber-300 text-black font-semibold text-xs sm:text-sm shadow-xl shadow-amber-400/20 transition-all hover:scale-[1.02] cursor-pointer"
           >
-            <Search size={16} />
-            <span>Search Tool Registry (⌘K)</span>
+            <Search size={15} />
+            <span>Search Workstations (⌘K)</span>
           </button>
 
           <a
             href="#guidelines"
-            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white/[0.05] hover:bg-white/[0.09] text-zinc-200 hover:text-white border border-white/[0.08] text-xs sm:text-sm font-semibold transition-all"
+            className="flex items-center gap-2 px-5 py-3 rounded-full bg-white/[0.05] hover:bg-white/[0.09] text-zinc-200 hover:text-white border border-white/[0.08] text-xs sm:text-sm font-medium transition-all backdrop-blur-md"
           >
-            <Info size={16} className="text-amber-400" />
+            <Info size={15} className="text-amber-400" />
             <span>Operating Guidelines</span>
           </a>
 
           <a
             href="#catalog"
-            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-200 border border-white/[0.05] text-xs sm:text-sm font-medium transition-all"
+            className="flex items-center gap-2 px-5 py-3 rounded-full bg-white/[0.02] hover:bg-white/[0.05] text-zinc-400 hover:text-zinc-200 border border-white/[0.05] text-xs sm:text-sm font-medium transition-all"
           >
-            <Layers size={16} />
-            <span>Browse Catalog ({allTools.length} Tools)</span>
+            <Layers size={15} />
+            <span>Browse Catalog ({allTools.length})</span>
           </a>
         </div>
 
-        {/* System Telemetry Metrics */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-4xl pt-4">
-          <div className="p-3.5 rounded-xl bg-[#0c0d14] border border-white/[0.06] flex flex-col items-center text-center">
-            <span className="text-xs font-mono text-zinc-500 uppercase">Server I/O</span>
-            <span className="text-lg font-bold text-white font-mono mt-0.5">0.00 B</span>
-            <span className="text-[10px] text-amber-400 mt-0.5">Zero Remote Transfer</span>
+        {/* Hero Artwork Centerpiece (Sukoya & Aethera Fine Art Showcase) */}
+        <div className="relative w-full max-w-4xl mt-4 rounded-3xl overflow-hidden border border-white/[0.1] bg-[#0c0e15] shadow-2xl shadow-black/90 group">
+          <div className="relative aspect-[16/9] w-full overflow-hidden">
+            <Image
+              src="/hero-artwork.jpg"
+              alt="Explosive In-Memory Computing Monolith"
+              fill
+              priority
+              className="object-cover transition-transform duration-700 group-hover:scale-[1.01]"
+            />
+            {/* Soft Ambient Vignette Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#07080b] via-transparent to-transparent opacity-80" />
+            
+            {/* Artwork Floating Metadata Caption (Sukoya Style) */}
+            <div className="absolute bottom-4 inset-x-6 flex items-center justify-between text-[11px] font-mono text-zinc-400">
+              <span className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+                <span>HARDWARE ARCHITECTURE // 07</span>
+              </span>
+              <span className="text-zinc-500 hidden sm:inline">ZERO-CLOUD IN-MEMORY EXECUTION</span>
+              <span className="text-amber-400 font-semibold">100% PRIVATE</span>
+            </div>
           </div>
+        </div>
 
-          <div className="p-3.5 rounded-xl bg-[#0c0d14] border border-white/[0.06] flex flex-col items-center text-center">
-            <span className="text-xs font-mono text-zinc-500 uppercase">Compute Core</span>
-            <span className="text-lg font-bold text-white font-mono mt-0.5">WASM SIMD</span>
-            <span className="text-[10px] text-zinc-400 mt-0.5">Native Multi-Thread</span>
+        {/* High-Trust Telemetry Strip (Aethera Reviews Score Pattern) */}
+        <div className="w-full max-w-3xl flex flex-wrap items-center justify-around gap-4 py-3 px-6 rounded-2xl bg-white/[0.02] border border-white/[0.05] text-[11px] font-mono text-zinc-400">
+          <div className="flex items-center gap-2">
+            <ShieldCheck size={14} className="text-amber-400" />
+            <span className="text-zinc-200">100% In-Memory Sandbox</span>
           </div>
-
-          <div className="p-3.5 rounded-xl bg-[#0c0d14] border border-white/[0.06] flex flex-col items-center text-center">
-            <span className="text-xs font-mono text-zinc-500 uppercase">Data Retention</span>
-            <span className="text-lg font-bold text-white font-mono mt-0.5">Ephemeral</span>
-            <span className="text-[10px] text-amber-400 mt-0.5">Wiped on Tab Close</span>
+          <div className="flex items-center gap-2">
+            <span className="text-amber-400">★★★★★</span>
+            <span className="text-zinc-200">Zero Cloud Egress</span>
           </div>
-
-          <div className="p-3.5 rounded-xl bg-[#0c0d14] border border-white/[0.06] flex flex-col items-center text-center">
-            <span className="text-xs font-mono text-zinc-500 uppercase">Active Suites</span>
-            <span className="text-lg font-bold text-white font-mono mt-0.5">5 Categories</span>
-            <span className="text-[10px] text-zinc-400 mt-0.5">17 Total Workstations</span>
+          <div className="flex items-center gap-2">
+            <Cpu size={14} className="text-amber-400" />
+            <span className="text-zinc-200">WASM SIMD Hardware V8</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Lock size={14} className="text-amber-400" />
+            <span className="text-zinc-200">W3C WebCrypto Compliant</span>
           </div>
         </div>
       </section>
 
-      {/* ── 2. Operating Guidelines & How It Works ── */}
-      <section id="guidelines" className="flex flex-col gap-6 pt-4 scroll-mt-20">
-        <div className="flex flex-col gap-1.5 border-b border-white/[0.08] pb-4">
-          <div className="flex items-center gap-2 text-amber-400 font-mono text-xs uppercase tracking-wider">
-            <Info size={14} />
-            <span>Platform Guidelines</span>
+      {/* ── 2. Operating Guidelines & Engineering Principles (01 - 04 Editorial) ── */}
+      <section id="guidelines" className="flex flex-col gap-8 scroll-mt-20">
+        <div className="flex flex-col gap-2">
+          <div className="text-[11px] font-mono uppercase tracking-widest text-amber-400 font-semibold">
+            Operational Protocol
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-            How The In-Memory Studio Operates
+          <h2 className="text-2xl sm:text-3xl font-light text-white tracking-tight">
+            How the Platform Operates
           </h2>
-          <p className="text-xs sm:text-sm text-zinc-400">
-            Explosive Studio functions as a sandboxed workstation engine. Follow these 4 standard steps to execute workflows.
+          <p className="text-xs sm:text-sm text-zinc-400 max-w-xl font-light">
+            Explosive Studio treats your browser as a dedicated hardware appliance. Follow these standard operational principles for optimal throughput.
           </p>
         </div>
 
+        {/* 4-Step Editorial Grid (Lassain Meri & Sukoya Style) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Step 1 */}
-          <div className="p-5 rounded-2xl bg-[#0c0d14] border border-white/[0.07] flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono font-bold text-amber-400 px-2 py-0.5 rounded bg-amber-400/10 border border-amber-400/20">
-                STEP 01
+          <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col justify-between hover:border-amber-400/30 transition-all group">
+            <div className="flex flex-col gap-3">
+              <span className="text-2xl font-light text-amber-400/60 font-mono group-hover:text-amber-400 transition-colors">
+                01
               </span>
-              <Layers size={16} className="text-zinc-500" />
+              <h3 className="text-sm font-semibold text-white">Local Ingestion</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed font-light">
+                Drop your assets into any workstation. Files are mounted directly into client volatile RAM via typed ArrayBuffers and Blob URLs.
+              </p>
             </div>
-            <h3 className="text-sm font-semibold text-white">Select from Directory</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-              Open the left sidebar menu or click any workstation in the catalog below to launch the dedicated hardware interface.
-            </p>
+            <div className="pt-4 text-[10px] font-mono text-zinc-500 uppercase">
+              No Network Transmission
+            </div>
           </div>
 
-          {/* Step 2 */}
-          <div className="p-5 rounded-2xl bg-[#0c0d14] border border-white/[0.07] flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono font-bold text-zinc-300 px-2 py-0.5 rounded bg-white/[0.06] border border-white/[0.08]">
-                STEP 02
+          <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col justify-between hover:border-amber-400/30 transition-all group">
+            <div className="flex flex-col gap-3">
+              <span className="text-2xl font-light text-amber-400/60 font-mono group-hover:text-amber-400 transition-colors">
+                02
               </span>
-              <HardDrive size={16} className="text-zinc-500" />
+              <h3 className="text-sm font-semibold text-white">SIMD Acceleration</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed font-light">
+                Compute kernels execute via multi-threaded WebAssembly leveraging 128-bit vector CPU registers for near-native throughput.
+              </p>
             </div>
-            <h3 className="text-sm font-semibold text-white">In-Memory Buffer Ingestion</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-              Drop target files directly into the dropzone. Data is allocated into private <code className="text-zinc-300 font-mono">ArrayBuffer</code> RAM with 0 server uploads.
-            </p>
+            <div className="pt-4 text-[10px] font-mono text-zinc-500 uppercase">
+              Hardware Vectorization
+            </div>
           </div>
 
-          {/* Step 3 */}
-          <div className="p-5 rounded-2xl bg-[#0c0d14] border border-white/[0.07] flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono font-bold text-zinc-300 px-2 py-0.5 rounded bg-white/[0.06] border border-white/[0.08]">
-                STEP 03
+          <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col justify-between hover:border-amber-400/30 transition-all group">
+            <div className="flex flex-col gap-3">
+              <span className="text-2xl font-light text-amber-400/60 font-mono group-hover:text-amber-400 transition-colors">
+                03
               </span>
-              <Cpu size={16} className="text-zinc-500" />
+              <h3 className="text-sm font-semibold text-white">Memory Cleansing</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed font-light">
+                Sensitive metadata, intermediate frame buffers, and temporary caches are zeroed out and garbage collected upon task completion.
+              </p>
             </div>
-            <h3 className="text-sm font-semibold text-white">Local Hardware Compute</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-              Adjust parameters (FFmpeg CRF, EQ stems, Bézier smoothing, or AES keys). Compute executes on client CPU cores.
-            </p>
+            <div className="pt-4 text-[10px] font-mono text-zinc-500 uppercase">
+              Automated Zero-Fill
+            </div>
           </div>
 
-          {/* Step 4 */}
-          <div className="p-5 rounded-2xl bg-[#0c0d14] border border-white/[0.07] flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono font-bold text-zinc-300 px-2 py-0.5 rounded bg-white/[0.06] border border-white/[0.08]">
-                STEP 04
+          <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col justify-between hover:border-amber-400/30 transition-all group">
+            <div className="flex flex-col gap-3">
+              <span className="text-2xl font-light text-amber-400/60 font-mono group-hover:text-amber-400 transition-colors">
+                04
               </span>
-              <FileDown size={16} className="text-zinc-500" />
+              <h3 className="text-sm font-semibold text-white">Zero-Trace Export</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed font-light">
+                Transcoded streams are packaged and written straight to your local file system with cryptographic checksums for data integrity.
+              </p>
             </div>
-            <h3 className="text-sm font-semibold text-white">Direct Binary Export</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-              Download the generated binary directly through browser Blob URLs. Memory buffers are immediately reclaimed.
-            </p>
+            <div className="pt-4 text-[10px] font-mono text-zinc-500 uppercase">
+              Direct Binary Stream
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── 3. Architecture Specification Table ── */}
-      <section className="flex flex-col gap-6 pt-4">
-        <div className="flex flex-col gap-1.5 border-b border-white/[0.08] pb-4">
-          <div className="flex items-center gap-2 text-amber-400 font-mono text-xs uppercase tracking-wider">
-            <ShieldCheck size={14} />
-            <span>Technical Specifications</span>
-          </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-            Security & Memory Isolation Comparison
-          </h2>
-          <p className="text-xs sm:text-sm text-zinc-400">
-            A technical breakdown of client-side WASM execution versus conventional cloud-hosted converters.
-          </p>
-        </div>
-
-        <div className="overflow-x-auto rounded-2xl border border-white/[0.08] bg-[#0c0d14]">
-          <table className="w-full text-left text-xs font-sans">
-            <thead>
-              <tr className="border-b border-white/[0.08] bg-white/[0.02] text-zinc-400 font-mono uppercase text-[11px]">
-                <th className="p-4">Specification Parameter</th>
-                <th className="p-4 text-amber-400 font-bold">Explosive In-Browser Studio</th>
-                <th className="p-4 text-zinc-500">Traditional Cloud Converters</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/[0.05] text-zinc-300">
-              <tr>
-                <td className="p-4 font-semibold text-white">Network Ingestion & Egress</td>
-                <td className="p-4 font-mono text-amber-400">0 KB (Zero outbound packets)</td>
-                <td className="p-4 font-mono text-zinc-400">100% Upload + Download Required</td>
-              </tr>
-              <tr>
-                <td className="p-4 font-semibold text-white">Data Privacy & Exposure</td>
-                <td className="p-4 text-zinc-200">Air-gapped memory sandbox. Zero server retention.</td>
-                <td className="p-4 text-zinc-500">Subject to server logs, storage retention & leaks.</td>
-              </tr>
-              <tr>
-                <td className="p-4 font-semibold text-white">Processing Latency</td>
-                <td className="p-4 font-mono text-zinc-200">Instantaneous (Local CPU/SIMD speed)</td>
-                <td className="p-4 font-mono text-zinc-500">High (Queue times + Network upload delays)</td>
-              </tr>
-              <tr>
-                <td className="p-4 font-semibold text-white">File Size Limits</td>
-                <td className="p-4 text-zinc-200">Limited only by available Client RAM (4GB+)</td>
-                <td className="p-4 text-zinc-500">Strict 25MB–100MB paywalls</td>
-              </tr>
-              <tr>
-                <td className="p-4 font-semibold text-white">Offline Capability</td>
-                <td className="p-4 text-amber-400 font-semibold">100% Functional Offline (PWA Ready)</td>
-                <td className="p-4 text-zinc-500">Inoperable without internet access</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* ── 4. Product Catalog Directory & Tabs ── */}
-      <section id="catalog" className="flex flex-col gap-6 pt-4 scroll-mt-20">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-white/[0.08] pb-4">
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center gap-2 text-amber-400 font-mono text-xs uppercase tracking-wider">
-              <Layers size={14} />
-              <span>Workstation Directory</span>
+      {/* ── 3. Curated Workstation Catalog (Editorial Showcase) ── */}
+      <section id="catalog" className="flex flex-col gap-6 scroll-mt-20">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div className="flex flex-col gap-2">
+            <div className="text-[11px] font-mono uppercase tracking-widest text-amber-400 font-semibold">
+              Workstation Registry
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-              Engineering Workstation Catalog
+            <h2 className="text-2xl sm:text-3xl font-light text-white tracking-tight">
+              Engineering Suites & Tools
             </h2>
-            <p className="text-xs sm:text-sm text-zinc-400">
-              Filter by suite category or search across all {allTools.length} dedicated tools.
-            </p>
           </div>
 
-          {/* Search Input */}
-          <div className="relative w-full sm:w-72">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+          {/* Search Filter Input */}
+          <div className="relative w-full sm:w-64">
+            <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500" />
             <input
               type="text"
-              placeholder="Search catalog..."
               value={catalogSearch}
               onChange={(e) => setCatalogSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-amber-400/40 focus:ring-1 focus:ring-amber-400/30 transition-all font-sans"
+              placeholder="Search tools or specs..."
+              className="w-full pl-9 pr-3 py-2 rounded-full bg-white/[0.03] border border-white/[0.08] focus:border-amber-400/60 focus:bg-white/[0.05] text-xs text-zinc-200 placeholder-zinc-500 outline-none transition-all"
             />
           </div>
         </div>
 
-        {/* Category Tabs */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+        {/* Minimalist Category Filter Tabs */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
           <button
             onClick={() => setActiveCategoryTab("all")}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap cursor-pointer ${
               activeCategoryTab === "all"
-                ? "bg-amber-400 text-black shadow-md shadow-amber-400/10"
-                : "bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/[0.07] border border-white/[0.06]"
+                ? "bg-amber-400 text-black font-semibold shadow-md shadow-amber-400/20"
+                : "bg-white/[0.03] hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-200 border border-white/[0.06]"
             }`}
           >
-            All Suites ({allTools.length})
+            All Workstations ({allTools.length})
           </button>
-
-          {SIDEBAR_CATEGORIES.map((cat) => {
-            const isActive = activeCategoryTab === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategoryTab(cat.id)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                  isActive
-                    ? "bg-amber-400 text-black shadow-md shadow-amber-400/10"
-                    : "bg-white/[0.04] text-zinc-400 hover:text-white hover:bg-white/[0.07] border border-white/[0.06]"
-                }`}
-              >
-                {cat.name} ({cat.items.length})
-              </button>
-            );
-          })}
+          {SIDEBAR_CATEGORIES.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setActiveCategoryTab(cat.id)}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap cursor-pointer ${
+                activeCategoryTab === cat.id
+                  ? "bg-amber-400 text-black font-semibold shadow-md shadow-amber-400/20"
+                  : "bg-white/[0.03] hover:bg-white/[0.06] text-zinc-400 hover:text-zinc-200 border border-white/[0.06]"
+              }`}
+            >
+              {cat.name} ({cat.items.length})
+            </button>
+          ))}
         </div>
 
-        {/* Workstation Directory Grid / List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+        {/* Workstation Product Cards Grid (Lassain Meri Editorial Grid) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {displayedTools.map((tool) => {
-            const ToolIcon = tool.icon;
+            const Icon = tool.icon;
             return (
               <Link
                 key={tool.href}
                 href={tool.href}
-                className="p-4 rounded-2xl bg-[#0c0d14] border border-white/[0.07] hover:border-amber-400/30 hover:bg-[#10121b] transition-all flex flex-col justify-between group"
+                className="p-5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-amber-400/40 shadow-sm transition-all duration-200 flex flex-col justify-between group cursor-pointer"
               >
-                <div className="flex flex-col gap-2.5">
+                <div className="flex flex-col gap-3">
                   <div className="flex items-center justify-between">
-                    <div className="p-2 rounded-lg bg-white/[0.04] group-hover:bg-amber-400/10 text-zinc-400 group-hover:text-amber-400 transition-colors">
-                      <ToolIcon size={16} />
+                    <div className="p-2 rounded-xl bg-white/[0.04] border border-white/[0.06] text-amber-400 group-hover:scale-105 transition-transform">
+                      <Icon size={18} />
                     </div>
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-white/[0.05] text-zinc-400 border border-white/[0.06]">
+                    <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.06] text-zinc-400 group-hover:border-amber-400/30 group-hover:text-amber-400 transition-colors">
                       {tool.tag}
                     </span>
                   </div>
 
-                  <div>
+                  <div className="flex flex-col gap-1">
                     <h3 className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors">
                       {tool.label}
                     </h3>
-                    <p className="text-xs text-zinc-400 font-sans mt-0.5 leading-relaxed">
+                    <p className="text-xs text-zinc-400 leading-relaxed font-light line-clamp-2">
                       {tool.sublabel}
                     </p>
                   </div>
                 </div>
 
-                <div className="pt-4 mt-2 border-t border-white/[0.04] flex items-center justify-between text-[11px] font-mono text-zinc-500">
-                  <span>{tool.categoryName}</span>
-                  <span className="text-amber-400 font-semibold group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
-                    Launch →
+                <div className="pt-4 flex items-center justify-between text-[11px] text-zinc-500 group-hover:text-amber-400 transition-colors font-medium">
+                  <span className="text-[10px] font-mono uppercase text-zinc-500">
+                    {tool.categoryName}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <span>Launch</span>
+                    <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
                   </span>
                 </div>
               </Link>
@@ -376,48 +351,115 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── 5. Technical FAQ & Browser Guidance ── */}
-      <section className="flex flex-col gap-6 pt-4 pb-8">
-        <div className="flex flex-col gap-1.5 border-b border-white/[0.08] pb-4">
-          <div className="flex items-center gap-2 text-amber-400 font-mono text-xs uppercase tracking-wider">
-            <HelpCircle size={14} />
-            <span>Technical Reference</span>
+      {/* ── 4. Architectural Comparison & Zero-Cloud Matrix ── */}
+      <section id="comparison" className="flex flex-col gap-6 scroll-mt-20">
+        <div className="flex flex-col gap-2">
+          <div className="text-[11px] font-mono uppercase tracking-widest text-amber-400 font-semibold">
+            Security Specification
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-            System Compatibility & FAQ
+          <h2 className="text-2xl sm:text-3xl font-light text-white tracking-tight">
+            In-Browser Sandbox vs Cloud Converters
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-sans">
-          <div className="p-4 rounded-xl bg-[#0c0d14] border border-white/[0.06] flex flex-col gap-2">
-            <h4 className="font-semibold text-white text-sm">Which browsers are supported?</h4>
-            <p className="text-zinc-400 leading-relaxed">
-              All modern browsers supporting WebAssembly SIMD and WebAudio API are fully supported, including Google Chrome 91+, Microsoft Edge 91+, Mozilla Firefox 89+, and Apple Safari 16.4+ (iOS & macOS).
+        <div className="w-full overflow-x-auto rounded-2xl border border-white/[0.08] bg-[#0c0e15]/60 shadow-xl">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr className="border-b border-white/[0.08] bg-white/[0.02] text-zinc-400 font-mono text-[11px]">
+                <th className="py-3.5 px-5 font-semibold">Architectural Vector</th>
+                <th className="py-3.5 px-5 font-semibold text-amber-400">Explosive In-Memory WASM</th>
+                <th className="py-3.5 px-5 font-semibold text-zinc-500">Legacy Cloud Converters</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/[0.04] text-zinc-300">
+              <tr>
+                <td className="py-3.5 px-5 font-medium text-white">Network Staging</td>
+                <td className="py-3.5 px-5 text-zinc-300 font-mono">0 Bytes Uploaded (RAM Local)</td>
+                <td className="py-3.5 px-5 text-zinc-500 font-mono">100% Uploaded to Remote Server</td>
+              </tr>
+              <tr>
+                <td className="py-3.5 px-5 font-medium text-white">Confidentiality & Compliance</td>
+                <td className="py-3.5 px-5 text-zinc-300">Strictly client-side, GDPR/HIPAA immune</td>
+                <td className="py-3.5 px-5 text-zinc-500">Subject to server logs, leaks & retention</td>
+              </tr>
+              <tr>
+                <td className="py-3.5 px-5 font-medium text-white">Processing Latency</td>
+                <td className="py-3.5 px-5 text-zinc-300">Instant silicon execution, no queue</td>
+                <td className="py-3.5 px-5 text-zinc-500">Upload lag + server queue + download lag</td>
+              </tr>
+              <tr>
+                <td className="py-3.5 px-5 font-medium text-white">Offline Capability</td>
+                <td className="py-3.5 px-5 text-zinc-300 font-mono">Fully functional offline (PWA)</td>
+                <td className="py-3.5 px-5 text-zinc-500 font-mono">Fails without internet connection</td>
+              </tr>
+              <tr>
+                <td className="py-3.5 px-5 font-medium text-white">Data Retention</td>
+                <td className="py-3.5 px-5 text-amber-400 font-mono">Zero retention (Volatile RAM)</td>
+                <td className="py-3.5 px-5 text-zinc-500 font-mono">Stored on remote disk cache</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* ── 5. Technical FAQ & Reference ── */}
+      <section id="faq" className="flex flex-col gap-6 scroll-mt-20">
+        <div className="flex flex-col gap-2">
+          <div className="text-[11px] font-mono uppercase tracking-widest text-amber-400 font-semibold">
+            Technical Architecture
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-light text-white tracking-tight">
+            Frequently Asked Questions
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col gap-2">
+            <h3 className="text-sm font-semibold text-white">How is data processed without server uploads?</h3>
+            <p className="text-xs text-zinc-400 leading-relaxed font-light">
+              We compile high-performance C, C++, and Rust libraries into WebAssembly (WASM). Your browser's JavaScript V8 engine runs these binaries locally with hardware SIMD acceleration.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-[#0c0d14] border border-white/[0.06] flex flex-col gap-2">
-            <h4 className="font-semibold text-white text-sm">How are large media files handled?</h4>
-            <p className="text-zinc-400 leading-relaxed">
-              Large files are streamed chunk-by-chunk through virtual WASM file systems without copying to disk. Allocation is bounded by your machine's available physical RAM.
+          <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col gap-2">
+            <h3 className="text-sm font-semibold text-white">Are there file size limitations?</h3>
+            <p className="text-xs text-zinc-400 leading-relaxed font-light">
+              Because execution occurs in your browser's heap, files up to 2GB are supported on standard 64-bit systems. For larger files, processing speed depends on your available system RAM.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-[#0c0d14] border border-white/[0.06] flex flex-col gap-2">
-            <h4 className="font-semibold text-white text-sm">Are cryptographic operations compliant?</h4>
-            <p className="text-zinc-400 leading-relaxed">
-              All key generations, certificate parses, and SHA hashes use W3C WebCrypto API (<code className="text-zinc-300 font-mono">crypto.subtle</code>), backed by the host operating system's native cryptographic primitives.
+          <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col gap-2">
+            <h3 className="text-sm font-semibold text-white">Are cryptographic keys extractable?</h3>
+            <p className="text-xs text-zinc-400 leading-relaxed font-light">
+              No. Our Crypto Vault uses the standard W3C WebCrypto API with non-extractable CryptoKey handles in memory, ensuring military-grade key isolation.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-[#0c0d14] border border-white/[0.06] flex flex-col gap-2">
-            <h4 className="font-semibold text-white text-sm">Can I use this completely offline?</h4>
-            <p className="text-zinc-400 leading-relaxed">
-              Yes. Explosive Tools leverages progressive caching. Once loaded in your browser, all WASM modules, audio DSP nodes, and engines execute with zero internet connectivity.
+          <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col gap-2">
+            <h3 className="text-sm font-semibold text-white">Does the app work when disconnected from Wi-Fi?</h3>
+            <p className="text-xs text-zinc-400 leading-relaxed font-light">
+              Yes. All WebAssembly modules and static assets are cached locally via Progressive Web App (PWA) service workers, enabling 100% offline file transformations.
             </p>
           </div>
         </div>
       </section>
+
+      {/* ── 6. Minimalist Editorial Footer ── */}
+      <footer className="pt-8 pb-4 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500 font-mono">
+        <div className="flex items-center gap-2">
+          <div className="h-4 w-4 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center text-[9px] font-bold">
+            ⚡
+          </div>
+          <span className="text-zinc-400">Explosive Studio v2.4</span>
+          <span>·</span>
+          <span>In-Memory Silicon Computation</span>
+        </div>
+        <div className="flex items-center gap-4 text-zinc-500">
+          <a href="#guidelines" className="hover:text-zinc-300 transition-colors">Guidelines</a>
+          <a href="#comparison" className="hover:text-zinc-300 transition-colors">Security</a>
+          <a href="#faq" className="hover:text-zinc-300 transition-colors">Architecture</a>
+        </div>
+      </footer>
     </div>
   );
 }
