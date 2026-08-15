@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useCallback, useEffect } from "react";
 import { useDropzone, type DropzoneOptions, type FileRejection } from "react-dropzone";
@@ -20,7 +20,7 @@ export function NeoDropzone({
   onDropAccepted,
   onDrop: customOnDrop,
   label = "Drop files to load into memory",
-  sublabel = "Or click to browse from device. Paste files with Ctrl+V / âŒ˜V",
+  sublabel = "Or click to browse from device. Paste files with Ctrl+V / ⌘V",
   acceptedFormatsList,
   icon,
   maxSizeMB = 2048,
@@ -87,8 +87,8 @@ export function NeoDropzone({
         cursor-pointer transition-all duration-200 relative rounded-2xl select-none font-sans neu-inset
         ${
           isDragActive
-            ? "border border-zinc-300 bg-[#12151e] shadow-2xl"
-            : "hover:border-zinc-700"
+            ? "border-2 border-[var(--text-main)] shadow-2xl scale-[1.01]"
+            : "hover:border-[var(--border-active)]"
         }
       `}
     >
@@ -98,33 +98,33 @@ export function NeoDropzone({
         <div
           className={`p-3.5 rounded-xl neu-btn transition-colors ${
             isDragActive
-              ? "text-white border-zinc-500 active"
-              : "text-zinc-300"
+              ? "text-[var(--text-main)] active scale-110"
+              : "text-[var(--text-main)]"
           }`}
         >
-          {icon || <FileUp size={22} className="text-white" />}
+          {icon || <FileUp size={22} className="text-[var(--text-main)]" />}
         </div>
 
         <div className="flex flex-col gap-1">
-          <h3 className="text-sm sm:text-base font-semibold text-white tracking-tight font-sans">
+          <h3 className="text-sm sm:text-base font-semibold text-[var(--text-main)] tracking-tight font-sans">
             {isDragActive ? "Release to load into in-memory engine" : label}
           </h3>
-          <p className="text-xs text-zinc-400 font-sans max-w-md">{sublabel}</p>
+          <p className="text-xs text-[var(--text-muted)] font-sans max-w-md">{sublabel}</p>
         </div>
 
         {/* Format indicators and limits */}
-        <div className="flex flex-wrap items-center justify-center gap-2 pt-2 text-[10px] font-mono text-zinc-500">
-          <span className="flex items-center gap-1.5 bg-[#12141c] px-2.5 py-1 rounded-md border border-white/[0.04]">
-            <HardDrive size={11} className="text-zinc-400" />
+        <div className="flex flex-wrap items-center justify-center gap-2 pt-2 text-[10px] font-mono text-[var(--text-dim)]">
+          <span className="flex items-center gap-1.5 bg-[var(--bg-tile)] px-2.5 py-1 rounded-md border border-[var(--border-subtle)] shadow-xs">
+            <HardDrive size={11} className="text-[var(--text-dim)]" />
             <span>Up to {maxSizeMB >= 1024 ? `${maxSizeMB / 1024} GB` : `${maxSizeMB} MB`}</span>
           </span>
-          <span className="flex items-center gap-1.5 bg-[#12141c] px-2.5 py-1 rounded-md border border-white/[0.04]">
-            <ShieldCheck size={11} className="text-white/80" />
+          <span className="flex items-center gap-1.5 bg-[var(--bg-tile)] px-2.5 py-1 rounded-md border border-[var(--border-subtle)] shadow-xs">
+            <ShieldCheck size={11} className="text-emerald-500" />
             <span>Zero Network Upload</span>
           </span>
-          <span className="flex items-center gap-1.5 bg-[#12141c] px-2.5 py-1 rounded-md border border-white/[0.04]">
-            <Clipboard size={11} className="text-zinc-400" />
-            <span>âŒ˜V Paste Supported</span>
+          <span className="flex items-center gap-1.5 bg-[var(--bg-tile)] px-2.5 py-1 rounded-md border border-[var(--border-subtle)] shadow-xs">
+            <Clipboard size={11} className="text-[var(--text-dim)]" />
+            <span>⌘V Paste Supported</span>
           </span>
         </div>
 
@@ -133,7 +133,7 @@ export function NeoDropzone({
             {acceptedFormatsList.map((fmt) => (
               <span
                 key={fmt}
-                className="text-[9px] font-mono uppercase px-2 py-0.5 rounded bg-[#151822] text-zinc-400 border border-white/[0.05]"
+                className="text-[9px] font-mono uppercase px-2 py-0.5 rounded bg-[var(--bg-tile)] text-[var(--text-muted)] border border-[var(--border-subtle)] shadow-xs"
               >
                 {fmt}
               </span>
