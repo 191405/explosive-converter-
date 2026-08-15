@@ -6,8 +6,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { UploadCloud } from "lucide-react";
 import { toast } from "sonner";
 
-interface NeoDropzoneProps extends Omit<DropzoneOptions, "onDrop"> {
-  onDropAccepted: (files: File[]) => void;
+export interface NeoDropzoneProps extends Omit<DropzoneOptions, "onDrop"> {
+  onDropAccepted?: (files: File[]) => void;
+  onDrop?: (acceptedFiles: File[], fileRejections: FileRejection[]) => void;
   label?: string;
   sublabel?: string;
   icon?: React.ReactNode;
@@ -16,6 +17,7 @@ interface NeoDropzoneProps extends Omit<DropzoneOptions, "onDrop"> {
 
 export function NeoDropzone({
   onDropAccepted,
+  onDrop: customOnDrop,
   label = "Drop files here or browse",
   sublabel,
   icon,
@@ -24,7 +26,11 @@ export function NeoDropzone({
 }: NeoDropzoneProps) {
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-      if (acceptedFiles.length > 0) {
+      if (customOnDrop) {
+        customOnDrop(acceptedFiles, fileRejections);
+        return;
+      }
+      if (acceptedFiles.length > 0 && onDropAccepted) {
         onDropAccepted(acceptedFiles);
       }
       if (fileRejections.length > 0) {
@@ -35,7 +41,7 @@ export function NeoDropzone({
         });
       }
     },
-    [onDropAccepted]
+    [onDropAccepted, customOnDrop]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

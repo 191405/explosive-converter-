@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Link from "next/link";
 import "./globals.css";
 import { Sidebar } from "@/components/sidebar";
-import { CinematicBackground } from "@/components/cinematic-bg";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CommandPalette } from "@/components/command-palette";
 import { OnboardingTutorial } from "@/components/onboarding-tutorial";
 import { FeedbackModal } from "@/components/feedback-modal";
+import { EngineTelemetryBar } from "@/components/engine-telemetry-bar";
+import { ConsoleDrawer } from "@/components/console-drawer";
 import { Toaster } from "sonner";
 
 const geistSans = Geist({
@@ -25,33 +25,46 @@ const SITE_URL = "https://explosivetools.dpdns.org";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Explosive Converter — Client-Side File Tools & Media Processing",
+    default: "Explosive Converter & Studio Suite — High-Performance File & Media Engineering",
     template: "%s | Explosive Tools",
   },
   description:
-    "Lightning-fast, 100% private in-browser media converter and document suite powered by WebAssembly. Compress videos, transcode images, convert audio, trim waveforms, merge PDFs, and record screens with zero server uploads.",
+    "Industrial-grade media converter and document studio powered by WebAssembly SIMD and stream pipelines. Forensic metadata scrubbing, vector tracing, OCR, spatial audio DSP, video compression, PDF manipulation, and in-memory archive repacking.",
   keywords: [
     "file converter",
-    "client-side converter",
+    "media studio",
+    "webassembly converter",
+    "metadata scrubber",
+    "steganography inspector",
+    "image vectorizer",
+    "client-side ocr",
+    "audio dsp stem isolator",
     "video compressor",
-    "pdf merger",
-    "pdf splitter",
-    "audio converter",
-    "waveform trimmer",
-    "image transcode",
-    "screen recorder",
+    "animated gif optimizer",
+    "data format morph",
+    "archive inspector",
+    "pdf tools",
     "ffmpeg wasm",
     "private file tools",
-    "free online converter",
     "offline converter",
   ],
   authors: [{ name: "Explosive Tools" }],
   creator: "Explosive Tools",
   publisher: "Explosive Tools",
-  applicationName: "Explosive Converter",
+  applicationName: "Explosive Studio Suite",
   alternates: {
     canonical: "/",
   },
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon.svg", sizes: "192x192", type: "image/svg+xml" },
+      { url: "/icon.svg", sizes: "512x512", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/icon.svg", sizes: "180x180", type: "image/svg+xml" }],
+    shortcut: ["/icon.svg"],
+  },
+  manifest: "/manifest.webmanifest",
   robots: {
     index: true,
     follow: true,
@@ -68,21 +81,27 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     siteName: "Explosive Tools",
-    title: "Explosive Converter — 100% Private Client-Side File Suite",
+    title: "Explosive Converter & Studio Suite",
     description:
-      "Convert audio, compress video, transcode images, manipulate PDFs, and record screens with zero server uploads. Powered by WebAssembly.",
+      "High-grade client-side WebAssembly media and document engineering suite with zero-server privacy.",
+    images: [
+      {
+        url: "/icon.svg",
+        width: 512,
+        height: 512,
+        alt: "Explosive Tools Logo",
+      },
+    ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Explosive Converter — Client-Side File Tools",
+    card: "summary",
+    title: "Explosive Converter & Studio Suite",
     description:
-      "Privacy-first in-memory media processing. Convert video, audio, images, and PDFs directly in your browser with zero uploads.",
+      "High-performance in-browser media suite powered by WebAssembly SIMD.",
+    images: ["/icon.svg"],
   },
   verification: {
     google: "w4UVOlECyiP4Dmq5bhe59smLzIO1USAxJUl-UFRmMCI",
-  },
-  icons: {
-    icon: "/favicon.ico",
   },
 };
 
@@ -96,7 +115,10 @@ export default function RootLayout({
     "@type": "WebApplication",
     "name": "Explosive Converter",
     "url": "https://explosivetools.dpdns.org",
-    "description": "100% private, client-side WebAssembly media converter and document processing suite. Convert audio, compress video, transcode images, and manipulate PDFs in memory.",
+    "logo": "https://explosivetools.dpdns.org/icon.svg",
+    "image": "https://explosivetools.dpdns.org/icon.svg",
+    "description":
+      "High-performance client-side WebAssembly media converter and document processing suite. Convert audio, compress video, transcode images, extract OCR, vectorize graphics, scrub metadata, and manipulate PDFs in memory.",
     "applicationCategory": "MultimediaApplication",
     "operatingSystem": "All",
     "offers": {
@@ -105,42 +127,51 @@ export default function RootLayout({
       "priceCurrency": "USD",
     },
     "featureList": [
-      "Zero-Server File Processing",
-      "Offline Capable WebAssembly Execution",
+      "Zero-Server In-Memory Processing",
+      "Forensic Metadata Scrubber & Stego Inspector",
+      "High-Precision Raster to SVG Vectorizer",
+      "Client-Side OCR & Searchable PDF Synthesizer",
+      "Spatial Audio DSP & Stem Phase Isolator",
       "Video Compression with CRF Controls",
-      "Audio Extraction and Transcoding",
-      "Lossless Waveform Audio Trimming",
+      "Animated GIF/WebP Frame-Diff Optimizer",
+      "Universal Code & Data AST Serialization Morph",
+      "In-Memory Multi-Format Archive Inspector",
       "PDF Merge, Split and Rotation",
-      "High-Frame-Rate Screen and Camera Recording",
     ],
   };
 
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full dark`}
+      suppressHydrationWarning
     >
       <head>
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/icon.svg" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-full flex font-sans" suppressHydrationWarning>
+      <body className="min-h-full flex flex-col bg-[#050507] text-zinc-100 font-sans antialiased selection:bg-zinc-700 selection:text-white" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <CinematicBackground />
-          <Sidebar />
-          
-          {/* Main Content Area */}
-          <div className="flex-1 flex flex-col md:ml-[300px] pt-16 md:pt-0 pb-24 md:pb-12 min-h-screen relative z-10">
-            <main className="flex-1 flex flex-col items-center px-4 sm:px-6 py-6 md:py-12 w-full max-w-5xl mx-auto overflow-x-hidden">
-              {children}
-            </main>
+          <div className="flex min-h-screen w-full">
+            <Sidebar />
+            
+            {/* Main Content Area */}
+            <div className="flex-1 flex flex-col md:ml-[280px] min-h-screen relative z-10 w-full overflow-x-hidden">
+              <EngineTelemetryBar />
+              <main className="flex-1 flex flex-col items-center px-4 sm:px-8 py-6 md:py-10 w-full max-w-6xl mx-auto">
+                {children}
+              </main>
+              <ConsoleDrawer />
+            </div>
           </div>
           <CommandPalette />
           <OnboardingTutorial />
           <FeedbackModal />
-          <Toaster position="bottom-right" theme="system" richColors />
+          <Toaster position="bottom-right" theme="dark" richColors />
         </ThemeProvider>
       </body>
     </html>

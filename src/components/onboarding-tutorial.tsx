@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Shield,
+  ShieldCheck,
   Cpu,
   Monitor,
   Command,
@@ -11,9 +11,10 @@ import {
   ArrowRight,
   ArrowLeft,
   CheckCircle2,
-  HardDrive,
-  Wifi,
-  FileCheck,
+  Terminal,
+  Binary,
+  Radio,
+  Shapes,
   Zap,
 } from "lucide-react";
 
@@ -28,97 +29,98 @@ interface Step {
 
 const STEPS: Step[] = [
   {
-    badge: "System Architecture",
-    title: "100% Client-Side In-Memory Execution",
-    subtitle: "How files are handled without backend servers",
-    icon: Shield,
+    badge: "Hybrid Architecture",
+    title: "100% In-Memory WASM SIMD & Edge Streaming",
+    subtitle: "Zero-server file privacy and high-throughput execution",
+    icon: ShieldCheck,
     description:
-      "Unlike traditional file conversion websites that upload your personal documents and videos to remote cloud servers, Explosive Converter operates entirely within your browser's local sandbox.",
+      "Explosive Studio Suite processes your files directly inside your browser memory using WebAssembly SIMD and Web Workers. For extreme batch workloads, an optional Edge Streaming pipeline is available.",
     points: [
       {
-        title: "Zero Network Uploads",
-        desc: "Files are loaded into device RAM and processed locally. Nothing is sent over the network.",
+        title: "Zero Network Exfiltration",
+        desc: "Files are loaded into device RAM and processed locally. Personal documents and video streams never leave your machine.",
       },
       {
-        title: "WebAssembly Codecs",
-        desc: "Heavy media encoding (H.264, MP3, Opus) is compiled to binary WebAssembly that runs directly on your CPU threads.",
+        title: "Hardware Concurrency & SIMD",
+        desc: "Neural OCR, Bézier vectorization, and video codecs run across all available CPU threads with vector acceleration.",
       },
     ],
   },
   {
-    badge: "Core Workflow",
-    title: "Batch Transcoding & Precision Tools",
-    subtitle: "Configuring quality, codecs, and parameters",
+    badge: "Pro Engineering Tools",
+    title: "Forensics, Vectors, OCR & Spatial Audio DSP",
+    subtitle: "7 brand new super-rare capabilities",
     icon: Cpu,
     description:
-      "Each utility gives you granular control over the output parameters without artificial compression artifacts or watermarks.",
+      "Explore pro-grade tools that eliminate the need for expensive desktop software suites.",
     points: [
       {
-        title: "Audio & Video Suite",
-        desc: "Convert audio formats with custom bitrates (up to 320 kbps), slice waveforms with millisecond precision, or compress video streams with CRF control.",
+        title: "Forensic Metadata & Stego",
+        desc: "Scrub tracking tags, inspect raw EXIF headers, and visualize LSB steganography bitplanes.",
       },
       {
-        title: "Document & Graphic Transcoding",
-        desc: "Reorder and split PDF structures or transcode high-resolution image batches directly to WebP/PNG.",
+        title: "Raster to Vector & Document OCR",
+        desc: "Trace pixel images to smooth SVG paths and extract text from document scans with zero cloud API keys.",
+      },
+      {
+        title: "Spatial Audio DSP & Stem Phase",
+        desc: "Vocal removal/karaoke via stereo center phase cancellation, 3D binaural panning, and 8-band parametric EQ.",
       },
     ],
   },
   {
-    badge: "Device Compatibility",
-    title: "Cross-Platform vs. Desktop Features",
-    subtitle: "Understanding display media capabilities",
-    icon: Monitor,
+    badge: "Data & Media Optimization",
+    title: "Universal Code AST Morph & In-Memory Archive",
+    subtitle: "Lossless schema transforms and archive repacking",
+    icon: Binary,
     description:
-      "Most tools run seamlessly across mobile phones, tablets, and desktop workstations. Specific studio tools have hardware/browser requirements.",
+      "Transform developer payloads and compress nested archives without touching the filesystem disk.",
     points: [
       {
-        title: "Universal Mobile & Tablet Tools",
-        desc: "Audio conversion, image transcoding, PDF editing, and video compression run on all modern mobile browsers.",
+        title: "Universal Code AST Morph",
+        desc: "Bi-directional instant conversion between JSON, YAML, TOML, CSV, XML, and TypeScript interfaces.",
       },
       {
-        title: "Desktop-Exclusive Studio",
-        desc: "Screen and application window capture requires desktop display media APIs (available on PC, Mac, and Linux).",
+        title: "Archive Inspector & Repacker",
+        desc: "Explore nested ZIP/TAR catalogs and pack multi-file batches into in-memory containers.",
       },
     ],
   },
   {
-    badge: "Productivity",
-    title: "Command Palette & Offline Capability",
-    subtitle: "Fast navigation and offline persistence",
-    icon: Command,
+    badge: "Developer Ergonomics",
+    title: "Live Stdout Terminal & Command Deck",
+    subtitle: "Tactile industrial interface with 0 AI gimmicks",
+    icon: Terminal,
     description:
-      "The platform is designed as a focused, high-speed utility dashboard with keyboard-driven navigation.",
+      "Designed for power users with real-time stdout telemetry, hardware profiling, and instant keyboard navigation.",
     points: [
       {
-        title: "Command Palette (⌘K / Ctrl+K)",
-        desc: "Press ⌘K or Ctrl+K anywhere to switch tools instantly or search for supported file extensions.",
+        title: "Live Stdout Terminal Drawer (`~`)",
+        desc: "Press `~` or click the top telemetry bar to view real-time FFmpeg and WASM stdout/stderr logs.",
       },
       {
-        title: "Offline Persistence",
-        desc: "Once the WebAssembly binaries are loaded in your browser cache, the suite continues operating without an active internet connection.",
+        title: "Command Deck (⌘K / Ctrl+K)",
+        desc: "Jump to any tool or trigger actions instantly with global keyboard shortcuts.",
       },
     ],
   },
 ];
 
-const STORAGE_KEY = "explosive_onboarding_v1";
+const STORAGE_KEY = "explosive_studio_guide_v2";
 
 export function OnboardingTutorial() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
-    // Check if user has already seen the onboarding tutorial
     const hasSeen = localStorage.getItem(STORAGE_KEY);
     if (!hasSeen) {
-      // Small delay for smooth entry after initial load
       const timer = setTimeout(() => {
         setIsOpen(true);
-      }, 700);
+      }, 600);
       return () => clearTimeout(timer);
     }
 
-    // Allow manual re-triggering via custom event
     const handleOpenTour = () => {
       setCurrentStep(0);
       setIsOpen(true);
@@ -128,7 +130,6 @@ export function OnboardingTutorial() {
     return () => window.removeEventListener("open-system-tour", handleOpenTour);
   }, []);
 
-  // Keyboard navigation
   useEffect(() => {
     if (!isOpen) return;
 
@@ -173,24 +174,23 @@ export function OnboardingTutorial() {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-md">
+      <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md font-sans">
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           transition={{ type: "spring", stiffness: 400, damping: 30 }}
-          className="relative w-full max-w-xl bg-bg-surface border border-border-focus rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+          className="relative w-full max-w-xl bg-[#0c0c10] border border-white/[0.12] rounded-2xl shadow-2xl overflow-hidden flex flex-col"
         >
           {/* Header Bar */}
-          <div className="flex items-center justify-between px-6 pt-5 pb-3 border-b border-border-subtle">
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-mono text-text-tertiary uppercase tracking-widest">
-                System Guide • Step {currentStep + 1} of {STEPS.length}
-              </span>
+          <div className="flex items-center justify-between px-6 pt-5 pb-3 border-b border-white/[0.06]">
+            <div className="flex items-center gap-2 font-mono text-[11px] text-zinc-400">
+              <Zap size={13} className="text-amber-400" />
+              <span>Explosive Studio Guide • Step {currentStep + 1} of {STEPS.length}</span>
             </div>
             <button
               onClick={handleDismiss}
-              className="p-1.5 rounded-lg text-text-tertiary hover:text-text-primary hover:bg-text-primary/5 transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer"
               title="Close guide (Esc)"
             >
               <X size={16} />
@@ -198,9 +198,9 @@ export function OnboardingTutorial() {
           </div>
 
           {/* Step Progress Bar */}
-          <div className="w-full h-1 bg-border-subtle">
+          <div className="w-full h-1 bg-white/[0.06]">
             <motion.div
-              className="h-full bg-text-primary"
+              className="h-full bg-white"
               initial={{ width: `${(currentStep / STEPS.length) * 100}%` }}
               animate={{ width: `${((currentStep + 1) / STEPS.length) * 100}%` }}
               transition={{ duration: 0.3 }}
@@ -220,20 +220,20 @@ export function OnboardingTutorial() {
               >
                 {/* Icon & Category Badge */}
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 rounded-xl bg-text-primary/[0.04] border border-border-subtle text-text-primary">
-                    <StepIcon size={20} strokeWidth={1.75} />
+                  <div className="p-2.5 rounded-xl bg-white/[0.06] border border-white/[0.08] text-white">
+                    <StepIcon size={20} />
                   </div>
                   <div>
-                    <span className="text-[10px] font-mono text-text-tertiary uppercase tracking-widest block">
+                    <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest block">
                       {step.badge}
                     </span>
-                    <h3 className="text-lg font-bold tracking-tight text-text-primary">
+                    <h3 className="text-lg font-bold tracking-tight text-white">
                       {step.title}
                     </h3>
                   </div>
                 </div>
 
-                <p className="text-xs sm:text-sm text-text-secondary leading-relaxed font-normal">
+                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-normal">
                   {step.description}
                 </p>
 
@@ -242,13 +242,13 @@ export function OnboardingTutorial() {
                   {step.points.map((pt, idx) => (
                     <div
                       key={idx}
-                      className="p-3 rounded-lg bg-bg-base/60 border border-border-subtle flex flex-col gap-1"
+                      className="p-3 rounded-lg bg-[#050507] border border-white/[0.06] flex flex-col gap-1"
                     >
-                      <span className="text-xs font-semibold text-text-primary flex items-center gap-1.5">
-                        <CheckCircle2 size={13} className="text-text-primary/70 shrink-0" />
+                      <span className="text-xs font-semibold text-zinc-200 flex items-center gap-1.5 font-mono">
+                        <CheckCircle2 size={13} className="text-emerald-400 shrink-0" />
                         {pt.title}
                       </span>
-                      <span className="text-[11px] text-text-secondary leading-relaxed pl-5">
+                      <span className="text-[11px] text-zinc-400 leading-relaxed pl-5 font-mono">
                         {pt.desc}
                       </span>
                     </div>
@@ -259,10 +259,10 @@ export function OnboardingTutorial() {
           </div>
 
           {/* Footer Controls */}
-          <div className="px-6 py-4 bg-bg-base/80 border-t border-border-subtle flex items-center justify-between gap-4">
+          <div className="px-6 py-4 bg-[#08080a] border-t border-white/[0.06] flex items-center justify-between gap-4 font-mono">
             <button
               onClick={handleDismiss}
-              className="text-xs font-mono text-text-tertiary hover:text-text-primary transition-colors cursor-pointer"
+              className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
             >
               Skip Guide
             </button>
@@ -282,7 +282,7 @@ export function OnboardingTutorial() {
                 onClick={handleNext}
                 className="btn-primary px-4 py-2 text-xs flex items-center gap-1.5 font-semibold cursor-pointer shadow-sm"
               >
-                <span>{isLastStep ? "Get Started" : "Continue"}</span>
+                <span>{isLastStep ? "Enter Studio" : "Continue"}</span>
                 <ArrowRight size={13} />
               </button>
             </div>

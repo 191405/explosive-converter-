@@ -3,17 +3,61 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { FileDown, Image, FileText, Zap, Search, Music, Scissors, Video, Monitor } from "lucide-react";
+import {
+  Zap,
+  FileText,
+  Image as ImageIcon,
+  FileDown,
+  Music,
+  Scissors,
+  Video,
+  ShieldCheck,
+  Shapes,
+  ScanText,
+  Radio,
+  Film,
+  Binary,
+  Archive,
+  Terminal,
+  Search,
+} from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
-const NAV_ITEMS = [
-  { href: "/", label: "Home", shortLabel: "Home", icon: Zap },
-  { href: "/pdf", label: "PDF Studio", shortLabel: "PDF", icon: FileText },
-  { href: "/image", label: "Image Transcoder", shortLabel: "Image", icon: Image },
-  { href: "/compress", label: "Video Compressor", shortLabel: "Video", icon: FileDown },
-  { href: "/audio", label: "Audio Converter", shortLabel: "Audio", icon: Music },
-  { href: "/trim", label: "Audio Trimmer", shortLabel: "Trim", icon: Scissors },
-  { href: "/record", label: "Screen Recorder", shortLabel: "Record", icon: Video, desktopOnly: true },
+interface NavGroup {
+  category: string;
+  items: {
+    href: string;
+    label: string;
+    icon: any;
+    badge?: string;
+    desktopOnly?: boolean;
+  }[];
+}
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    category: "Pro Engineering & Forensics",
+    items: [
+      { href: "/metadata", label: "Metadata & Stego", icon: ShieldCheck, badge: "PRO" },
+      { href: "/vectorize", label: "Raster to Vector", icon: Shapes, badge: "SVG" },
+      { href: "/ocr", label: "Client-Side OCR", icon: ScanText, badge: "WASM" },
+      { href: "/dsp", label: "Spatial Audio DSP", icon: Radio, badge: "DSP" },
+      { href: "/animator", label: "Animation Diff", icon: Film, badge: "DIFF" },
+      { href: "/data-morph", label: "Data AST Morph", icon: Binary, badge: "AST" },
+      { href: "/archive", label: "Archive Repacker", icon: Archive, badge: "IO" },
+    ],
+  },
+  {
+    category: "Core Media & Documents",
+    items: [
+      { href: "/pdf", label: "PDF Studio", icon: FileText },
+      { href: "/image", label: "Image Transcoder", icon: ImageIcon },
+      { href: "/compress", label: "Video Compressor", icon: FileDown },
+      { href: "/audio", label: "Audio Converter", icon: Music },
+      { href: "/trim", label: "Audio Trimmer", icon: Scissors },
+      { href: "/record", label: "Screen Recorder", icon: Video, desktopOnly: true },
+    ],
+  },
 ];
 
 export function Sidebar() {
@@ -21,162 +65,155 @@ export function Sidebar() {
 
   return (
     <>
-      {/* ── Desktop Floating Sidebar ── */}
-      <aside className="hidden md:flex flex-col w-[260px] h-[calc(100vh-48px)] fixed left-6 top-6 p-5 glass-panel z-40 justify-between">
-        <div>
-          <Link href="/" className="flex items-center gap-3 mb-8 pl-2 group">
-            <motion.div 
-              whileHover={{ scale: 1.05, rotate: 10 }}
-              whileTap={{ scale: 0.95 }}
-              className="p-2 rounded-xl bg-text-primary text-bg-base transition-all shadow-md"
-            >
-              <Zap size={20} className="fill-current" />
-            </motion.div>
+      {/* ── Desktop Pro Sidebar ── */}
+      <aside className="hidden md:flex flex-col w-[280px] h-[calc(100vh-24px)] fixed left-3 top-3 p-4 bg-[#09090c] border border-white/[0.08] rounded-xl z-40 justify-between overflow-y-auto scrollbar-none shadow-2xl">
+        <div className="flex flex-col gap-5">
+          {/* Brand Header */}
+          <Link href="/" className="flex items-center gap-3 px-2 py-1 group">
+            <div className="p-2 rounded-lg bg-white text-black transition-all shadow-md group-hover:scale-105">
+              <Zap size={18} className="fill-current" />
+            </div>
             <div>
-              <span className="text-lg font-bold tracking-tight text-text-primary group-hover:text-glow transition-all block leading-tight">
-                Explosive
-              </span>
-              <span className="text-[10px] font-mono text-text-tertiary tracking-widest uppercase">
-                Studio Suite
+              <div className="flex items-center gap-1.5">
+                <span className="text-base font-bold tracking-tight text-white block leading-tight">
+                  Explosive
+                </span>
+                <span className="text-[9px] font-mono uppercase bg-white/[0.08] text-zinc-400 px-1 py-0.2 rounded border border-white/[0.06]">
+                  v2.0
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-zinc-500 tracking-wider uppercase">
+                Studio Engineering
               </span>
             </div>
           </Link>
 
-          <nav className="flex flex-col gap-1.5">
-            {NAV_ITEMS.map((item) => {
-              const isActive = pathname === item.href;
-              const Icon = item.icon;
-              return (
-                <Link key={item.href} href={item.href} className="relative group">
-                  <div
-                    className={`flex items-center justify-between px-3.5 py-2.5 rounded-lg transition-colors relative z-10 ${
-                      isActive ? "text-text-primary font-semibold" : "text-[#888888] hover:text-text-primary font-medium"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <Icon size={17} strokeWidth={isActive ? 2 : 1.5} />
-                      <span className="text-sm">
-                        {item.label}
-                      </span>
-                    </div>
-                    {item.desktopOnly && (
-                      <span className="text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-text-primary/5 text-text-tertiary border border-border-subtle">
-                        Desktop
-                      </span>
-                    )}
-                  </div>
-                  {isActive && (
-                    <motion.div
-                      layoutId="sidebar-active"
-                      className="absolute inset-0 bg-text-primary/[0.08] border border-text-primary/[0.05] rounded-lg z-0"
-                      transition={{ type: "spring", stiffness: 400, damping: 35 }}
-                    />
-                  )}
-                </Link>
-              );
-            })}
+          {/* Nav Groups */}
+          <nav className="flex flex-col gap-5">
+            {NAV_GROUPS.map((group) => (
+              <div key={group.category} className="flex flex-col gap-1">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 px-2.5 mb-1 font-semibold">
+                  {group.category}
+                </span>
+                {group.items.map((item) => {
+                  const isActive = pathname === item.href;
+                  const Icon = item.icon;
+                  return (
+                    <Link key={item.href} href={item.href} className="relative group">
+                      <div
+                        className={`flex items-center justify-between px-2.5 py-1.5 rounded-md transition-all text-xs relative z-10 ${
+                          isActive
+                            ? "text-white font-semibold bg-white/[0.08] border border-white/[0.1]"
+                            : "text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04] font-medium"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <Icon
+                            size={15}
+                            className={isActive ? "text-white" : "text-zinc-400 group-hover:text-zinc-200"}
+                          />
+                          <span>{item.label}</span>
+                        </div>
+                        {item.badge && (
+                          <span
+                            className={`text-[8px] font-mono px-1 py-0.2 rounded border ${
+                              item.badge === "PRO"
+                                ? "bg-amber-500/10 text-amber-300 border-amber-500/20"
+                                : item.badge === "WASM"
+                                ? "bg-purple-500/10 text-purple-300 border-purple-500/20"
+                                : "bg-white/[0.05] text-zinc-400 border-white/[0.06]"
+                            }`}
+                          >
+                            {item.badge}
+                          </span>
+                        )}
+                        {item.desktopOnly && (
+                          <span className="text-[8px] font-mono uppercase px-1 py-0.2 rounded bg-white/[0.04] text-zinc-500 border border-white/[0.04]">
+                            PC
+                          </span>
+                        )}
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            ))}
           </nav>
         </div>
 
-        <div className="flex flex-col gap-2">
+        {/* Footer Actions */}
+        <div className="flex flex-col gap-2 pt-4 border-t border-white/[0.06] mt-4">
           <button
-            onClick={() => window.dispatchEvent(new Event("open-system-tour"))}
-            className="flex items-center gap-2 px-3 py-2 text-xs rounded-lg text-text-secondary hover:text-text-primary hover:bg-text-primary/5 transition-colors border border-border-subtle cursor-pointer text-left"
-          >
-            <FileText size={14} className="text-text-tertiary" />
-            <span>Architecture & Guide</span>
-          </button>
-
-          <button
-            onClick={() => window.dispatchEvent(new Event("open-feedback-modal"))}
-            className="flex items-center gap-2 px-3 py-2 text-xs rounded-lg text-text-secondary hover:text-text-primary hover:bg-text-primary/5 transition-colors border border-border-subtle cursor-pointer text-left"
-          >
-            <Zap size={14} className="text-text-tertiary" />
-            <span>Suggest & Feedback</span>
-          </button>
-
-          <button
-            onClick={() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
-            className="flex items-center justify-between px-3 py-2 text-xs rounded-lg bg-text-primary/5 text-text-secondary hover:bg-text-primary/10 transition-colors border border-border-subtle cursor-pointer"
+            onClick={() => window.dispatchEvent(new Event("toggle-console-drawer"))}
+            className="flex items-center justify-between px-2.5 py-1.5 text-xs rounded-md bg-white/[0.03] text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06] transition-colors border border-white/[0.06] cursor-pointer"
           >
             <div className="flex items-center gap-2">
-              <Search size={14} />
-              <span>Quick Search</span>
+              <Terminal size={14} className="text-amber-400" />
+              <span>Stdout Terminal</span>
             </div>
-            <kbd className="font-mono bg-bg-surface px-1.5 py-0.5 rounded border border-border-subtle">⌘K</kbd>
+            <span className="text-[9px] font-mono text-zinc-500">`~`</span>
           </button>
 
-          <div className="pt-2.5 border-t border-border-subtle flex items-center justify-between">
-            <div className="text-[10px] font-mono text-text-tertiary uppercase tracking-[0.2em]">
-              100% Client-Side
+          <button
+            onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))}
+            className="flex items-center justify-between px-2.5 py-1.5 text-xs rounded-md bg-white/[0.03] text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06] transition-colors border border-white/[0.06] cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <Search size={14} className="text-zinc-500" />
+              <span>Command Deck</span>
             </div>
+            <kbd className="text-[9px] font-mono bg-white/[0.06] px-1 rounded text-zinc-400">⌘K</kbd>
+          </button>
+
+          <div className="flex items-center justify-between px-2 pt-1 text-[11px] text-zinc-500 font-mono">
+            <span>100% In-Memory WASM</span>
             <ThemeToggle />
           </div>
         </div>
       </aside>
 
-      {/* ── Mobile Top Sticky Header ── */}
-      <header className="md:hidden fixed top-0 left-0 right-0 h-14 bg-bg-base/80 backdrop-blur-md border-b border-border-subtle z-50 flex items-center justify-between px-4">
+      {/* ── Mobile Header & Bottom Navigation Bar ── */}
+      <div className="md:hidden fixed top-0 left-0 right-0 h-14 bg-[#09090c]/90 backdrop-blur-md border-b border-white/[0.08] px-4 flex items-center justify-between z-40">
         <Link href="/" className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-text-primary text-bg-base">
-            <Zap size={16} className="fill-current" />
+          <div className="p-1.5 rounded-md bg-white text-black">
+            <Zap size={14} className="fill-current" />
           </div>
-          <span className="text-base font-bold tracking-tight text-text-primary">
-            Explosive
-          </span>
+          <span className="text-sm font-bold text-white">Explosive Studio</span>
         </Link>
 
         <div className="flex items-center gap-2">
           <button
-            onClick={() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
-            className="p-2 rounded-lg bg-text-primary/5 text-text-primary/70 border border-border-subtle"
-            aria-label="Search"
+            onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }))}
+            className="p-1.5 rounded bg-white/[0.05] border border-white/[0.08] text-zinc-300"
           >
-            <Search size={16} />
+            <Search size={14} />
           </button>
           <ThemeToggle />
         </div>
-      </header>
+      </div>
 
-      {/* ── Mobile Bottom Horizontally Scrollable Dock ── */}
-      <nav className="md:hidden fixed bottom-3 left-3 right-3 h-14 bg-bg-surface/90 backdrop-blur-xl border border-border-subtle rounded-2xl z-50 flex items-center px-2 shadow-2xl overflow-hidden">
-        <div className="flex items-center gap-1 w-full overflow-x-auto scrollbar-none py-1 px-1 touch-pan-x">
-          {NAV_ITEMS.map((item) => {
-            const isActive = pathname === item.href;
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl shrink-0 transition-all ${
-                  isActive
-                    ? "text-text-primary font-semibold bg-text-primary/10"
-                    : item.desktopOnly
-                    ? "text-text-tertiary opacity-60"
-                    : "text-text-secondary hover:text-text-primary"
-                }`}
-              >
-                <Icon size={16} strokeWidth={isActive ? 2 : 1.5} />
-                <span className="text-xs tracking-tight whitespace-nowrap">
-                  {item.shortLabel}
-                </span>
-                {item.desktopOnly && (
-                  <span className="text-[8px] font-mono bg-text-primary/10 px-1 py-0.2 rounded text-text-tertiary">
-                    PC
-                  </span>
-                )}
-                {isActive && (
-                  <motion.div
-                    layoutId="mobile-pill-active"
-                    className="absolute inset-0 border border-text-primary/20 rounded-xl pointer-events-none"
-                    transition={{ type: "spring", stiffness: 450, damping: 35 }}
-                  />
-                )}
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
+      <div className="md:hidden fixed bottom-0 left-0 right-0 h-14 bg-[#09090c]/95 backdrop-blur-lg border-t border-white/[0.08] px-3 flex items-center justify-around z-40">
+        <Link href="/" className={`flex flex-col items-center gap-0.5 text-[10px] ${pathname === "/" ? "text-white" : "text-zinc-500"}`}>
+          <Zap size={16} />
+          <span>Home</span>
+        </Link>
+        <Link href="/metadata" className={`flex flex-col items-center gap-0.5 text-[10px] ${pathname === "/metadata" ? "text-white" : "text-zinc-500"}`}>
+          <ShieldCheck size={16} />
+          <span>Forensics</span>
+        </Link>
+        <Link href="/vectorize" className={`flex flex-col items-center gap-0.5 text-[10px] ${pathname === "/vectorize" ? "text-white" : "text-zinc-500"}`}>
+          <Shapes size={16} />
+          <span>Vector</span>
+        </Link>
+        <Link href="/ocr" className={`flex flex-col items-center gap-0.5 text-[10px] ${pathname === "/ocr" ? "text-white" : "text-zinc-500"}`}>
+          <ScanText size={16} />
+          <span>OCR</span>
+        </Link>
+        <Link href="/data-morph" className={`flex flex-col items-center gap-0.5 text-[10px] ${pathname === "/data-morph" ? "text-white" : "text-zinc-500"}`}>
+          <Binary size={16} />
+          <span>Morph</span>
+        </Link>
+      </div>
     </>
   );
 }

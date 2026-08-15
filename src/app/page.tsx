@@ -1,23 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import {
+  Zap,
   FileText,
   Image as ImageIcon,
   FileDown,
   Music,
   Scissors,
   Video,
-  Monitor,
-  Lock,
+  ShieldCheck,
+  Shapes,
+  ScanText,
+  Radio,
+  Film,
+  Binary,
+  Archive,
   ArrowRight,
-  Shield,
-  Layers,
   Cpu,
+  Layers,
+  Terminal,
+  Activity,
 } from "lucide-react";
-import { toast } from "sonner";
 
 interface ToolItem {
   href: string;
@@ -26,6 +31,7 @@ interface ToolItem {
   icon: any;
   engine: string;
   supportedFormats: string;
+  badge?: string;
   desktopOnly?: boolean;
 }
 
@@ -38,60 +44,119 @@ interface ToolGroup {
 
 const TOOL_GROUPS: ToolGroup[] = [
   {
-    id: "audio",
-    category: "Audio Processing",
-    summary: "Conversion, track extraction, and lossless waveform editing.",
+    id: "forensics-vectors",
+    category: "Forensics, Vectors & OCR",
+    summary: "Deep binary header inspection, raster-to-vector tracing, and local OCR text extraction.",
     tools: [
+      {
+        href: "/metadata",
+        title: "Metadata & Stego Inspector",
+        description: "Scrub GPS & hardware identifiers, inspect EXIF tags, and visualize LSB steganography bitplanes.",
+        icon: ShieldCheck,
+        engine: "In-Memory Header Parser",
+        supportedFormats: "JPG, PNG, TIFF, MP4, WebP",
+        badge: "PRO",
+      },
+      {
+        href: "/vectorize",
+        title: "Raster to SVG Vectorizer",
+        description: "Convert bitmap images, logos, and scans into infinitely scalable, smooth SVG vector paths.",
+        icon: Shapes,
+        engine: "Bézier Boundary Tracer",
+        supportedFormats: "PNG, JPG, BMP, Scans",
+        badge: "SVG",
+      },
+      {
+        href: "/ocr",
+        title: "Client-Side Document OCR",
+        description: "Neural optical character recognition with layout analysis and plain text / searchable PDF layer extraction.",
+        icon: ScanText,
+        engine: "Tesseract WASM Core",
+        supportedFormats: "PNG, JPG, PDF, TIFF",
+        badge: "WASM",
+      },
+    ],
+  },
+  {
+    id: "audio-dsp-animation",
+    category: "Spatial Audio & Animated Media",
+    summary: "Real-time Web Audio DSP matrix and frame-diffing animated media optimization.",
+    tools: [
+      {
+        href: "/dsp",
+        title: "Spatial Audio DSP & Stem Isolator",
+        description: "Stereo phase cancellation for vocal cut / isolation, 3D binaural panning, and 8-band parametric EQ.",
+        icon: Radio,
+        engine: "WebAudio Biquad Matrix",
+        supportedFormats: "WAV, MP3, AAC, FLAC, OGG",
+        badge: "DSP",
+      },
+      {
+        href: "/animator",
+        title: "Animated WebP & GIF Diff",
+        description: "Generate lightweight animations with temporal delta deduplication and 256-color palette dithering.",
+        icon: Film,
+        engine: "FFmpeg WASM PaletteGen",
+        supportedFormats: "MP4, WebM, MOV, GIF",
+        badge: "DIFF",
+      },
       {
         href: "/audio",
         title: "Audio Converter & Extractor",
-        description: "Extract audio streams from video files or transcode between audio formats with bitrate and sample rate configuration.",
+        description: "Extract audio streams from video files or transcode between formats with custom sample rate controls.",
         icon: Music,
-        engine: "FFmpeg WASM (libmp3lame, opus)",
-        supportedFormats: "MP3, WAV, AAC, FLAC, OGG, M4A",
-        desktopOnly: false,
+        engine: "FFmpeg WASM (libmp3lame)",
+        supportedFormats: "MP3, WAV, AAC, FLAC, OGG",
       },
       {
         href: "/trim",
         title: "Audio Waveform Trimmer",
-        description: "Interactive visual waveform cutting with millisecond range controls and lossless client-side PCM audio slicing.",
+        description: "Interactive visual waveform slicing with millisecond precision and lossless client-side PCM export.",
         icon: Scissors,
-        engine: "Web Audio API (AudioBuffer)",
-        supportedFormats: "MP3, WAV, AAC, FLAC, OGG",
-        desktopOnly: false,
+        engine: "AudioBuffer PCM Slicer",
+        supportedFormats: "MP3, WAV, AAC, FLAC",
       },
     ],
   },
   {
-    id: "video-graphics",
-    category: "Video & Graphics",
-    summary: "Compression and image format transcoding.",
+    id: "code-archive-documents",
+    category: "Code Morph, Archives & Documents",
+    summary: "AST schema transformations, in-memory archive repacking, video compression, and PDF manipulation.",
     tools: [
+      {
+        href: "/data-morph",
+        title: "Universal Code & AST Morph",
+        description: "Bi-directional instant conversion between JSON, YAML, TOML, CSV, XML, and TypeScript interfaces.",
+        icon: Binary,
+        engine: "AST Parser & Serializer",
+        supportedFormats: "JSON, YAML, CSV, TS, XML",
+        badge: "AST",
+      },
+      {
+        href: "/archive",
+        title: "Archive Inspector & Repacker",
+        description: "Inspect nested directories, extract selective files, and pack in-memory ZIP/TAR archives.",
+        icon: Archive,
+        engine: "Fflate In-Memory Stream",
+        supportedFormats: "ZIP, TAR, GZ, ZSTD",
+        badge: "IO",
+      },
       {
         href: "/compress",
         title: "Video Compressor",
-        description: "Reduce video bitrate and file size using H.264 encoding with adjustable Constant Rate Factor (CRF) and preset speed.",
+        description: "Reduce video bitrate using H.264 encoding with Constant Rate Factor (CRF) and preset speed tuning.",
         icon: FileDown,
         engine: "FFmpeg WASM (libx264)",
-        supportedFormats: "MP4, MOV, MKV, WebM, AVI",
-        desktopOnly: false,
+        supportedFormats: "MP4, MOV, MKV, WebM",
       },
       {
         href: "/image",
         title: "Image Transcoder",
-        description: "Batch transcode image formats, adjust compression quality, and apply proportional or exact dimension scaling.",
+        description: "Batch transcode image formats, adjust compression quality, and apply proportional dimension scaling.",
         icon: ImageIcon,
-        engine: "HTML5 Canvas Transcoder",
-        supportedFormats: "PNG, JPG, WEBP, BMP, SVG",
-        desktopOnly: false,
+        engine: "HTML5 Canvas Engine",
+        supportedFormats: "PNG, JPG, WEBP, BMP",
       },
-    ],
-  },
-  {
-    id: "documents-capture",
-    category: "Documents & Recording",
-    summary: "Document manipulation and display media capture.",
-    tools: [
       {
         href: "/pdf",
         title: "PDF Studio",
@@ -99,12 +164,11 @@ const TOOL_GROUPS: ToolGroup[] = [
         icon: FileText,
         engine: "PDF-Lib Core",
         supportedFormats: "PDF",
-        desktopOnly: false,
       },
       {
         href: "/record",
         title: "Screen & Camera Recorder",
-        description: "Capture application windows, full displays, or webcams with synchronized microphone and system audio streams.",
+        description: "Capture application windows, full displays, or webcams with synchronized microphone audio.",
         icon: Video,
         engine: "MediaRecorder API",
         supportedFormats: "WebM, MP4 (VP9 / Opus)",
@@ -115,202 +179,109 @@ const TOOL_GROUPS: ToolGroup[] = [
 ];
 
 export default function Home() {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
-    };
-    checkIsMobile();
-    window.addEventListener("resize", checkIsMobile);
-    return () => window.removeEventListener("resize", checkIsMobile);
-  }, []);
-
-  const handleToolClick = (e: React.MouseEvent, tool: ToolItem) => {
-    if (tool.desktopOnly && isMobile) {
-      e.preventDefault();
-      toast.info("Desktop Exclusive Tool", {
-        description: "Screen & Window Recording requires desktop display capture APIs (Chrome, Firefox, or Edge on PC/Mac).",
-        icon: <Monitor className="w-4 h-4 text-text-primary" />,
-      });
-    }
-  };
-
   return (
-    <div className="flex flex-col items-center w-full gap-12 sm:gap-16 max-w-5xl mx-auto">
-      {/* ── Headline & Overview ── */}
-      <section className="w-full text-left pt-2 sm:pt-10 border-b border-border-subtle pb-8">
-        <div className="flex flex-col gap-3 max-w-3xl">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-xs font-mono text-text-tertiary uppercase tracking-wider">
-              <span>Media & Document Suite</span>
-              <span>•</span>
-              <span>Client-Side Engine</span>
-            </div>
-
-            <button
-              onClick={() => window.dispatchEvent(new Event("open-system-tour"))}
-              className="text-xs font-mono text-text-secondary hover:text-text-primary underline underline-offset-4 cursor-pointer"
-            >
-              System Guide →
-            </button>
+    <div className="flex flex-col items-center w-full gap-10 sm:gap-14 max-w-5xl mx-auto">
+      {/* ── Studio Hero & Spec Matrix ── */}
+      <section className="w-full text-left pt-2 sm:pt-6 border-b border-white/[0.08] pb-8">
+        <div className="flex flex-col gap-4 max-w-3xl">
+          <div className="flex items-center gap-2 text-xs font-mono text-zinc-500 uppercase tracking-widest">
+            <span className="text-emerald-400 font-semibold">Explosive Studio v2.0</span>
+            <span>•</span>
+            <span>WebAssembly SIMD & Stream Engine</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-text-primary">
-            Local Media & Document Processing
+          <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
+            High-Grade Media & Data Engineering Suite
           </h1>
 
-          <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-normal">
-            A privacy-focused suite of media conversion and document utilities running entirely inside your browser. 
-            All operations execute on your device’s processor with zero server uploads or external network requests.
+          <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
+            Industrial-strength media processing, forensic file inspection, and schema serialization. Powered 100% in-browser by WebAssembly SIMD and Web Streams with zero server data exfiltration.
           </p>
-        </div>
 
-        {/* Technical Specs Strip */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-8 pt-6 border-t border-border-subtle">
-          <div className="flex items-start gap-3 p-3 rounded-lg bg-bg-surface border border-border-subtle">
-            <Shield size={18} className="text-text-secondary mt-0.5 shrink-0" />
-            <div>
-              <span className="text-xs font-semibold text-text-primary block">Private by Design</span>
-              <span className="text-[11px] text-text-tertiary font-mono">Files never leave memory</span>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3 p-3 rounded-lg bg-bg-surface border border-border-subtle">
-            <Cpu size={18} className="text-text-secondary mt-0.5 shrink-0" />
-            <div>
-              <span className="text-xs font-semibold text-text-primary block">WebAssembly Execution</span>
-              <span className="text-[11px] text-text-tertiary font-mono">Native C/C++ codecs in browser</span>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3 p-3 rounded-lg bg-bg-surface border border-border-subtle">
-            <Layers size={18} className="text-text-secondary mt-0.5 shrink-0" />
-            <div>
-              <span className="text-xs font-semibold text-text-primary block">Offline Capable</span>
-              <span className="text-[11px] text-text-tertiary font-mono">Works without internet once loaded</span>
-            </div>
+          {/* Quick Spec Badges */}
+          <div className="flex flex-wrap items-center gap-2 pt-2 text-xs font-mono">
+            <span className="px-2.5 py-1 rounded bg-white/[0.04] text-zinc-300 border border-white/[0.08] flex items-center gap-1.5">
+              <Cpu size={13} className="text-amber-400" />
+              <span>Multi-Threaded Workers</span>
+            </span>
+            <span className="px-2.5 py-1 rounded bg-white/[0.04] text-zinc-300 border border-white/[0.08] flex items-center gap-1.5">
+              <ShieldCheck size={13} className="text-emerald-400" />
+              <span>100% In-Memory Privacy</span>
+            </span>
+            <span className="px-2.5 py-1 rounded bg-white/[0.04] text-zinc-300 border border-white/[0.08] flex items-center gap-1.5">
+              <Terminal size={13} className="text-cyan-400" />
+              <span>Real-Time Stdout Telemetry</span>
+            </span>
           </div>
         </div>
       </section>
 
-      {/* ── Organized Tool Sections ── */}
-      <section className="flex flex-col gap-12 w-full">
+      {/* ── Tool Categories Grid ── */}
+      <div className="w-full flex flex-col gap-10">
         {TOOL_GROUPS.map((group) => (
-          <div key={group.id} className="flex flex-col gap-4">
-            {/* Group Header */}
-            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 pb-2 border-b border-border-subtle">
-              <h2 className="text-lg font-semibold tracking-tight text-text-primary">
-                {group.category}
-              </h2>
-              <span className="text-xs text-text-tertiary font-mono">
-                {group.summary}
-              </span>
+          <section key={group.id} className="flex flex-col gap-4">
+            <div className="flex flex-col gap-0.5">
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-white/[0.2]"></span>
+                <h2 className="text-base font-semibold text-white font-mono tracking-tight uppercase">
+                  {group.category}
+                </h2>
+              </div>
+              <p className="text-xs text-zinc-400 font-mono pl-4">{group.summary}</p>
             </div>
 
-            {/* Tools Grid for this Group */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
               {group.tools.map((tool) => {
                 const Icon = tool.icon;
-                const isGreyedOut = tool.desktopOnly && isMobile;
-
                 return (
                   <Link
                     key={tool.href}
                     href={tool.href}
-                    onClick={(e) => handleToolClick(e, tool)}
-                    className={`group block outline-none select-none ${
-                      isGreyedOut ? "cursor-not-allowed" : "cursor-pointer"
-                    }`}
+                    className="group relative p-4 rounded-xl bg-[#09090c] border border-white/[0.07] hover:border-white/[0.2] hover:bg-[#111116] transition-all flex flex-col justify-between gap-4 shadow-sm"
                   >
-                    <div
-                      className={`h-full p-5 sm:p-6 rounded-2xl border transition-all duration-200 flex flex-col justify-between gap-5 relative overflow-hidden ${
-                        isGreyedOut
-                          ? "bg-bg-surface/30 border-border-subtle opacity-40 grayscale shadow-none"
-                          : "bg-bg-surface border-border-focus/40 hover:border-text-primary/40 hover:bg-bg-surface-hover shadow-md hover:shadow-xl hover:-translate-y-0.5"
-                      }`}
-                    >
-                      {/* Top Info */}
-                      <div className="flex flex-col gap-3.5">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2.5 rounded-xl bg-text-primary text-bg-base font-bold shadow-sm group-hover:scale-105 transition-transform">
-                              <Icon size={18} strokeWidth={2} />
-                            </div>
-                            <h3 className="text-base font-bold tracking-tight text-text-primary group-hover:text-glow transition-all">
-                              {tool.title}
-                            </h3>
-                          </div>
-
-                          {tool.desktopOnly && (
-                            <span className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md bg-text-primary/5 text-text-tertiary border border-border-subtle">
-                              <Monitor size={10} />
-                              {isMobile ? "Desktop Only" : "Desktop"}
-                            </span>
-                          )}
+                    <div className="flex flex-col gap-2.5">
+                      <div className="flex items-center justify-between">
+                        <div className="p-2 rounded-lg bg-white/[0.05] border border-white/[0.08] text-white group-hover:scale-105 transition-transform">
+                          <Icon size={18} />
                         </div>
+                        {tool.badge && (
+                          <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-white/[0.08] text-zinc-300 border border-white/[0.08]">
+                            {tool.badge}
+                          </span>
+                        )}
+                      </div>
 
-                        <p className="text-xs text-text-secondary leading-relaxed font-normal">
+                      <div>
+                        <h3 className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center gap-1.5">
+                          <span>{tool.title}</span>
+                          <ArrowRight
+                            size={12}
+                            className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-amber-300"
+                          />
+                        </h3>
+                        <p className="text-xs text-zinc-400 line-clamp-2 mt-1 leading-relaxed">
                           {tool.description}
                         </p>
                       </div>
+                    </div>
 
-                      {/* Technical Footer & Action CTA */}
-                      <div className="pt-4 border-t border-border-subtle flex flex-col gap-3">
-                        <div className="flex flex-col gap-1 text-[11px] font-mono text-text-tertiary">
-                          <div className="flex items-center justify-between">
-                            <span>Engine:</span>
-                            <span className="text-text-secondary truncate max-w-[200px]">{tool.engine}</span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span>Formats:</span>
-                            <span className="text-text-secondary truncate max-w-[200px]">{tool.supportedFormats}</span>
-                          </div>
-                        </div>
-
-                        {/* Distinct Clickable Button Affordance */}
-                        <div className="pt-2 flex items-center justify-end">
-                          <div className={`px-4 py-2 rounded-xl text-xs font-bold tracking-wide flex items-center gap-1.5 transition-all ${
-                            isGreyedOut
-                              ? "bg-text-primary/5 text-text-tertiary border border-border-subtle"
-                              : "bg-text-primary text-bg-base shadow-md group-hover:bg-text-primary/90 group-hover:gap-2"
-                          }`}>
-                            <span>{isGreyedOut ? "Desktop Required" : "Launch Utility"}</span>
-                            {!isGreyedOut && <ArrowRight size={13} strokeWidth={2.5} />}
-                          </div>
-                        </div>
+                    <div className="pt-2.5 border-t border-white/[0.05] flex flex-col gap-1 text-[10px] font-mono text-zinc-500">
+                      <div className="flex items-center justify-between">
+                        <span>Engine:</span>
+                        <span className="text-zinc-400 truncate max-w-[150px]">{tool.engine}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span>Formats:</span>
+                        <span className="text-zinc-400 truncate max-w-[150px]">{tool.supportedFormats}</span>
                       </div>
                     </div>
                   </Link>
                 );
               })}
             </div>
-          </div>
+          </section>
         ))}
-      </section>
-
-      {/* ── Footer / Suggestions Bar ── */}
-      <footer className="w-full pt-8 pb-4 border-t border-border-subtle flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-text-tertiary">
-        <div>
-          <span>Explosive Converter • 100% Client-Side Suite</span>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => window.dispatchEvent(new Event("open-system-tour"))}
-            className="hover:text-text-primary transition-colors cursor-pointer"
-          >
-            System Guide
-          </button>
-          <span>•</span>
-          <button
-            onClick={() => window.dispatchEvent(new Event("open-feedback-modal"))}
-            className="hover:text-text-primary transition-colors cursor-pointer underline underline-offset-4 font-semibold text-text-secondary"
-          >
-            Send Feedback & Suggestions
-          </button>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 }
