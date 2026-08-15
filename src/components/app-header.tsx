@@ -66,14 +66,14 @@ export function AppHeader() {
           {/* Center: Tabs — styled like e-commerce mega-nav */}
           <nav className="hidden lg:flex items-center h-full">
             {SIDEBAR_CATEGORIES.map((cat) => (
-              <Link
+              <button
                 key={cat.id}
-                href={cat.items[0]?.href || "/"}
-                className="relative h-full flex items-center px-4 text-[13px] font-medium text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors group"
+                onClick={() => setDrawerOpen(true)}
+                className="relative h-full flex items-center px-4 text-[13px] font-medium text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors group cursor-pointer"
               >
                 <span>{cat.name}</span>
                 <span className="absolute bottom-0 left-4 right-4 h-[2px] bg-[var(--text-main)] scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-              </Link>
+              </button>
             ))}
           </nav>
 
