@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -130,6 +130,11 @@ export function OnboardingTutorial() {
     return () => window.removeEventListener("open-system-tour", handleOpenTour);
   }, []);
 
+  const handleDismiss = () => {
+    localStorage.setItem(STORAGE_KEY, "true");
+    setIsOpen(false);
+  };
+
   useEffect(() => {
     if (!isOpen) return;
 
@@ -146,11 +151,6 @@ export function OnboardingTutorial() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, currentStep]);
-
-  const handleDismiss = () => {
-    localStorage.setItem(STORAGE_KEY, "true");
-    setIsOpen(false);
-  };
 
   const handleNext = () => {
     if (currentStep < STEPS.length - 1) {
