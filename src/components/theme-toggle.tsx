@@ -4,39 +4,41 @@ import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export function ThemeToggle() {
+export function ThemeToggle({ showLabel = false, className = "" }: { showLabel?: boolean; className?: string }) {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
 
-  if (!mounted) {
-    return <div className="w-9 h-9 rounded-xl opacity-0" />;
-  }
+  const isDark = mounted ? resolvedTheme === "dark" : true;
 
-  const isDark = resolvedTheme === "dark";
+  const toggleTheme = () => {
+    setTheme(isDark ? "light" : "dark");
+  };
 
   return (
     <button
-      onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="neu-btn relative flex items-center justify-center w-9 h-9 rounded-xl text-[var(--text-main)] transition-all cursor-pointer overflow-hidden p-0"
-      aria-label="Toggle light/dark theme"
+      type="button"
+      onClick={toggleTheme}
+      className={`relative inline-flex items-center gap-2 px-3 py-1.5 h-9 rounded-xl border border-black/10 dark:border-white/15 bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/15 text-[var(--text-main)] shadow-sm transition-all duration-200 cursor-pointer select-none group ${className}`}
+      aria-label={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
       title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
     >
-      <div
-        className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${
-          isDark ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-50 pointer-events-none"
-        }`}
-      >
-        <Moon size={16} strokeWidth={2} />
+      <div className="relative w-4 h-4 flex items-center justify-center shrink-0">
+        {mounted ? (
+          isDark ? (
+            <Moon size={15} className="text-zinc-200 group-hover:text-white transition-colors" />
+          ) : (
+            <Sun size={15} className="text-amber-500 group-hover:text-amber-600 transition-colors" />
+          )
+        ) : (
+          <Moon size={15} className="text-zinc-400" />
+        )}
       </div>
-      <div
-        className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${
-          !isDark ? "opacity-100 rotate-0 scale-100 text-amber-500" : "opacity-0 rotate-90 scale-50 pointer-events-none"
-        }`}
-      >
-        <Sun size={16} strokeWidth={2} className="text-zinc-900 dark:text-amber-500" />
-      </div>
+
+      <span className="text-xs font-mono font-medium text-[var(--text-main)]">
+        {mounted ? (isDark ? "Dark" : "Light") : "Theme"}
+      </span>
     </button>
   );
 }

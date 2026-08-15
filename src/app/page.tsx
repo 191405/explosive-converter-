@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
-  ArrowRight,
   Search,
   ChevronDown,
   Shield,
@@ -14,8 +13,11 @@ import {
   Minus,
   Zap,
   Menu,
+  Sparkles,
+  Lock,
+  HardDrive,
+  Workflow,
 } from "lucide-react";
-import { SIDEBAR_CATEGORIES } from "@/components/sidebar";
 
 export default function HomePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -33,44 +35,44 @@ export default function HomePage() {
   const faqItems = [
     {
       q: "How does file processing work without a server?",
-      a: "We compile native C/C++ and Rust libraries to WebAssembly. Your browser executes these binaries locally with hardware SIMD acceleration — no upload, no queue, no waiting.",
+      a: "We compile native C/C++ and Rust libraries to WebAssembly. Your browser executes these binaries locally with hardware SIMD acceleration — no upload, no remote queue, and no waiting.",
+    },
+    {
+      q: "Where do I access the 19 engineering workstations?",
+      a: "All 19 tools are housed directly in the Sidebar Directory (open via the top-left hamburger menu or 'Explore Workstations' CTA) and the Command Palette (⌘K). This keeps the main studio view clean, focused, and distraction-free.",
     },
     {
       q: "Is there a file size limit?",
-      a: "Files up to 2 GB are supported on standard 64-bit systems. Processing speed scales with your available RAM.",
+      a: "Files up to 2 GB are supported on standard 64-bit systems. Processing speed scales directly with your device's available RAM and CPU cores.",
     },
     {
-      q: "Are my cryptographic keys and files safe?",
-      a: "All keys use the W3C WebCrypto API with non-extractable CryptoKey handles. Files are processed entirely in browser volatile RAM and flushed immediately on export.",
+      q: "Are my cryptographic keys and sensitive files safe?",
+      a: "All keys use the W3C WebCrypto API with non-extractable handles. Files are processed entirely in browser volatile RAM and flushed immediately on export with zero residual cache.",
     },
     {
-      q: "Does it work offline?",
-      a: "Yes. All WASM modules and assets are cached by the Progressive Web App service worker. Full offline capability without internet connectivity.",
-    },
-    {
-      q: "Where do I find all 19 engineering workstations?",
-      a: "Click 'Explore Workstations' or open the Directory menu in the top left header to access all forensic, audio DSP, video streaming, schematic, and document tools.",
+      q: "Does it work completely offline?",
+      a: "Yes. All WASM modules, UI engines, and assets are cached by our Progressive Web App (PWA) service worker. You can disconnect from the internet and continue converting seamlessly.",
     },
   ];
 
   return (
-    <div className="flex flex-col w-full font-sans text-[var(--text-muted)] -mt-20">
+    <div className="flex flex-col w-full font-sans text-[var(--text-muted)]">
       {/* ──────────────────────────────────────────
-          LAYER 1 — IMMERSIVE HERO
+          LAYER 1 — IMMERSIVE EXECUTIVE HERO
       ────────────────────────────────────────── */}
-      <section className="relative w-screen -mx-3 sm:-mx-6 min-h-[92vh] flex items-end justify-center overflow-hidden">
+      <section className="relative w-full min-h-[82vh] flex items-center justify-center overflow-hidden rounded-3xl mb-12 border border-black/[0.06] dark:border-white/[0.08] shadow-2xl">
         {/* Background Artwork */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 scale-105"
           style={{ backgroundImage: "url('/hero-artwork.jpg')" }}
         />
-        {/* Deep vignette layers for depth */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-main)] via-[var(--bg-main)]/75 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-main)]/60 via-transparent to-[var(--bg-main)]/60" />
+        {/* Deep adaptive vignette gradients */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-main)] via-[var(--bg-main)]/80 to-[var(--bg-main)]/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-main)]/70 via-transparent to-[var(--bg-main)]/70" />
 
         {/* Hero Content */}
-        <div className="relative z-10 max-w-4xl mx-auto px-6 pb-20 sm:pb-28 text-center flex flex-col items-center gap-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/20 dark:bg-white/[0.06] border border-black/10 dark:border-white/10 text-xs font-mono text-[var(--text-main)] backdrop-blur-md">
+        <div className="relative z-10 max-w-4xl mx-auto px-6 py-16 sm:py-24 text-center flex flex-col items-center gap-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/10 dark:bg-white/[0.08] border border-black/10 dark:border-white/15 text-xs font-mono text-[var(--text-main)] backdrop-blur-md shadow-sm">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             100% Client-Side WebAssembly SIMD
           </div>
@@ -78,12 +80,12 @@ export default function HomePage() {
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extralight tracking-[-0.03em] text-[var(--text-main)] leading-[1.08]">
             Convert. Process.
             <br />
-            <span className="font-semibold">Entirely Yours.</span>
+            <span className="font-semibold text-[var(--text-main)]">Entirely Yours.</span>
           </h1>
 
           <p className="text-base sm:text-lg text-[var(--text-muted)] max-w-xl leading-relaxed font-light">
             A private engineering studio that runs entirely in your browser memory.
-            No cloud uploads. Zero data retention. Full offline execution.
+            No cloud uploads. Zero data retention. Full offline execution across 19 workstations.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3.5 pt-4">
@@ -104,23 +106,18 @@ export default function HomePage() {
             </button>
           </div>
         </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[var(--text-dim)] text-xs animate-bounce z-10">
-          <ChevronDown size={18} />
-        </div>
       </section>
 
       {/* ──────────────────────────────────────────
           LAYER 2 — TRUST STRIP
       ────────────────────────────────────────── */}
-      <section className="w-screen -mx-3 sm:-mx-6 py-12 px-4">
+      <section className="w-full py-6 px-2 mb-16">
         <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {[
-            { num: "0 bytes", desc: "uploaded to any server" },
-            { num: "100%", desc: "client-side execution" },
-            { num: "19 Tools", desc: "accessible via sidebar" },
-            { num: "PWA Offline", desc: "runs with zero internet" },
+            { num: "0 bytes", desc: "uploaded to any remote server" },
+            { num: "100%", desc: "client-side memory execution" },
+            { num: "19 Tools", desc: "accessible in sidebar directory" },
+            { num: "PWA Offline", desc: "runs with zero internet connection" },
           ].map((stat, i) => (
             <div key={i} className="neu-tile p-6 text-center">
               <div className="text-2xl sm:text-3xl font-light text-[var(--text-main)] tracking-tight">
@@ -137,14 +134,14 @@ export default function HomePage() {
       {/* ──────────────────────────────────────────
           LAYER 3 — HOW IT WORKS
       ────────────────────────────────────────── */}
-      <section id="how" className="w-screen -mx-3 sm:-mx-6 py-20 sm:py-28">
-        <div className="max-w-5xl mx-auto px-6 sm:px-8">
+      <section id="how" className="w-full py-16 sm:py-24 border-t border-black/[0.06] dark:border-white/[0.06]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="max-w-lg mb-12">
             <h2 className="text-3xl sm:text-4xl font-light text-[var(--text-main)] tracking-tight leading-snug">
               How it works
             </h2>
             <p className="mt-3 text-sm text-[var(--text-muted)] leading-relaxed">
-              Three steps. Zero accounts, no sign-ups, and complete offline capability.
+              Three simple steps. Zero accounts, no logins, and complete privacy by architecture.
             </p>
           </div>
 
@@ -152,15 +149,15 @@ export default function HomePage() {
             {[
               {
                 step: "Drop",
-                body: "Open any workstation from the sidebar and drag your file in. It loads directly into browser volatile RAM — zero bytes leave your hardware.",
+                body: "Open any workstation from the sidebar drawer and drop your file in. It streams into browser volatile RAM — 0 bytes touch any network.",
               },
               {
                 step: "Process",
-                body: "WebAssembly SIMD compute kernels and Web Audio DSP execute transformations locally at hardware speeds.",
+                body: "WebAssembly SIMD compute kernels and Web Audio DSP execute transformations directly on your hardware at peak performance.",
               },
               {
                 step: "Export",
-                body: "Save the processed output instantly to your disk. Memory buffers are immediately flushed with zero residual footprint.",
+                body: "Save your processed media instantly to disk. Memory buffers are immediately purged with zero residual cache.",
               },
             ].map((item, i) => (
               <div key={i} className="neu-tile p-8 flex flex-col gap-4">
@@ -182,14 +179,14 @@ export default function HomePage() {
       {/* ──────────────────────────────────────────
           LAYER 4 — SECURITY & ARCHITECTURE COMPARISON
       ────────────────────────────────────────── */}
-      <section className="w-screen -mx-3 sm:-mx-6 py-20 sm:py-28">
-        <div className="max-w-5xl mx-auto px-6 sm:px-8">
+      <section className="w-full py-16 sm:py-24 border-t border-black/[0.06] dark:border-white/[0.06]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="max-w-lg mb-12">
             <h2 className="text-3xl sm:text-4xl font-light text-[var(--text-main)] tracking-tight">
               Why In-Browser?
             </h2>
             <p className="mt-3 text-sm text-[var(--text-muted)] leading-relaxed">
-              Hardware client-side execution versus traditional cloud conversion pipelines.
+              Hardware client-side execution compared to traditional cloud conversion pipelines.
             </p>
           </div>
 
@@ -220,7 +217,7 @@ export default function HomePage() {
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-3">
                     <div className="w-5 h-5 neu-icon-raised shrink-0">
-                      <Check size={12} className="text-emerald-500 dark:text-emerald-400" />
+                      <Check size={12} className="text-emerald-500" />
                     </div>
                     <span className="text-sm text-[var(--text-main)] font-light">{item}</span>
                   </div>
@@ -249,8 +246,8 @@ export default function HomePage() {
                   "Full file uploaded over public internet",
                   "Queued behind other users' conversion jobs",
                   "Requires permanent online connection",
-                  "Data cached and indexed on remote cloud storage",
-                  "Subject to changing third-party data policies",
+                  "Data cached and indexed on remote storage",
+                  "Subject to third-party retention policies",
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-3">
                     <div className="w-5 h-5 neu-icon-inset shrink-0">
@@ -270,9 +267,9 @@ export default function HomePage() {
       ────────────────────────────────────────── */}
       <section
         id="faq"
-        className="w-screen -mx-3 sm:-mx-6 py-20 sm:py-28 border-t border-black/[0.04] dark:border-white/[0.04]"
+        className="w-full py-16 sm:py-24 border-t border-black/[0.06] dark:border-white/[0.06]"
       >
-        <div className="max-w-3xl mx-auto px-6 sm:px-8">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <h2 className="text-3xl sm:text-4xl font-light text-[var(--text-main)] tracking-tight mb-10">
             Frequently Asked Questions
           </h2>
@@ -307,17 +304,17 @@ export default function HomePage() {
       </section>
 
       {/* ──────────────────────────────────────────
-          LAYER 6 — FOOTER
+          LAYER 6 — MINIMAL FOOTER
       ────────────────────────────────────────── */}
-      <footer className="w-screen -mx-3 sm:-mx-6 border-t border-black/[0.04] dark:border-white/[0.04] py-10">
-        <div className="max-w-6xl mx-auto px-6 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--text-dim)]">
+      <footer className="w-full border-t border-black/[0.06] dark:border-white/[0.06] py-10 mt-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--text-dim)]">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded bg-gradient-to-br from-zinc-900 to-zinc-700 dark:from-white dark:to-zinc-200 flex items-center justify-center">
+            <div className="w-5 h-5 rounded bg-zinc-900 dark:bg-white flex items-center justify-center">
               <Zap size={10} className="text-white dark:text-black fill-current" />
             </div>
             <span className="text-[var(--text-main)] font-medium">Explosive Studio</span>
             <span>·</span>
-            <span>All processing happens locally</span>
+            <span>Zero-Server Private Media Engine</span>
           </div>
           <div className="flex items-center gap-5">
             <button
