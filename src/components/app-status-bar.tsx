@@ -35,7 +35,7 @@ export function AppStatusBar() {
             className={`h-1.5 w-1.5 rounded-full ${
               telemetry.engineStatus === "processing"
                 ? "bg-amber-400 animate-pulse"
-                : "bg-emerald-400"
+                : "bg-zinc-400"
             }`}
           />
           <span className="text-zinc-200">
@@ -49,7 +49,7 @@ export function AppStatusBar() {
         <div className="flex items-center gap-1">
           <Zap size={11} className={telemetry.simdActive ? "text-amber-400" : "text-zinc-600"} />
           <span>SIMD:</span>
-          <span className={telemetry.simdActive ? "text-emerald-400" : "text-zinc-500"}>
+          <span className={telemetry.simdActive ? "text-zinc-200 font-semibold" : "text-zinc-500"}>
             {telemetry.simdActive ? "128-BIT" : "STANDARD"}
           </span>
         </div>
@@ -73,7 +73,7 @@ export function AppStatusBar() {
         )}
 
         <div className="hidden lg:flex items-center gap-1 text-zinc-500">
-          <ShieldCheck size={11} className="text-emerald-400" />
+          <ShieldCheck size={11} className="text-amber-400/80" />
           <span>ZERO-SERVER PRIVACY BUFFER</span>
         </div>
       </div>

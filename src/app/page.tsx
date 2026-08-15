@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   Zap,
@@ -21,136 +21,17 @@ import {
   HardDrive,
   FileUp,
   Sliders,
-  CheckCircle2,
-  Lock,
+  Check,
+  Play,
+  Pause,
   Layers,
   Cpu,
   Search,
   Settings2,
+  Maximize2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { emitLog } from "@/lib/engine/orchestrator";
-
-interface ToolItem {
-  href: string;
-  title: string;
-  category: "forensics" | "audio" | "code" | "media";
-  description: string;
-  icon: any;
-  formats: string;
-  tag: string;
-}
-
-const TOOLS_LIST: ToolItem[] = [
-  {
-    href: "/metadata",
-    title: "Metadata & Steganography",
-    category: "forensics",
-    description: "Deep-scan binary headers for GPS coordinates, camera serial numbers, and inspect LSB bitplane steganography.",
-    icon: ShieldCheck,
-    formats: "JPG, PNG, MP4, WebP",
-    tag: "RAW EXIF",
-  },
-  {
-    href: "/vectorize",
-    title: "Raster to SVG Vectorizer",
-    category: "forensics",
-    description: "Convert pixel images, logos, and technical drawings into infinitely scalable Bézier vector curves.",
-    icon: Shapes,
-    formats: "PNG, JPG, BMP",
-    tag: "Vector",
-  },
-  {
-    href: "/ocr",
-    title: "Neural Document OCR",
-    category: "forensics",
-    description: "Extract clean text layers and bounding box coordinates directly in browser RAM with Tesseract WASM.",
-    icon: ScanText,
-    formats: "PNG, JPG, PDF",
-    tag: "Neural",
-  },
-  {
-    href: "/dsp",
-    title: "Spatial Audio & Stem DSP",
-    category: "audio",
-    description: "Real-time WebAudio Biquad filter matrix, vocal center phase cancellation, and 3D binaural panning.",
-    icon: Radio,
-    formats: "WAV, MP3, FLAC, AAC",
-    tag: "48kHz DSP",
-  },
-  {
-    href: "/animator",
-    title: "Animated WebP / GIF Diff",
-    category: "audio",
-    description: "Temporal delta deduplication and 256-color palette dithering to produce ultra-lightweight animations.",
-    icon: Film,
-    formats: "MP4, WebM, MOV, GIF",
-    tag: "Delta Diff",
-  },
-  {
-    href: "/data-morph",
-    title: "Universal Code AST Morph",
-    category: "code",
-    description: "Bi-directional instant schema conversion between JSON, YAML, TOML, CSV, XML, and TypeScript types.",
-    icon: Binary,
-    formats: "JSON, YAML, CSV, TS",
-    tag: "AST Schema",
-  },
-  {
-    href: "/archive",
-    title: "In-Memory Archive Studio",
-    category: "code",
-    description: "Inspect multi-level archive directories, extract files selectively, and repack in-memory ZIP/TAR archives.",
-    icon: Archive,
-    formats: "ZIP, TAR, GZ",
-    tag: "Stream IO",
-  },
-  {
-    href: "/compress",
-    title: "H.264 Video Compressor",
-    category: "media",
-    description: "CRF quality tuning and speed presets to reduce video file sizes locally with FFmpeg WASM.",
-    icon: FileDown,
-    formats: "MP4, MOV, WebM, MKV",
-    tag: "libx264",
-  },
-  {
-    href: "/audio",
-    title: "Audio Stream Converter",
-    category: "audio",
-    description: "Transcode bitrates, sample rates (44.1k/48k/96k), and extract raw audio tracks from video containers.",
-    icon: Music,
-    formats: "MP3, WAV, FLAC, AAC",
-    tag: "Codec",
-  },
-  {
-    href: "/trim",
-    title: "Waveform PCM Slicer",
-    category: "audio",
-    description: "Interactive visual waveform slicing with millisecond precision and lossless client PCM export.",
-    icon: Scissors,
-    formats: "MP3, WAV, AAC",
-    tag: "PCM 16-Bit",
-  },
-  {
-    href: "/image",
-    title: "Canvas Image Transcoder",
-    category: "media",
-    description: "Batch transcode image formats, adjust compression levels, and resize dimensions with GPU acceleration.",
-    icon: ImageIcon,
-    formats: "PNG, JPG, WebP, AVIF",
-    tag: "Canvas GPU",
-  },
-  {
-    href: "/pdf",
-    title: "PDF Document Studio",
-    category: "media",
-    description: "Merge multiple documents, extract specific page ranges, and rotate page orientations in-memory.",
-    icon: FileText,
-    formats: "PDF",
-    tag: "PDF-Lib",
-  },
-];
 
 export default function Home() {
   const router = useRouter();
@@ -158,219 +39,713 @@ export default function Home() {
   const [activeCategory, setActiveCategory] = useState<"all" | "forensics" | "audio" | "code" | "media">("all");
   const [searchQuery, setSearchQuery] = useState("");
 
+  // ── Interactive Tile States ──
+  // Audio Tile Interactive Synthesizer
+  const [audioPlaying, setAudioPlaying] = useState(false);
+  const [audioFreq, setAudioFreq] = useState(440);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const oscRef = useRef<OscillatorNode | null>(null);
+
+  // Vectorizer Tile Interactive Threshold
+  const [vectorThreshold, setVectorThreshold] = useState(128);
+
+  // Video Compressor Tile Interactive CRF Estimator
+  const [crfVal, setCrfVal] = useState(24);
+
+  // AST Morph Tile Interactive Format
+  const [astFormat, setAstFormat] = useState<"ts" | "json" | "yaml">("ts");
+
+  // Steganography Tile Bitplane Selector
+  const [activeBitplane, setActiveBitplane] = useState<number>(0);
+
+  // Audio synthesis test drive
+  const toggleTileAudio = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (audioPlaying) {
+      if (oscRef.current) {
+        oscRef.current.stop();
+        oscRef.current.disconnect();
+      }
+      if (audioCtxRef.current) audioCtxRef.current.close();
+      setAudioPlaying(false);
+    } else {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      audioCtxRef.current = ctx;
+
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(audioFreq, ctx.currentTime);
+      gain.gain.setValueAtTime(0.1, ctx.currentTime);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+
+      oscRef.current = osc;
+      setAudioPlaying(true);
+    }
+  };
+
+  useEffect(() => {
+    if (oscRef.current && audioCtxRef.current && audioPlaying) {
+      oscRef.current.frequency.setValueAtTime(audioFreq, audioCtxRef.current.currentTime);
+    }
+  }, [audioFreq, audioPlaying]);
+
+  useEffect(() => {
+    return () => {
+      if (oscRef.current) {
+        try { oscRef.current.stop(); } catch {}
+      }
+      if (audioCtxRef.current) {
+        try { audioCtxRef.current.close(); } catch {}
+      }
+    };
+  }, []);
+
   const handleUniversalIngest = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (!f) return;
     setAnalyzedFile(f);
-    emitLog(`Ingest Probe: [${f.name}] (${(f.size / 1024).toFixed(1)} KB, MIME: ${f.type || "unknown"})`, "info", "ORCHESTRATOR");
+    emitLog(`Ingest Container: [${f.name}] (${(f.size / 1024).toFixed(1)} KB)`, "info", "ORCHESTRATOR");
   };
 
-  const getSuggestedRoutes = (file: File) => {
-    const name = file.name.toLowerCase();
-    const type = file.type.toLowerCase();
-
-    if (type.startsWith("image/") || name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".webp")) {
-      return [
-        { label: "Scrub Metadata & EXIF", href: "/metadata", icon: ShieldCheck },
-        { label: "Trace to Scalable SVG", href: "/vectorize", icon: Shapes },
-        { label: "Extract Neural OCR Text", href: "/ocr", icon: ScanText },
-        { label: "Transcode to WebP / PNG", href: "/image", icon: ImageIcon },
-      ];
-    }
-    if (type.startsWith("video/") || name.endsWith(".mp4") || name.endsWith(".mov") || name.endsWith(".webm") || name.endsWith(".mkv")) {
-      return [
-        { label: "Compress with H.264 CRF", href: "/compress", icon: FileDown },
-        { label: "Extract Audio Track", href: "/audio", icon: Music },
-        { label: "Convert to Animated WebP/GIF", href: "/animator", icon: Film },
-      ];
-    }
-    if (type.startsWith("audio/") || name.endsWith(".mp3") || name.endsWith(".wav") || name.endsWith(".flac") || name.endsWith(".aac")) {
-      return [
-        { label: "Spatial DSP & Stem Isolator", href: "/dsp", icon: Radio },
-        { label: "Waveform PCM Slicer", href: "/trim", icon: Scissors },
-        { label: "Transcode Audio Stream", href: "/audio", icon: Music },
-      ];
-    }
-    if (name.endsWith(".json") || name.endsWith(".yaml") || name.endsWith(".yml") || name.endsWith(".csv") || name.endsWith(".xml")) {
-      return [
-        { label: "Morph Code AST Schema", href: "/data-morph", icon: Binary },
-        { label: "Inspect Archive Payload", href: "/archive", icon: Archive },
-      ];
-    }
-    if (name.endsWith(".pdf")) {
-      return [
-        { label: "Merge, Split & Rotate PDF", href: "/pdf", icon: FileText },
-        { label: "Extract OCR Text Layer", href: "/ocr", icon: ScanText },
-      ];
-    }
-    return [
-      { label: "Inspect Container Headers", href: "/metadata", icon: ShieldCheck },
-      { label: "Pack into In-Memory Archive", href: "/archive", icon: Archive },
-    ];
+  const getEstimatedSavings = (crf: number) => {
+    const origMB = 100;
+    const est = Math.round(origMB * (1 - (crf - 18) / 34));
+    return Math.max(12, Math.min(95, est));
   };
-
-  const filteredTools = TOOLS_LIST.filter((t) => {
-    const matchesCategory = activeCategory === "all" || t.category === activeCategory;
-    const matchesSearch =
-      t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      t.formats.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
 
   return (
-    <div className="flex flex-col w-full gap-8 max-w-6xl mx-auto font-sans pb-12">
-      {/* ── Workbench Header & Ingest Dock ── */}
-      <section className="w-full bg-[#0d0e14] border border-white/[0.08] rounded-xl p-5 sm:p-6 shadow-lg flex flex-col gap-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.06] pb-3">
+    <div className="flex flex-col w-full gap-8 max-w-6xl mx-auto font-sans pb-16">
+      {/* ── Top Neumorphic Ingest Well ── */}
+      <section className="w-full neu-tile p-6 sm:p-7 flex flex-col gap-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h1 className="text-base sm:text-lg font-semibold tracking-tight text-white font-sans">
-              Universal File Ingest & Processing Dock
+              Universal Media & Document Ingest
             </h1>
             <p className="text-xs text-zinc-400 font-sans mt-0.5">
-              Drop any media container, audio track, document, or code schema for instant zero-server conversion.
+              Drag and drop any file to inspect container headers and launch localized transformation tools.
             </p>
           </div>
 
           <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
-            <span>Client Memory Active</span>
+            <span className="px-2.5 py-1 rounded-md bg-[#090a0d] border border-white/[0.05] text-zinc-300">
+              Zero-Server Memory
+            </span>
           </div>
         </div>
 
         {!analyzedFile ? (
-          <label className="w-full border border-dashed border-white/[0.1] hover:border-amber-400/50 hover:bg-white/[0.02] transition-all rounded-lg p-6 sm:p-7 flex flex-col items-center justify-center gap-2.5 cursor-pointer bg-[#090a0f] select-none group">
+          <label className="w-full neu-inset p-8 sm:p-10 flex flex-col items-center justify-center gap-3 cursor-pointer select-none group transition-all hover:border-zinc-700">
             <input type="file" onChange={handleUniversalIngest} className="hidden" />
-            <div className="p-2.5 rounded-md bg-white/[0.04] border border-white/[0.08] text-zinc-300 group-hover:text-amber-400 transition-colors">
-              <FileUp size={20} />
+            <div className="p-3.5 rounded-xl neu-btn text-zinc-300 group-hover:text-white transition-colors">
+              <FileUp size={22} className="text-amber-400" />
             </div>
 
-            <div className="text-center space-y-0.5">
-              <span className="text-xs font-medium text-white block">
-                Drag and drop files here, or click to browse
+            <div className="text-center space-y-1">
+              <span className="text-sm font-medium text-zinc-200 block">
+                Drop files here to load into memory
               </span>
-              <span className="text-[11px] text-zinc-500 font-mono block">
-                Video • Audio • Scans • Images • PDFs • JSON/YAML • Archives (Up to 2 GB)
+              <span className="text-xs text-zinc-500 font-mono block">
+                Audio • Video • Images • Documents • Archives • Data Schemas (Up to 2 GB)
               </span>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-2 mt-2">
+              {["MP4", "WAV", "PNG", "PDF", "JSON", "ZIP", "SVG"].map((fmt) => (
+                <span
+                  key={fmt}
+                  className="px-2.5 py-1 rounded-md text-[11px] font-mono bg-[#141720] text-zinc-400 border border-white/[0.04]"
+                >
+                  {fmt}
+                </span>
+              ))}
             </div>
           </label>
         ) : (
-          <div className="p-4 bg-[#090a0f] border border-white/[0.08] rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded bg-amber-400 text-black font-bold">
-                <HardDrive size={18} />
+          <div className="p-5 neu-inset rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="p-3 rounded-lg neu-btn text-amber-400 font-bold">
+                <HardDrive size={20} />
               </div>
               <div>
-                <span className="text-xs font-semibold text-white block">{analyzedFile.name}</span>
-                <span className="text-[11px] text-zinc-400 font-mono">
-                  {(analyzedFile.size / 1024).toFixed(1)} KB • {analyzedFile.type || "Container"}
+                <span className="text-sm font-semibold text-white block">{analyzedFile.name}</span>
+                <span className="text-xs text-zinc-400 font-mono">
+                  {(analyzedFile.size / 1024).toFixed(1)} KB • {analyzedFile.type || "Container Stream"}
                 </span>
               </div>
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              {getSuggestedRoutes(analyzedFile).map((route) => {
-                const Icon = route.icon;
-                return (
-                  <button
-                    key={route.href}
-                    onClick={() => router.push(route.href)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-white text-black font-medium text-xs hover:bg-zinc-200 transition-colors shadow cursor-pointer"
-                  >
-                    <Icon size={12} />
-                    <span>{route.label}</span>
-                  </button>
-                );
-              })}
+              <button
+                onClick={() => router.push("/metadata")}
+                className="neu-btn-primary px-4 py-2 text-xs flex items-center gap-1.5"
+              >
+                <span>Process File</span>
+                <ArrowRight size={13} />
+              </button>
               <button
                 onClick={() => setAnalyzedFile(null)}
-                className="px-2.5 py-1.5 text-xs text-zinc-500 hover:text-white transition-colors cursor-pointer"
+                className="neu-btn px-3 py-2 text-xs text-zinc-400 hover:text-white"
               >
-                Change File
+                Change
               </button>
             </div>
           </div>
         )}
       </section>
 
-      {/* ── Workstations Directory ── */}
-      <section className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.06] pb-3">
-          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-1 sm:pb-0">
-            {(
-              [
-                { id: "all", label: "All Tools (12)" },
-                { id: "forensics", label: "Forensics & Vectors" },
-                { id: "audio", label: "Audio & DSP" },
-                { id: "code", label: "Code & Data" },
-                { id: "media", label: "Video & Documents" },
-              ] as const
-            ).map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`px-3 py-1.5 rounded text-xs font-medium transition-colors whitespace-nowrap cursor-pointer ${
-                  activeCategory === cat.id
-                    ? "bg-white/[0.1] text-white font-semibold border border-white/[0.12]"
-                    : "text-zinc-400 hover:text-white hover:bg-white/[0.03]"
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="relative shrink-0">
-            <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
-            <input
-              type="text"
-              placeholder="Filter workstations..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-[#0c0d14] border border-white/[0.08] rounded-md pl-8 pr-3 py-1.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-amber-400/60 w-full sm:w-56 font-sans"
-            />
-          </div>
+      {/* ── Category Filter Bar ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-1 sm:pb-0">
+          {(
+            [
+              { id: "all", label: "All Workstations (12)" },
+              { id: "forensics", label: "Forensics & Vectors" },
+              { id: "audio", label: "Audio & DSP" },
+              { id: "code", label: "Code & Data" },
+              { id: "media", label: "Video & Documents" },
+            ] as const
+          ).map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setActiveCategory(cat.id)}
+              className={`neu-btn px-3.5 py-1.5 text-xs font-sans whitespace-nowrap ${
+                activeCategory === cat.id ? "active text-white border-amber-400/40" : "text-zinc-400"
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {filteredTools.map((tool) => {
-            const Icon = tool.icon;
-            return (
-              <Link
-                key={tool.href}
-                href={tool.href}
-                className="group p-4 rounded-lg bg-[#0c0d13] hover:bg-[#11131a] border border-white/[0.06] hover:border-white/[0.16] transition-all flex flex-col justify-between gap-3 shadow-sm hover:shadow-md"
-              >
-                <div className="space-y-2.5">
-                  <div className="flex items-center justify-between">
-                    <div className="p-2 rounded bg-white/[0.04] border border-white/[0.06] text-zinc-300 group-hover:text-amber-400 transition-colors">
-                      <Icon size={16} />
-                    </div>
-                    <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded bg-white/[0.03] border border-white/[0.05] text-zinc-400">
-                      {tool.tag}
-                    </span>
-                  </div>
-
-                  <div>
-                    <h2 className="text-xs font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
-                      <span>{tool.title}</span>
-                      <ArrowRight size={13} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
-                    </h2>
-                    <p className="text-[11px] text-zinc-400 mt-1 leading-relaxed line-clamp-2 font-sans">
-                      {tool.description}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="pt-2 border-t border-white/[0.04] flex items-center justify-between text-[10px] font-mono text-zinc-500">
-                  <span>Formats:</span>
-                  <span className="text-zinc-400">{tool.formats}</span>
-                </div>
-              </Link>
-            );
-          })}
+        <div className="relative shrink-0">
+          <Search size={13} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500" />
+          <input
+            type="text"
+            placeholder="Search workstations..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="neu-inset pl-9 pr-3 py-1.5 text-xs text-white placeholder-zinc-500 focus:outline-none w-full sm:w-60 font-sans"
+          />
         </div>
-      </section>
+      </div>
+
+      {/* ── Neumorphic Interactive Tiles Grid ── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/* ── Tile 1: Spatial Audio & DSP (Interactive Synthesizer) ── */}
+        {(activeCategory === "all" || activeCategory === "audio") && (
+          <div className="neu-tile p-5 flex flex-col justify-between gap-4 group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 rounded-xl neu-btn text-amber-400">
+                  <Radio size={18} />
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#090a0d] border border-white/[0.04] text-zinc-400">
+                  48kHz DSP
+                </span>
+              </div>
+
+              <div>
+                <Link href="/dsp" className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                  <span>Spatial Audio & Stem DSP</span>
+                  <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
+                </Link>
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Phase cancellation for center vocal cut, 3D binaural spatial panning, and parametric EQ.
+                </p>
+              </div>
+
+              {/* Interactive Audio Widget */}
+              <div className="neu-inset p-3 rounded-xl flex flex-col gap-2.5">
+                <div className="flex items-center justify-between text-[11px] font-mono">
+                  <span className="text-zinc-400">Tone Generator</span>
+                  <span className="text-amber-400 tabular-nums">{audioFreq} Hz</span>
+                </div>
+
+                <input
+                  type="range"
+                  min="100"
+                  max="1200"
+                  value={audioFreq}
+                  onChange={(e) => setAudioFreq(Number(e.target.value))}
+                  className="neu-slider w-full"
+                />
+
+                <button
+                  onClick={toggleTileAudio}
+                  className={`neu-btn py-1.5 px-3 text-xs font-mono flex items-center justify-center gap-1.5 ${
+                    audioPlaying ? "active text-amber-400" : "text-zinc-300"
+                  }`}
+                >
+                  {audioPlaying ? <Pause size={12} /> : <Play size={12} />}
+                  <span>{audioPlaying ? "Mute Tone" : "Play Tone"}</span>
+                </button>
+              </div>
+            </div>
+
+            <Link href="/dsp" className="neu-btn text-center py-2 text-xs font-medium text-zinc-300 hover:text-white">
+              Launch Audio DSP Studio
+            </Link>
+          </div>
+        )}
+
+        {/* ── Tile 2: Raster to SVG Vectorizer (Interactive Threshold) ── */}
+        {(activeCategory === "all" || activeCategory === "forensics") && (
+          <div className="neu-tile p-5 flex flex-col justify-between gap-4 group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 rounded-xl neu-btn text-zinc-300">
+                  <Shapes size={18} />
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#090a0d] border border-white/[0.04] text-zinc-400">
+                  Bézier Vector
+                </span>
+              </div>
+
+              <div>
+                <Link href="/vectorize" className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                  <span>Raster to SVG Vectorizer</span>
+                  <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
+                </Link>
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Convert pixel graphics, sketches, and logos into infinitely scalable Bézier vector curves.
+                </p>
+              </div>
+
+              {/* Interactive Vector Curve Geometry Widget */}
+              <div className="neu-inset p-3 rounded-xl flex flex-col gap-2.5">
+                <div className="flex items-center justify-between text-[11px] font-mono">
+                  <span className="text-zinc-400">Cutoff Threshold</span>
+                  <span className="text-white tabular-nums">{vectorThreshold}</span>
+                </div>
+
+                <input
+                  type="range"
+                  min="30"
+                  max="220"
+                  value={vectorThreshold}
+                  onChange={(e) => setVectorThreshold(Number(e.target.value))}
+                  className="neu-slider w-full"
+                />
+
+                <div className="h-12 bg-black/40 rounded-lg flex items-center justify-center border border-white/[0.04]">
+                  <svg width="140" height="36" viewBox="0 0 140 36">
+                    <path
+                      d={`M 10 25 Q ${vectorThreshold / 2} ${5 + (255 - vectorThreshold) / 10} ${vectorThreshold} 25 T 130 25`}
+                      fill="none"
+                      stroke="#e69d28"
+                      strokeWidth="2.5"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <Link href="/vectorize" className="neu-btn text-center py-2 text-xs font-medium text-zinc-300 hover:text-white">
+              Launch Vectorizer Studio
+            </Link>
+          </div>
+        )}
+
+        {/* ── Tile 3: Video Compressor (Interactive CRF Estimator) ── */}
+        {(activeCategory === "all" || activeCategory === "media") && (
+          <div className="neu-tile p-5 flex flex-col justify-between gap-4 group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 rounded-xl neu-btn text-zinc-300">
+                  <FileDown size={18} />
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#090a0d] border border-white/[0.04] text-zinc-400">
+                  libx264
+                </span>
+              </div>
+
+              <div>
+                <Link href="/compress" className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                  <span>H.264 Video Compressor</span>
+                  <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
+                </Link>
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Reduce video file sizes with Constant Rate Factor (CRF) and hardware encoder speed presets.
+                </p>
+              </div>
+
+              {/* Interactive CRF Slider */}
+              <div className="neu-inset p-3 rounded-xl flex flex-col gap-2.5">
+                <div className="flex items-center justify-between text-[11px] font-mono">
+                  <span className="text-zinc-400">CRF Level</span>
+                  <span className="text-white font-bold tabular-nums">{crfVal}</span>
+                </div>
+
+                <input
+                  type="range"
+                  min="18"
+                  max="40"
+                  value={crfVal}
+                  onChange={(e) => setCrfVal(Number(e.target.value))}
+                  className="neu-slider w-full"
+                />
+
+                <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400 pt-1">
+                  <span>100 MB Input File</span>
+                  <span className="text-amber-400 font-bold">~{getEstimatedSavings(crfVal)} MB Output</span>
+                </div>
+              </div>
+            </div>
+
+            <Link href="/compress" className="neu-btn text-center py-2 text-xs font-medium text-zinc-300 hover:text-white">
+              Launch Compressor Studio
+            </Link>
+          </div>
+        )}
+
+        {/* ── Tile 4: Code & Data AST Morph (Interactive Format Switcher) ── */}
+        {(activeCategory === "all" || activeCategory === "code") && (
+          <div className="neu-tile p-5 flex flex-col justify-between gap-4 group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 rounded-xl neu-btn text-zinc-300">
+                  <Binary size={18} />
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#090a0d] border border-white/[0.04] text-zinc-400">
+                  AST Engine
+                </span>
+              </div>
+
+              <div>
+                <Link href="/data-morph" className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                  <span>Universal Code AST Morph</span>
+                  <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
+                </Link>
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Transpile between JSON, YAML, TOML, CSV, XML, and TypeScript Interfaces in browser RAM.
+                </p>
+              </div>
+
+              {/* Interactive AST Schema Preview */}
+              <div className="neu-inset p-3 rounded-xl flex flex-col gap-2">
+                <div className="flex gap-1.5 font-mono text-[10px]">
+                  {(["ts", "json", "yaml"] as const).map((fmt) => (
+                    <button
+                      key={fmt}
+                      onClick={() => setAstFormat(fmt)}
+                      className={`neu-btn flex-1 py-1 uppercase ${astFormat === fmt ? "active text-amber-400" : "text-zinc-400"}`}
+                    >
+                      {fmt}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="bg-black/50 p-2.5 rounded text-[10px] font-mono text-zinc-300 h-14 overflow-hidden">
+                  {astFormat === "ts" && <code>interface StreamConfig &#123; fps: 60; audio: true; &#125;</code>}
+                  {astFormat === "json" && <code>&#123; &quot;fps&quot;: 60, &quot;audio&quot;: true &#125;</code>}
+                  {astFormat === "yaml" && <code>fps: 60<br/>audio: true</code>}
+                </div>
+              </div>
+            </div>
+
+            <Link href="/data-morph" className="neu-btn text-center py-2 text-xs font-medium text-zinc-300 hover:text-white">
+              Launch AST Schema Studio
+            </Link>
+          </div>
+        )}
+
+        {/* ── Tile 5: Metadata & Steganography ── */}
+        {(activeCategory === "all" || activeCategory === "forensics") && (
+          <div className="neu-tile p-5 flex flex-col justify-between gap-4 group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 rounded-xl neu-btn text-zinc-300">
+                  <ShieldCheck size={18} />
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#090a0d] border border-white/[0.04] text-zinc-400">
+                  RAW EXIF
+                </span>
+              </div>
+
+              <div>
+                <Link href="/metadata" className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                  <span>Metadata & Steganography</span>
+                  <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
+                </Link>
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Deep-scan GPS and tracking markers, and inspect least-significant-bit steganography bitplanes.
+                </p>
+              </div>
+
+              <div className="neu-inset p-3 rounded-xl flex items-center justify-between font-mono text-[11px]">
+                <span className="text-zinc-400">Bitplane Slicer</span>
+                <div className="flex gap-1">
+                  {[0, 1, 2, 3].map((b) => (
+                    <button
+                      key={b}
+                      onClick={() => setActiveBitplane(b)}
+                      className={`neu-btn px-2 py-0.5 text-[10px] ${activeBitplane === b ? "active text-amber-400 font-bold" : "text-zinc-400"}`}
+                    >
+                      b{b}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <Link href="/metadata" className="neu-btn text-center py-2 text-xs font-medium text-zinc-300 hover:text-white">
+              Launch Forensic Inspector
+            </Link>
+          </div>
+        )}
+
+        {/* ── Tile 6: Neural Document OCR ── */}
+        {(activeCategory === "all" || activeCategory === "forensics") && (
+          <div className="neu-tile p-5 flex flex-col justify-between gap-4 group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 rounded-xl neu-btn text-zinc-300">
+                  <ScanText size={18} />
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#090a0d] border border-white/[0.04] text-zinc-400">
+                  Tesseract
+                </span>
+              </div>
+
+              <div>
+                <Link href="/ocr" className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                  <span>Neural Document OCR</span>
+                  <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
+                </Link>
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Extract plain text layers and bounding coordinates locally in browser RAM with Tesseract WASM.
+                </p>
+              </div>
+
+              <div className="neu-inset p-3 rounded-xl text-[10px] font-mono text-zinc-400 flex items-center justify-between">
+                <span>Multi-Language Model:</span>
+                <span className="text-zinc-200 font-semibold">ENG / SPA / FRA / DEU</span>
+              </div>
+            </div>
+
+            <Link href="/ocr" className="neu-btn text-center py-2 text-xs font-medium text-zinc-300 hover:text-white">
+              Launch OCR Workstation
+            </Link>
+          </div>
+        )}
+
+        {/* ── Tile 7: PDF Document Studio ── */}
+        {(activeCategory === "all" || activeCategory === "media") && (
+          <div className="neu-tile p-5 flex flex-col justify-between gap-4 group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 rounded-xl neu-btn text-zinc-300">
+                  <FileText size={18} />
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#090a0d] border border-white/[0.04] text-zinc-400">
+                  PDF-Lib
+                </span>
+              </div>
+
+              <div>
+                <Link href="/pdf" className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                  <span>PDF Document Studio</span>
+                  <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
+                </Link>
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Merge multiple documents, extract specific page ranges, and rotate page orientations.
+                </p>
+              </div>
+
+              <div className="neu-inset p-3 rounded-xl text-[10px] font-mono text-zinc-400 flex items-center justify-between">
+                <span>Modes:</span>
+                <span className="text-zinc-200 font-semibold">Merge • Split • Rotate</span>
+              </div>
+            </div>
+
+            <Link href="/pdf" className="neu-btn text-center py-2 text-xs font-medium text-zinc-300 hover:text-white">
+              Launch PDF Studio
+            </Link>
+          </div>
+        )}
+
+        {/* ── Tile 8: In-Memory Archive Studio ── */}
+        {(activeCategory === "all" || activeCategory === "code") && (
+          <div className="neu-tile p-5 flex flex-col justify-between gap-4 group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 rounded-xl neu-btn text-zinc-300">
+                  <Archive size={18} />
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#090a0d] border border-white/[0.04] text-zinc-400">
+                  Stream IO
+                </span>
+              </div>
+
+              <div>
+                <Link href="/archive" className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                  <span>In-Memory Archive Studio</span>
+                  <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
+                </Link>
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Inspect multi-level archive directories, extract files selectively, and repack ZIP/TAR archives.
+                </p>
+              </div>
+
+              <div className="neu-inset p-3 rounded-xl text-[10px] font-mono text-zinc-400 flex items-center justify-between">
+                <span>Supported:</span>
+                <span className="text-zinc-200 font-semibold">ZIP • TAR • GZ • ZSTD</span>
+              </div>
+            </div>
+
+            <Link href="/archive" className="neu-btn text-center py-2 text-xs font-medium text-zinc-300 hover:text-white">
+              Launch Archive Studio
+            </Link>
+          </div>
+        )}
+
+        {/* ── Tile 9: Audio Stream Converter ── */}
+        {(activeCategory === "all" || activeCategory === "audio") && (
+          <div className="neu-tile p-5 flex flex-col justify-between gap-4 group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 rounded-xl neu-btn text-zinc-300">
+                  <Music size={18} />
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#090a0d] border border-white/[0.04] text-zinc-400">
+                  Codec
+                </span>
+              </div>
+
+              <div>
+                <Link href="/audio" className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                  <span>Audio Stream Converter</span>
+                  <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
+                </Link>
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Transcode bitrates, sample rates (44.1k/48k/96k), and extract raw audio tracks from video files.
+                </p>
+              </div>
+
+              <div className="neu-inset p-3 rounded-xl text-[10px] font-mono text-zinc-400 flex items-center justify-between">
+                <span>Bitrates:</span>
+                <span className="text-zinc-200 font-semibold">128k • 192k • 256k • 320k</span>
+              </div>
+            </div>
+
+            <Link href="/audio" className="neu-btn text-center py-2 text-xs font-medium text-zinc-300 hover:text-white">
+              Launch Audio Converter
+            </Link>
+          </div>
+        )}
+
+        {/* ── Tile 10: Waveform PCM Slicer ── */}
+        {(activeCategory === "all" || activeCategory === "audio") && (
+          <div className="neu-tile p-5 flex flex-col justify-between gap-4 group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 rounded-xl neu-btn text-zinc-300">
+                  <Scissors size={18} />
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#090a0d] border border-white/[0.04] text-zinc-400">
+                  PCM 16-Bit
+                </span>
+              </div>
+
+              <div>
+                <Link href="/trim" className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                  <span>Waveform PCM Slicer</span>
+                  <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
+                </Link>
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Interactive visual waveform slicing with millisecond range selection and lossless export.
+                </p>
+              </div>
+
+              <div className="neu-inset p-3 rounded-xl text-[10px] font-mono text-zinc-400 flex items-center justify-between">
+                <span>Range Precision:</span>
+                <span className="text-zinc-200 font-semibold">0.01 ms Accuracy</span>
+              </div>
+            </div>
+
+            <Link href="/trim" className="neu-btn text-center py-2 text-xs font-medium text-zinc-300 hover:text-white">
+              Launch Audio Slicer
+            </Link>
+          </div>
+        )}
+
+        {/* ── Tile 11: Canvas Image Transcoder ── */}
+        {(activeCategory === "all" || activeCategory === "media") && (
+          <div className="neu-tile p-5 flex flex-col justify-between gap-4 group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 rounded-xl neu-btn text-zinc-300">
+                  <ImageIcon size={18} />
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#090a0d] border border-white/[0.04] text-zinc-400">
+                  Canvas GPU
+                </span>
+              </div>
+
+              <div>
+                <Link href="/image" className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                  <span>Canvas Image Transcoder</span>
+                  <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
+                </Link>
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Batch transcode image formats, adjust compression levels, and resize dimensions with GPU acceleration.
+                </p>
+              </div>
+
+              <div className="neu-inset p-3 rounded-xl text-[10px] font-mono text-zinc-400 flex items-center justify-between">
+                <span>Targets:</span>
+                <span className="text-zinc-200 font-semibold">WebP • PNG • AVIF • JPEG</span>
+              </div>
+            </div>
+
+            <Link href="/image" className="neu-btn text-center py-2 text-xs font-medium text-zinc-300 hover:text-white">
+              Launch Image Transcoder
+            </Link>
+          </div>
+        )}
+
+        {/* ── Tile 12: Animated WebP & GIF Diff ── */}
+        {(activeCategory === "all" || activeCategory === "media") && (
+          <div className="neu-tile p-5 flex flex-col justify-between gap-4 group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 rounded-xl neu-btn text-zinc-300">
+                  <Film size={18} />
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#090a0d] border border-white/[0.04] text-zinc-400">
+                  Delta Diff
+                </span>
+              </div>
+
+              <div>
+                <Link href="/animator" className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                  <span>Animated WebP / GIF Diff</span>
+                  <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
+                </Link>
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Temporal delta deduplication and color palette dithering to produce lightweight animations.
+                </p>
+              </div>
+
+              <div className="neu-inset p-3 rounded-xl text-[10px] font-mono text-zinc-400 flex items-center justify-between">
+                <span>Sampling:</span>
+                <span className="text-zinc-200 font-semibold">10 FPS - 30 FPS Dithered</span>
+              </div>
+            </div>
+
+            <Link href="/animator" className="neu-btn text-center py-2 text-xs font-medium text-zinc-300 hover:text-white">
+              Launch Animation Studio
+            </Link>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

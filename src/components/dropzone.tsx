@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect } from "react";
 import { useDropzone, type DropzoneOptions, type FileRejection } from "react-dropzone";
-import { Upload, FileUp, Clipboard, ShieldCheck, HardDrive } from "lucide-react";
+import { FileUp, Clipboard, ShieldCheck, HardDrive } from "lucide-react";
 import { toast } from "sonner";
 
 export interface NeoDropzoneProps extends Omit<DropzoneOptions, "onDrop"> {
@@ -84,67 +84,60 @@ export function NeoDropzone({
       {...(getRootProps() as any)}
       className={`
         w-full max-w-3xl mx-auto p-8 sm:p-10 flex flex-col items-center justify-center
-        cursor-pointer transition-all duration-150 relative rounded-xl border border-dashed
-        select-none font-sans
+        cursor-pointer transition-all duration-200 relative rounded-2xl select-none font-sans neu-inset
         ${
           isDragActive
-            ? "border-amber-400/80 bg-amber-400/[0.04] shadow-xl"
-            : "border-white/[0.12] bg-[#0a0a0d] hover:border-white/[0.25] hover:bg-[#0f0f14]"
+            ? "border border-amber-400/80 bg-[#12151e] shadow-2xl"
+            : "hover:border-zinc-700"
         }
       `}
     >
       <input {...getInputProps()} />
 
-      <div className="flex flex-col items-center gap-3 text-center">
+      <div className="flex flex-col items-center gap-3.5 text-center">
         <div
-          className={`p-3 rounded-xl border transition-colors ${
+          className={`p-3.5 rounded-xl neu-btn transition-colors ${
             isDragActive
-              ? "bg-amber-400 text-black border-amber-400"
-              : "bg-white/[0.04] text-zinc-300 border-white/[0.08]"
+              ? "text-amber-400 border-amber-400/60 active"
+              : "text-zinc-300"
           }`}
         >
-          <FileUp size={22} strokeWidth={1.75} />
+          {icon || <FileUp size={22} className="text-amber-400" />}
         </div>
 
         <div className="flex flex-col gap-1">
-          <h3 className="text-sm sm:text-base font-semibold text-white tracking-tight">
+          <h3 className="text-sm sm:text-base font-semibold text-white tracking-tight font-sans">
             {isDragActive ? "Release to load into in-memory engine" : label}
           </h3>
-          <p className="text-xs text-zinc-400 font-mono max-w-md">{sublabel}</p>
+          <p className="text-xs text-zinc-400 font-sans max-w-md">{sublabel}</p>
         </div>
 
         {/* Format indicators and limits */}
         <div className="flex flex-wrap items-center justify-center gap-2 pt-2 text-[10px] font-mono text-zinc-500">
-          <span className="flex items-center gap-1 bg-white/[0.03] px-2 py-0.5 rounded border border-white/[0.05]">
+          <span className="flex items-center gap-1.5 bg-[#12141c] px-2.5 py-1 rounded-md border border-white/[0.04]">
             <HardDrive size={11} className="text-zinc-400" />
             <span>Up to {maxSizeMB >= 1024 ? `${maxSizeMB / 1024} GB` : `${maxSizeMB} MB`}</span>
           </span>
-          <span className="flex items-center gap-1 bg-white/[0.03] px-2 py-0.5 rounded border border-white/[0.05]">
-            <ShieldCheck size={11} className="text-emerald-400" />
+          <span className="flex items-center gap-1.5 bg-[#12141c] px-2.5 py-1 rounded-md border border-white/[0.04]">
+            <ShieldCheck size={11} className="text-amber-400/80" />
             <span>Zero Network Upload</span>
           </span>
-          <span className="flex items-center gap-1 bg-white/[0.03] px-2 py-0.5 rounded border border-white/[0.05]">
+          <span className="flex items-center gap-1.5 bg-[#12141c] px-2.5 py-1 rounded-md border border-white/[0.04]">
             <Clipboard size={11} className="text-zinc-400" />
             <span>⌘V Paste Supported</span>
           </span>
         </div>
 
         {acceptedFormatsList && acceptedFormatsList.length > 0 && (
-          <div className="flex flex-wrap items-center justify-center gap-1 pt-1">
+          <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1">
             {acceptedFormatsList.map((fmt) => (
               <span
                 key={fmt}
-                className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-white/[0.05] text-zinc-400 border border-white/[0.06]"
+                className="text-[9px] font-mono uppercase px-2 py-0.5 rounded bg-[#151822] text-zinc-400 border border-white/[0.05]"
               >
                 {fmt}
               </span>
             ))}
-          </div>
-        )}
-
-        {typeof currentCount === "number" && currentCount > 0 && (
-          <div className="mt-2 text-[11px] font-mono font-semibold px-3 py-1 rounded bg-white text-black">
-            {currentCount} file{currentCount !== 1 ? "s" : ""} staged in memory
           </div>
         )}
       </div>
