@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Sidebar } from "@/components/sidebar";
-import { CinematicBackground } from "@/components/cinematic-bg";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CommandPalette } from "@/components/command-palette";
 import { OnboardingTutorial } from "@/components/onboarding-tutorial";
 import { FeedbackModal } from "@/components/feedback-modal";
-import { EngineTelemetryBar } from "@/components/engine-telemetry-bar";
 import { ConsoleDrawer } from "@/components/console-drawer";
 import { CookieConsent } from "@/components/cookie-consent";
+import { AppHeader } from "@/components/app-header";
+import { AppStatusBar } from "@/components/app-status-bar";
 import { Toaster } from "sonner";
 
 const geistSans = Geist({
@@ -141,18 +140,6 @@ export default function RootLayout({
       "price": "0",
       "priceCurrency": "USD",
     },
-    "featureList": [
-      "Zero-Server In-Memory Processing",
-      "Forensic Metadata Scrubber & Stego Inspector",
-      "High-Precision Raster to SVG Vectorizer",
-      "Client-Side OCR & Searchable PDF Synthesizer",
-      "Spatial Audio DSP & Stem Phase Isolator",
-      "Video Compression with CRF Controls",
-      "Animated GIF/WebP Frame-Diff Optimizer",
-      "Universal Code & Data AST Serialization Morph",
-      "In-Memory Multi-Format Archive Inspector",
-      "PDF Merge, Split and Rotation",
-    ],
   };
 
   return (
@@ -175,20 +162,15 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdApp) }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-[#050507] text-[#f4f4f5] font-sans antialiased selection:bg-zinc-700 selection:text-white relative" suppressHydrationWarning>
+      <body className="min-h-full flex flex-col bg-[#07080b] text-[#f0f2f5] font-sans antialiased selection:bg-zinc-700 selection:text-white" suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" enableSystem={false}>
-          <CinematicBackground />
-          <div className="flex min-h-screen w-full relative z-10">
-            <Sidebar />
-            
-            {/* Main Content Area */}
-            <div className="flex-1 flex flex-col md:ml-[280px] min-h-screen relative z-10 w-full overflow-x-hidden">
-              <EngineTelemetryBar />
-              <main className="flex-1 flex flex-col items-center px-4 sm:px-8 py-6 md:py-10 w-full max-w-6xl mx-auto">
-                {children}
-              </main>
-              <ConsoleDrawer />
-            </div>
+          <div className="flex flex-col min-h-screen w-full">
+            <AppHeader />
+            <main className="flex-1 flex flex-col items-center px-4 sm:px-8 py-6 w-full max-w-7xl mx-auto pb-14">
+              {children}
+            </main>
+            <AppStatusBar />
+            <ConsoleDrawer />
           </div>
           <CommandPalette />
           <OnboardingTutorial />
