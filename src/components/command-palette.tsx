@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { Command } from "cmdk";
@@ -33,6 +33,7 @@ const TOOLS = [
   { href: "/ocr", label: "Client-Side Document OCR", icon: ScanText, category: "Forensics & Vectors" },
   { href: "/dsp", label: "Spatial Audio DSP & Stem Isolator", icon: Radio, category: "Spatial Audio & Video" },
   { href: "/subtitles", label: "Subtitle & Caption Synchronizer", icon: Clock, category: "Spatial Audio & Video" },
+  { href: "/cloudinary", label: "In-Browser Cloudinary Media Engine", icon: Zap, category: "Spatial Audio & Video" },
   { href: "/animator", label: "Animated WebP & GIF Diff", icon: Film, category: "Spatial Audio & Video" },
   { href: "/crypto-vault", label: "Cryptographic Key & JWK Vault", icon: Key, category: "Code & Security" },
   { href: "/diagram-mesh", label: "Architecture Diagram & Vector Mesh", icon: Network, category: "Code & Security" },

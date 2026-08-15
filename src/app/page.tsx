@@ -129,23 +129,23 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-          LAYER 2 â€” TRUST STRIP
-          Horizontal proof points, no badges, no icons spam
-      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
-      <section className="w-screen -mx-3 sm:-mx-6 bg-[#0a0b10] border-y border-white/[0.04]">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 divide-x divide-white/[0.04]">
+      {/* ──────────────────────────────────────────
+          LAYER 2 — TRUST STRIP
+          Neumorphic stats strip
+      ────────────────────────────────────────── */}
+      <section className="w-screen -mx-3 sm:-mx-6 py-10 px-4">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { num: "0 bytes", desc: "uploaded to any server" },
             { num: "100%", desc: "client-side execution" },
-            { num: "18", desc: "engineering workstations" },
+            { num: "19", desc: "engineering workstations" },
             { num: "PWA", desc: "works fully offline" },
           ].map((stat, i) => (
-            <div key={i} className="py-8 sm:py-10 px-6 text-center">
+            <div key={i} className="neu-tile p-6 text-center">
               <div className="text-2xl sm:text-3xl font-light text-white tracking-tight">
                 {stat.num}
               </div>
-              <div className="mt-1 text-xs text-zinc-500 uppercase tracking-widest">
+              <div className="mt-1.5 text-[11px] text-zinc-500 uppercase tracking-widest font-medium">
                 {stat.desc}
               </div>
             </div>
@@ -153,45 +153,45 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-          LAYER 3 â€” HOW IT WORKS
-          Three clean steps, no numbered AI cards
-      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      {/* ──────────────────────────────────────────
+          LAYER 3 — HOW IT WORKS
+          Tactile 3-step neumorphic cards
+      ────────────────────────────────────────── */}
       <section id="how" className="w-screen -mx-3 sm:-mx-6 py-20 sm:py-28">
         <div className="max-w-5xl mx-auto px-6 sm:px-8">
-          <div className="max-w-lg mb-14">
+          <div className="max-w-lg mb-12">
             <h2 className="text-3xl sm:text-4xl font-light text-white tracking-tight leading-snug">
               How it works
             </h2>
             <p className="mt-3 text-sm text-zinc-400 leading-relaxed">
-              Three steps. No accounts, no sign-ups, no cloud dependency.
+              Three steps. Zero accounts, no sign-ups, and complete offline capability.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/[0.04] rounded-2xl overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
                 step: "Drop",
-                body: "Drag any file into a workstation. It's read directly into your browser's volatile memory â€” nothing leaves your machine.",
+                body: "Drag any file into a workstation. It is loaded directly into browser volatile RAM — zero bytes leave your hardware.",
               },
               {
                 step: "Process",
-                body: "WebAssembly compute kernels execute the transformation using your CPU's hardware SIMD registers at near-native speed.",
+                body: "WebAssembly SIMD compute kernels execute transformations locally at hardware speeds.",
               },
               {
                 step: "Export",
-                body: "Download the result straight to your disk. All buffers are garbage collected. Zero residual data.",
+                body: "Save output instantly to your disk. Memory buffers are immediately flushed. Zero residual data.",
               },
             ].map((item, i) => (
               <div
                 key={i}
-                className="bg-[#0a0b10] p-8 sm:p-10 flex flex-col gap-4"
+                className="neu-tile p-8 flex flex-col gap-4"
               >
-                <div className="text-xs font-mono text-zinc-500 uppercase tracking-widest">
-                  Step {i + 1}
+                <div className="w-10 h-10 neu-icon-raised text-xs font-mono text-white font-bold">
+                  0{i + 1}
                 </div>
-                <h3 className="text-xl font-medium text-white">{item.step}</h3>
-                <p className="text-sm text-zinc-400 leading-relaxed">
+                <h3 className="text-xl font-medium text-white tracking-tight">{item.step}</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed font-light">
                   {item.body}
                 </p>
               </div>
@@ -200,112 +200,113 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-          LAYER 4 â€” TOOL CATALOG
-          E-commerce product grid with proper tabs
-      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      {/* ──────────────────────────────────────────
+          LAYER 4 — TOOL CATALOG
+          Neumorphic E-Commerce Grid with Tactile Tiles
+      ────────────────────────────────────────── */}
       <section
         id="tools"
-        className="w-screen -mx-3 sm:-mx-6 bg-[#0a0b10] border-t border-white/[0.04] py-20 sm:py-28 scroll-mt-20"
+        className="w-screen -mx-3 sm:-mx-6 py-20 sm:py-28 scroll-mt-20 border-t border-white/[0.04]"
       >
         <div className="max-w-6xl mx-auto px-6 sm:px-8">
           {/* Section Header + Search */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
             <div>
               <h2 className="text-3xl sm:text-4xl font-light text-white tracking-tight">
-                All Tools
+                Engineering Workstations
               </h2>
               <p className="mt-2 text-sm text-zinc-400">
-                {allTools.length} workstations across {SIDEBAR_CATEGORIES.length} engineering suites
+                {allTools.length} private workstations across {SIDEBAR_CATEGORIES.length} suites
               </p>
             </div>
 
-            <div className="relative w-full sm:w-72">
+            {/* Tactile Inset Search Bar */}
+            <div className="relative w-full sm:w-80 neu-inset flex items-center px-3.5 py-1">
               <Search
-                size={15}
-                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500"
+                size={16}
+                className="text-zinc-500 shrink-0"
               />
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search tools..."
-                className="w-full h-10 pl-10 pr-4 rounded-lg bg-[#0d0e15] border border-white/[0.08] focus:border-white/[0.2] text-sm text-zinc-200 placeholder-zinc-500 outline-none transition-all"
+                placeholder="Search workstations..."
+                className="w-full h-10 px-3 bg-transparent text-sm text-zinc-200 placeholder-zinc-500 outline-none"
               />
             </div>
           </div>
 
-          {/* E-Commerce Style Tab Bar (underline tabs, not pills) */}
-          <div className="flex items-center gap-0 border-b border-white/[0.06] mb-8 overflow-x-auto scrollbar-none">
+          {/* Tactile Tab Selector */}
+          <div className="flex items-center gap-2 mb-10 overflow-x-auto pb-2 scrollbar-none">
             <button
               onClick={() => setActiveCat("all")}
-              className={`shrink-0 px-5 pb-3 text-sm font-medium border-b-2 transition-all cursor-pointer ${
+              className={`shrink-0 px-4 py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
                 activeCat === "all"
-                  ? "border-white text-white"
-                  : "border-transparent text-zinc-500 hover:text-zinc-300"
+                  ? "neu-btn-primary"
+                  : "neu-btn text-zinc-400 hover:text-white"
               }`}
             >
-              All
+              All Suites ({allTools.length})
             </button>
             {SIDEBAR_CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveCat(cat.id)}
-                className={`shrink-0 px-5 pb-3 text-sm font-medium border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+                className={`shrink-0 px-4 py-2 text-xs font-semibold rounded-xl transition-all cursor-pointer whitespace-nowrap ${
                   activeCat === cat.id
-                    ? "border-white text-white"
-                    : "border-transparent text-zinc-500 hover:text-zinc-300"
+                    ? "neu-btn-primary"
+                    : "neu-btn text-zinc-400 hover:text-white"
                 }`}
               >
-                {cat.name}
+                {cat.name} ({cat.items.length})
               </button>
             ))}
           </div>
 
-          {/* Product Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Neumorphic Product Cards Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((tool) => {
               const Icon = tool.icon;
               return (
                 <Link
                   key={tool.href}
                   href={tool.href}
-                  className="group relative bg-[#0d0e15] rounded-xl border border-white/[0.06] hover:border-white/[0.14] transition-all duration-200 overflow-hidden"
+                  className="neu-tile-interactive group p-6 flex flex-col justify-between gap-5 relative"
                 >
-                  {/* Card top accent line */}
-                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.25] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  {/* Subtle top bevel specular glow on hover */}
+                  <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
-                  <div className="p-6 flex flex-col gap-4">
+                  <div className="flex flex-col gap-4">
                     <div className="flex items-start justify-between">
-                      <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-zinc-400 group-hover:text-white group-hover:border-white/[0.12] transition-colors">
-                        <Icon size={18} />
+                      <div className="w-11 h-11 neu-icon-raised text-zinc-300 group-hover:text-white group-hover:scale-105 transition-all">
+                        <Icon size={20} />
                       </div>
-                      <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider mt-1">
+                      <span className="px-2.5 py-1 neu-icon-inset text-[10px] font-mono text-zinc-400 tracking-wider">
                         {tool.tag}
                       </span>
                     </div>
 
                     <div>
-                      <h3 className="text-[15px] font-medium text-white group-hover:text-zinc-100 transition-colors leading-tight">
+                      <h3 className="text-base font-semibold text-white group-hover:text-white transition-colors leading-tight">
                         {tool.label}
                       </h3>
-                      <p className="mt-1.5 text-xs text-zinc-500 leading-relaxed line-clamp-2">
+                      <p className="mt-2 text-xs text-zinc-400 leading-relaxed line-clamp-2 font-light">
                         {tool.sublabel}
                       </p>
                     </div>
+                  </div>
 
-                    <div className="flex items-center justify-between pt-2 border-t border-white/[0.04]">
-                      <span className="text-[11px] text-zinc-600 font-medium">
-                        {tool.categoryName}
-                      </span>
-                      <span className="text-xs text-zinc-500 group-hover:text-white flex items-center gap-1 font-medium transition-colors">
-                        Open
-                        <ArrowRight
-                          size={12}
-                          className="group-hover:translate-x-0.5 transition-transform"
-                        />
-                      </span>
-                    </div>
+                  <div className="flex items-center justify-between pt-3 border-t border-white/[0.04]">
+                    <span className="text-[11px] text-zinc-500 font-mono">
+                      {tool.categoryName}
+                    </span>
+                    <span className="text-xs px-3 py-1.5 neu-btn text-zinc-300 group-hover:text-white flex items-center gap-1.5 font-medium transition-colors">
+                      Launch
+                      <ArrowRight
+                        size={12}
+                        className="group-hover:translate-x-0.5 transition-transform"
+                      />
+                    </span>
                   </div>
                 </Link>
               );
@@ -314,73 +315,77 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-          LAYER 5 â€” SECURITY / COMPARISON
-          Side-by-side, no table â€” stacked comparison cards
-      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      {/* ──────────────────────────────────────────
+          LAYER 5 — SECURITY & ARCHITECTURE
+          Tactile Dual Comparison
+      ────────────────────────────────────────── */}
       <section className="w-screen -mx-3 sm:-mx-6 py-20 sm:py-28">
         <div className="max-w-5xl mx-auto px-6 sm:px-8">
-          <div className="max-w-lg mb-14">
+          <div className="max-w-lg mb-12">
             <h2 className="text-3xl sm:text-4xl font-light text-white tracking-tight">
-              Why in-browser?
+              Why In-Browser?
             </h2>
             <p className="mt-3 text-sm text-zinc-400 leading-relaxed">
-              Side-by-side: what happens here versus what happens when you upload to a cloud converter.
+              Tactile side-by-side: hardware client-side execution versus third-party cloud converters.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Our approach */}
-            <div className="rounded-2xl border border-white/[0.08] bg-[#0a0b10] p-8 flex flex-col gap-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/[0.12] flex items-center justify-center">
-                  <Shield size={18} className="text-white" />
+            <div className="neu-tile p-8 flex flex-col gap-6">
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 neu-icon-raised text-white">
+                  <Shield size={22} />
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-white">Explosive Studio</div>
-                  <div className="text-[11px] text-zinc-500">In-browser execution</div>
+                  <div className="text-base font-semibold text-white">Explosive Studio</div>
+                  <div className="text-xs text-zinc-500 font-mono">Hardware SIMD Execution</div>
                 </div>
               </div>
 
               <div className="flex flex-col gap-3.5">
                 {[
-                  "Files never leave your device",
-                  "Instant processing, no server queue",
-                  "Works completely offline",
-                  "Zero data retention â€” volatile RAM only",
-                  "GDPR & HIPAA compliant by architecture",
+                  "Files never leave your device boundary",
+                  "Instant processing — zero server queue",
+                  "100% offline via Progressive Web App",
+                  "Volatile memory only — zero residual cache",
+                  "Compliant with GDPR & HIPAA by architecture",
                 ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <Check size={15} className="text-white shrink-0 mt-0.5" />
-                    <span className="text-sm text-zinc-300">{item}</span>
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="w-5 h-5 neu-icon-raised shrink-0">
+                      <Check size={12} className="text-white" />
+                    </div>
+                    <span className="text-sm text-zinc-300 font-light">{item}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Cloud approach */}
-            <div className="rounded-2xl border border-white/[0.06] bg-[#0d0e15]/50 p-8 flex flex-col gap-6 opacity-60">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-white/[0.03] border border-white/[0.06] flex items-center justify-center">
-                  <Cpu size={18} className="text-zinc-500" />
+            <div className="neu-inset p-8 flex flex-col gap-6 opacity-75">
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 neu-icon-inset text-zinc-500">
+                  <Cpu size={22} />
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-zinc-400">Cloud Converters</div>
-                  <div className="text-[11px] text-zinc-600">Server-side processing</div>
+                  <div className="text-base font-semibold text-zinc-400">Cloud Converters</div>
+                  <div className="text-xs text-zinc-600 font-mono">Remote Server Ingestion</div>
                 </div>
               </div>
 
               <div className="flex flex-col gap-3.5">
                 {[
-                  "Full file uploaded to remote servers",
-                  "Queued behind other users' jobs",
-                  "Requires active internet connection",
-                  "Data cached on remote disk storage",
-                  "Subject to third-party data policies",
+                  "Full file uploaded over public internet",
+                  "Queued behind other users' conversion jobs",
+                  "Requires permanent online connection",
+                  "Data cached and indexed on remote disks",
+                  "Subject to changing third-party policies",
                 ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <XIcon size={15} className="text-zinc-600 shrink-0 mt-0.5" />
-                    <span className="text-sm text-zinc-500">{item}</span>
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="w-5 h-5 neu-icon-inset shrink-0">
+                      <XIcon size={12} className="text-zinc-600" />
+                    </div>
+                    <span className="text-sm text-zinc-500 font-light">{item}</span>
                   </div>
                 ))}
               </div>
@@ -389,37 +394,35 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-          LAYER 6 â€” FAQ
-          Clean accordion, no generic cards
-      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section
         id="faq"
-        className="w-screen -mx-3 sm:-mx-6 bg-[#0a0b10] border-t border-white/[0.04] py-20 sm:py-28"
+        className="w-screen -mx-3 sm:-mx-6 py-20 sm:py-28 border-t border-white/[0.04]"
       >
         <div className="max-w-3xl mx-auto px-6 sm:px-8">
-          <h2 className="text-3xl sm:text-4xl font-light text-white tracking-tight mb-12">
-            Questions
+          <h2 className="text-3xl sm:text-4xl font-light text-white tracking-tight mb-10">
+            Frequently Asked Questions
           </h2>
 
-          <div className="flex flex-col divide-y divide-white/[0.06]">
+          <div className="flex flex-col gap-4">
             {faqItems.map((item, i) => (
-              <div key={i}>
+              <div key={i} className="neu-tile overflow-hidden">
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between py-5 text-left cursor-pointer group"
+                  className="w-full flex items-center justify-between p-6 text-left cursor-pointer group"
                 >
                   <span className="text-[15px] font-medium text-zinc-200 group-hover:text-white transition-colors pr-4">
                     {item.q}
                   </span>
-                  {openFaq === i ? (
-                    <Minus size={16} className="text-zinc-500 shrink-0" />
-                  ) : (
-                    <Plus size={16} className="text-zinc-500 shrink-0" />
-                  )}
+                  <div className="w-8 h-8 neu-icon-raised shrink-0">
+                    {openFaq === i ? (
+                      <Minus size={14} className="text-zinc-400" />
+                    ) : (
+                      <Plus size={14} className="text-zinc-400" />
+                    )}
+                  </div>
                 </button>
                 {openFaq === i && (
-                  <div className="pb-5 text-sm text-zinc-400 leading-relaxed pr-10 animate-in fade-in duration-150">
+                  <div className="px-6 pb-6 pt-1 text-sm text-zinc-400 leading-relaxed font-light border-t border-white/[0.03]">
                     {item.a}
                   </div>
                 )}
@@ -429,10 +432,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-          LAYER 7 â€” FOOTER
-          Minimal, no emoji, no version badges
-      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
+      {/* ──────────────────────────────────────────
+          LAYER 7 — FOOTER
+          Tactile Minimal Footer
+      ────────────────────────────────────────── */}
       <footer className="w-screen -mx-3 sm:-mx-6 border-t border-white/[0.04] py-10">
         <div className="max-w-6xl mx-auto px-6 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
           <div className="flex items-center gap-2">
