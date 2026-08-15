@@ -35,7 +35,7 @@ export function EngineTelemetryBar() {
             className={`h-2 w-2 rounded-full ${
               telemetry.engineStatus === "processing"
                 ? "bg-amber-400 animate-pulse"
-                : "bg-emerald-400"
+                : "bg-zinc-400"
             }`}
           />
           <span className="font-semibold text-zinc-200">
@@ -49,7 +49,7 @@ export function EngineTelemetryBar() {
         <div className="flex items-center gap-1.5 text-zinc-400">
           <Zap size={13} className={telemetry.simdActive ? "text-amber-400" : "text-zinc-600"} />
           <span>WASM SIMD:</span>
-          <span className={telemetry.simdActive ? "text-emerald-400 font-semibold" : "text-zinc-400"}>
+          <span className={telemetry.simdActive ? "text-amber-400 font-semibold" : "text-zinc-400"}>
             {telemetry.simdActive ? "128-bit Active" : "Standard"}
           </span>
         </div>
@@ -73,7 +73,7 @@ export function EngineTelemetryBar() {
         )}
 
         <div className="hidden lg:flex items-center gap-1.5 text-zinc-500">
-          <ShieldCheck size={13} className="text-emerald-400" />
+          <ShieldCheck size={13} className="text-amber-400" />
           <span>Zero Server Upload</span>
         </div>
       </div>

@@ -217,7 +217,7 @@ ${adjustedCues
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             SMPTE Timecode
           </span>
-          <span className="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
             100% In-Memory
           </span>
         </div>
@@ -374,7 +374,7 @@ ${adjustedCues
             <div className="flex flex-col justify-center gap-1">
               <span className="text-zinc-400">CPS Diagnostics:</span>
               <div className="flex items-center gap-2">
-                <CheckCircle2 size={15} className="text-emerald-400" />
+                <CheckCircle2 size={15} className="text-amber-400" />
                 <span className="text-zinc-200">Optimal (12-18 CPS)</span>
               </div>
             </div>
@@ -420,7 +420,7 @@ ${adjustedCues
                         className={`text-[10px] px-2 py-0.5 rounded shrink-0 ${
                           isTooFast
                             ? "bg-red-500/10 text-red-400 border border-red-500/20"
-                            : "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                            : "bg-white/[0.05] text-zinc-300 border border-white/[0.08]"
                         }`}
                         title="Characters per second"
                       >

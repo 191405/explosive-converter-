@@ -158,7 +158,7 @@ export default function AudioConvertPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             libmp3lame / libopus
           </span>
-          <span className="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
             In-Memory
           </span>
         </div>
@@ -292,8 +292,8 @@ export default function AudioConvertPage() {
             </div>
 
             {downloadUrl ? (
-              <div className="p-5 bg-[#0e0e14] border border-emerald-500/30 rounded-xl flex flex-col gap-4">
-                <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+              <div className="p-5 bg-[#0e0e14] border border-amber-500/30 rounded-xl flex flex-col gap-4">
+                <div className="flex items-center gap-2 text-amber-400 font-bold text-sm">
                   <CheckCircle2 size={18} />
                   <span>Audio Transcoding Complete</span>
                 </div>
@@ -305,7 +305,7 @@ export default function AudioConvertPage() {
                   </div>
                   <div>
                     <span className="text-[10px] text-zinc-500 block">Output File Size</span>
-                    <span className="text-emerald-400 tabular-nums font-bold">{formatBytes(resultSize)}</span>
+                    <span className="text-amber-400 tabular-nums font-bold">{formatBytes(resultSize)}</span>
                   </div>
                 </div>
 
@@ -322,7 +322,7 @@ export default function AudioConvertPage() {
                   <a
                     href={downloadUrl}
                     download={outputName}
-                    className="inline-flex items-center gap-2 px-5 py-2 rounded-md bg-emerald-500 text-black font-semibold text-xs hover:bg-emerald-400 transition-colors shadow"
+                    className="inline-flex items-center gap-2 px-5 py-2 rounded-md bg-amber-500 text-black font-semibold text-xs hover:bg-amber-400 transition-colors shadow"
                   >
                     <Download size={14} />
                     <span>Download {format.toUpperCase()}</span>

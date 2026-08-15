@@ -59,7 +59,7 @@ export function ConsoleDrawer() {
             onClick={() => setAutoScroll(!autoScroll)}
             className={`px-2 py-1 rounded text-[10px] border transition-colors ${
               autoScroll
-                ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                ? "bg-amber-400/10 text-amber-400 border-amber-400/20"
                 : "bg-white/[0.05] text-zinc-400 border-white/[0.08]"
             }`}
           >
@@ -111,7 +111,7 @@ export function ConsoleDrawer() {
                     : log.source === "SERVER_STREAM"
                     ? "bg-blue-950/60 text-blue-300 border border-blue-800/40"
                     : log.source === "DSP_ENGINE"
-                    ? "bg-emerald-950/60 text-emerald-300 border border-emerald-800/40"
+                    ? "bg-amber-950/60 text-amber-300 border border-amber-800/40"
                     : "bg-zinc-800 text-zinc-300 border border-zinc-700"
                 }`}
               >

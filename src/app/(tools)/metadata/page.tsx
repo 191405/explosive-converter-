@@ -200,7 +200,7 @@ export default function MetadataForensicsPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             RAW EXIF 2.32
           </span>
-          <span className="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
             100% In-Memory
           </span>
         </div>
@@ -247,7 +247,7 @@ export default function MetadataForensicsPage() {
             className={`p-3.5 rounded-lg border flex items-center justify-between font-mono text-xs ${
               sensitiveCount > 0
                 ? "bg-amber-500/10 border-amber-500/20 text-amber-200"
-                : "bg-emerald-500/10 border-emerald-500/20 text-emerald-200"
+                : "bg-white/[0.04] border-white/[0.08] text-zinc-300"
             }`}
           >
             <div className="flex items-center gap-2">
@@ -290,7 +290,7 @@ export default function MetadataForensicsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-semibold text-sm text-white flex items-center gap-2">
-                    <Binary size={15} className="text-cyan-400" />
+                    <Binary size={15} className="text-amber-400" />
                     <span>Least Significant Bit (LSB) Steganography Analyzer</span>
                   </h3>
                   <p className="text-xs text-zinc-400 mt-0.5">
@@ -320,15 +320,15 @@ export default function MetadataForensicsPage() {
 
           {/* Download Scrubbed File */}
           {sanitizedUrl && (
-            <div className="p-4 bg-emerald-950/30 border border-emerald-500/30 rounded-xl flex items-center justify-between">
-              <div className="flex items-center gap-2 text-emerald-300 font-mono text-xs">
-                <CheckCircle2 size={16} />
+            <div className="p-4 bg-[#12131a] border border-amber-400/30 rounded-xl flex items-center justify-between">
+              <div className="flex items-center gap-2 text-zinc-200 font-mono text-xs">
+                <CheckCircle2 size={16} className="text-amber-400" />
                 <span>Sanitized File Ready for Distribution</span>
               </div>
               <a
                 href={sanitizedUrl}
                 download={`sanitized-${file.name.replace(/\.[^/.]+$/, "")}.png`}
-                className="flex items-center gap-2 px-4 py-2 rounded-md bg-emerald-500 text-black font-semibold text-xs hover:bg-emerald-400 transition-colors shadow"
+                className="flex items-center gap-2 px-4 py-2 rounded-md bg-amber-500 text-black font-semibold text-xs hover:bg-amber-400 transition-colors shadow"
               >
                 <Download size={14} />
                 <span>Download Scrubbed File</span>

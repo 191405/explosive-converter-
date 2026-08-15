@@ -85,7 +85,7 @@ export default function ArchiveStudioPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             Fflate Stream IO
           </span>
-          <span className="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
             In-Memory
           </span>
         </div>
@@ -157,7 +157,7 @@ export default function ArchiveStudioPage() {
                     </div>
                     <div className="flex items-center gap-8 tabular-nums text-zinc-400">
                       <span>{(entry.size / 1024).toFixed(1)} KB</span>
-                      <span className="text-emerald-400">{(entry.compressedSize / 1024).toFixed(1)} KB</span>
+                      <span className="text-amber-400">{(entry.compressedSize / 1024).toFixed(1)} KB</span>
                     </div>
                   </div>
                 ))}
@@ -207,7 +207,7 @@ export default function ArchiveStudioPage() {
                   <a
                     href={outputArchiveUrl}
                     download={`explosive-archive-${Date.now()}.zip`}
-                    className="flex items-center gap-2 px-4 py-2 rounded-md bg-emerald-500 text-black font-semibold text-xs hover:bg-emerald-400 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 rounded-md bg-amber-500 text-black font-semibold text-xs hover:bg-amber-400 transition-colors"
                   >
                     <Download size={14} />
                     <span>Download Repacked ZIP</span>

@@ -154,7 +154,7 @@ export default function VideoCompressPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             FFmpeg WASM (libx264)
           </span>
-          <span className="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
             Zero Server Upload
           </span>
         </div>
@@ -265,7 +265,7 @@ export default function VideoCompressPage() {
               {isProcessing && (
                 <div className="w-full bg-white/[0.06] rounded-full h-1.5 overflow-hidden mt-1">
                   <div
-                    className="bg-emerald-400 h-full transition-all duration-200"
+                    className="bg-amber-400 h-full transition-all duration-200"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -282,8 +282,8 @@ export default function VideoCompressPage() {
 
             {/* Result Comparison */}
             {downloadUrl ? (
-              <div className="p-5 bg-[#0e0e14] border border-emerald-500/30 rounded-xl flex flex-col gap-4">
-                <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+              <div className="p-5 bg-[#0e0e14] border border-amber-500/30 rounded-xl flex flex-col gap-4">
+                <div className="flex items-center gap-2 text-amber-400 font-bold text-sm">
                   <CheckCircle2 size={18} />
                   <span>Compression Finished Successfully</span>
                 </div>
@@ -295,7 +295,7 @@ export default function VideoCompressPage() {
                   </div>
                   <div>
                     <span className="text-[10px] text-zinc-500 block">Compressed Size</span>
-                    <span className="text-emerald-400 tabular-nums font-bold">{formatBytes(resultSize)}</span>
+                    <span className="text-amber-400 tabular-nums font-bold">{formatBytes(resultSize)}</span>
                   </div>
                   <div>
                     <span className="text-[10px] text-zinc-500 block">Data Reduction</span>
@@ -309,7 +309,7 @@ export default function VideoCompressPage() {
                   <a
                     href={downloadUrl}
                     download={`compressed-${file.name.replace(/\.[^/.]+$/, "")}.mp4`}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-emerald-500 text-black font-semibold text-xs hover:bg-emerald-400 transition-colors shadow"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-amber-500 text-black font-semibold text-xs hover:bg-amber-400 transition-colors shadow"
                   >
                     <Download size={14} />
                     <span>Download Compressed MP4 ({formatBytes(resultSize)})</span>

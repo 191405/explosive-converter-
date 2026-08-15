@@ -145,7 +145,7 @@ export default function CryptoVaultPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             WebCrypto Subtle
           </span>
-          <span className="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
             Zero Telemetry
           </span>
         </div>
@@ -200,7 +200,7 @@ export default function CryptoVaultPage() {
                 <Key size={14} className="text-amber-400" />
                 <span>WebCrypto In-Browser Keypair Generator</span>
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-400/10 text-amber-400 border border-amber-400/20">
                 W3C WebCrypto
               </span>
             </div>
@@ -240,7 +240,7 @@ export default function CryptoVaultPage() {
                   onClick={() => copyToClipboard(parsedKeyInfo.fingerprint)}
                   className="neu-btn p-1 text-zinc-400 hover:text-white"
                 >
-                  {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                  {copied ? <Check size={12} className="text-amber-400" /> : <Copy size={12} />}
                 </button>
               )}
             </div>
@@ -251,7 +251,7 @@ export default function CryptoVaultPage() {
               </div>
             ) : (
               <div className="flex flex-col gap-3 font-mono text-[11px]">
-                <div className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 flex items-center gap-2">
+                <div className="p-2.5 rounded-lg bg-amber-400/10 border border-amber-400/20 text-amber-300 flex items-center gap-2">
                   <ShieldCheck size={16} />
                   <span>{parsedKeyInfo.type}</span>
                 </div>
@@ -270,7 +270,7 @@ export default function CryptoVaultPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-zinc-500">Storage:</span>
-                    <span className="text-emerald-400">100% Client RAM</span>
+                    <span className="text-zinc-200">100% Client RAM</span>
                   </div>
                 </div>
               </div>

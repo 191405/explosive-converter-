@@ -70,7 +70,7 @@ export default function AnimatedMediaOptimizerPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             FFmpeg WASM PaletteGen
           </span>
-          <span className="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
             In-Memory
           </span>
         </div>
@@ -164,7 +164,7 @@ export default function AnimatedMediaOptimizerPage() {
                 <a
                   href={outputUrl}
                   download={`${file.name.replace(/\.[^/.]+$/, "")}-animated.${format}`}
-                  className="flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-emerald-500 text-black text-xs font-semibold hover:bg-emerald-400 transition-colors cursor-pointer"
+                  className="flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-amber-500 text-black text-xs font-semibold hover:bg-amber-400 transition-colors cursor-pointer"
                 >
                   <Download size={14} />
                   <span>Download ({((outputSize || 0) / 1024).toFixed(0)} KB)</span>

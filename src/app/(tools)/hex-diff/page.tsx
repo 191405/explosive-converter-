@@ -231,7 +231,7 @@ export default function HexDiffPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             ArrayBuffer SIMD
           </span>
-          <span className="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
             100% In-Memory
           </span>
         </div>
@@ -271,7 +271,7 @@ export default function HexDiffPage() {
               >
                 <Hash size={13} />
                 <span>SHA-256: {sha256Hash.slice(0, 8)}...</span>
-                {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                {copied ? <Check size={12} className="text-amber-400" /> : <Copy size={12} />}
               </button>
               <button
                 onClick={() => {
@@ -500,7 +500,7 @@ export default function HexDiffPage() {
                       </div>
                       <div className="p-2 rounded bg-white/[0.02]">
                         <span className="text-zinc-500 text-[10px] block">DELTA STATUS</span>
-                        <span className={bufferA?.length === bufferB?.length ? "text-emerald-400" : "text-amber-400"}>
+                        <span className={bufferA?.length === bufferB?.length ? "text-zinc-200" : "text-amber-400"}>
                           {bufferA?.length === bufferB?.length ? "Identical Length" : "Shifted / Resized"}
                         </span>
                       </div>

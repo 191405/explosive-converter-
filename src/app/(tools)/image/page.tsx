@@ -143,7 +143,7 @@ export default function ImageConvertPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             HTML5 Canvas GPU
           </span>
-          <span className="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
             In-Memory
           </span>
         </div>
@@ -226,11 +226,11 @@ export default function ImageConvertPage() {
                     <span className="text-amber-400">Processing...</span>
                   ) : res?.status === "done" && res.url ? (
                     <div className="flex items-center gap-3">
-                      <span className="text-emerald-400 tabular-nums font-semibold">{formatBytes(res.size || 0)}</span>
+                      <span className="text-amber-400 tabular-nums font-semibold">{formatBytes(res.size || 0)}</span>
                       <a
                         href={res.url}
                         download={res.newName}
-                        className="flex items-center gap-1.5 px-3 py-1 rounded bg-emerald-500 text-black font-semibold hover:bg-emerald-400 transition-colors"
+                        className="flex items-center gap-1.5 px-3 py-1 rounded bg-amber-500 text-black font-semibold hover:bg-amber-400 transition-colors"
                       >
                         <Download size={12} />
                         <span>Download</span>

@@ -137,7 +137,7 @@ export default function VectorizerPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             Bézier Curve Engine
           </span>
-          <span className="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
             Real-Time
           </span>
         </div>
@@ -238,7 +238,7 @@ export default function VectorizerPage() {
                 disabled={!svgOutput || isProcessing}
                 className="flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-white/[0.06] text-white text-xs font-mono hover:bg-white/[0.1] border border-white/[0.08] transition-colors cursor-pointer disabled:opacity-30"
               >
-                {copied ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
+                {copied ? <Check size={14} className="text-amber-400" /> : <Copy size={14} />}
                 <span>{copied ? "Copied SVG" : "Copy SVG Code"}</span>
               </button>
             </div>

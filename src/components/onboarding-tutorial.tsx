@@ -245,7 +245,7 @@ export function OnboardingTutorial() {
                       className="p-3 rounded-lg bg-[#050507] border border-white/[0.06] flex flex-col gap-1"
                     >
                       <span className="text-xs font-semibold text-zinc-200 flex items-center gap-1.5 font-mono">
-                        <CheckCircle2 size={13} className="text-emerald-400 shrink-0" />
+                        <CheckCircle2 size={13} className="text-amber-400 shrink-0" />
                         {pt.title}
                       </span>
                       <span className="text-[11px] text-zinc-400 leading-relaxed pl-5 font-mono">

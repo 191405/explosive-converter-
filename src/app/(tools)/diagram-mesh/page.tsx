@@ -209,7 +209,7 @@ export default function DiagramMeshPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             Mermaid.js Core
           </span>
-          <span className="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
             100% In-Memory
           </span>
         </div>
@@ -273,7 +273,7 @@ export default function DiagramMeshPage() {
                 onClick={copyCode}
                 className="neu-btn px-2.5 py-1 text-[11px] text-zinc-400 hover:text-white flex items-center gap-1"
               >
-                {copied ? <Check size={11} className="text-emerald-400" /> : <Copy size={11} />}
+                {copied ? <Check size={11} className="text-amber-400" /> : <Copy size={11} />}
                 <span>Copy</span>
               </button>
               <button

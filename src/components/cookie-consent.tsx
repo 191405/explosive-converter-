@@ -21,15 +21,16 @@ export function CookieConsent() {
   });
 
   useEffect(() => {
-    const saved = localStorage.getItem("explosive_cookie_consent");
-    if (!saved) {
-      // Small delay for smooth entry
-      const timer = setTimeout(() => setIsVisible(true), 800);
-      return () => clearTimeout(timer);
-    } else {
-      try {
+    try {
+      const saved = localStorage.getItem("explosive_cookie_consent");
+      if (!saved) {
+        const timer = setTimeout(() => setIsVisible(true), 1200);
+        return () => clearTimeout(timer);
+      } else {
         setPrefs(JSON.parse(saved));
-      } catch {}
+      }
+    } catch {
+      setIsVisible(false);
     }
 
     const handleOpenSettings = () => {
@@ -43,7 +44,9 @@ export function CookieConsent() {
 
   const savePreferences = (preferences: CookiePreferences) => {
     const finalPrefs = { ...preferences, timestamp: new Date().toISOString() };
-    localStorage.setItem("explosive_cookie_consent", JSON.stringify(finalPrefs));
+    try {
+      localStorage.setItem("explosive_cookie_consent", JSON.stringify(finalPrefs));
+    } catch {}
     setPrefs(finalPrefs);
     setIsVisible(false);
     setShowDetails(false);
@@ -58,13 +61,8 @@ export function CookieConsent() {
     });
   };
 
-  const acceptEssentialOnly = () => {
-    savePreferences({
-      essential: true,
-      wasmCache: false,
-      hardwareTelemetry: false,
-      timestamp: "",
-    });
+  const dismiss = () => {
+    savePreferences(prefs);
   };
 
   if (!isVisible) return null;
@@ -90,8 +88,8 @@ export function CookieConsent() {
         </div>
 
         <button
-          onClick={() => setIsVisible(false)}
-          className="text-zinc-500 hover:text-zinc-300 transition-colors p-1"
+          onClick={dismiss}
+          className="text-zinc-500 hover:text-zinc-300 transition-colors p-1 cursor-pointer"
           aria-label="Dismiss cookie notice"
         >
           <X size={15} />
@@ -107,13 +105,13 @@ export function CookieConsent() {
           {/* Essential */}
           <div className="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.06]">
             <div className="flex items-center gap-2.5">
-              <Lock size={14} className="text-emerald-400 shrink-0" />
+              <Lock size={14} className="text-amber-400 shrink-0" />
               <div>
                 <span className="text-white font-semibold block">Essential Workspace State</span>
                 <span className="text-[10px] text-zinc-500">Theme, tool parameters, and session state (Required)</span>
               </div>
             </div>
-            <span className="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded font-bold border border-emerald-500/20">
+            <span className="text-[10px] bg-amber-400/10 text-amber-400 px-2 py-0.5 rounded font-bold border border-amber-400/20">
               ALWAYS ACTIVE
             </span>
           </div>
@@ -121,61 +119,63 @@ export function CookieConsent() {
           {/* WASM Cache */}
           <div className="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.06]">
             <div className="flex items-center gap-2.5">
-              <Database size={14} className="text-amber-400 shrink-0" />
+              <Cpu size={14} className="text-zinc-400 shrink-0" />
               <div>
                 <span className="text-white font-semibold block">WebAssembly Binary Cache</span>
-                <span className="text-[10px] text-zinc-500">Caches compiled WASM cores locally in IndexedDB for instant load</span>
+                <span className="text-[10px] text-zinc-500">Cache compiled FFmpeg and Tesseract modules in IndexedDB</span>
               </div>
             </div>
             <input
               type="checkbox"
               checked={prefs.wasmCache}
               onChange={(e) => setPrefs({ ...prefs, wasmCache: e.target.checked })}
-              className="accent-amber-400 h-4 w-4 cursor-pointer"
+              className="accent-amber-400 w-4 h-4 rounded cursor-pointer"
             />
           </div>
 
-          {/* Hardware Diagnostics */}
+          {/* Hardware Telemetry */}
           <div className="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.06]">
             <div className="flex items-center gap-2.5">
-              <Cpu size={14} className="text-cyan-400 shrink-0" />
+              <Database size={14} className="text-zinc-400 shrink-0" />
               <div>
-                <span className="text-white font-semibold block">Hardware Telemetry Probing</span>
-                <span className="text-[10px] text-zinc-500">Probes CPU cores and SIMD 128-bit vector support to optimize rendering</span>
+                <span className="text-white font-semibold block">Hardware Telemetry</span>
+                <span className="text-[10px] text-zinc-500">Measure SIMD throughput and GPU canvas rendering locally</span>
               </div>
             </div>
             <input
               type="checkbox"
               checked={prefs.hardwareTelemetry}
               onChange={(e) => setPrefs({ ...prefs, hardwareTelemetry: e.target.checked })}
-              className="accent-amber-400 h-4 w-4 cursor-pointer"
+              className="accent-amber-400 w-4 h-4 rounded cursor-pointer"
             />
           </div>
         </div>
       )}
 
-      {/* Buttons */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/[0.06]">
+      <div className="flex items-center justify-between gap-2 pt-1">
         <button
           onClick={() => setShowDetails(!showDetails)}
-          className="flex items-center gap-1.5 text-zinc-400 hover:text-white transition-colors cursor-pointer text-xs"
+          className="text-xs text-zinc-400 hover:text-zinc-200 transition-colors flex items-center gap-1 font-mono cursor-pointer"
         >
           <Settings2 size={13} />
-          <span>{showDetails ? "Hide Preferences" : "Customize Preferences"}</span>
+          <span>{showDetails ? "Hide Options" : "Customize"}</span>
         </button>
 
         <div className="flex items-center gap-2">
-          <button
-            onClick={acceptEssentialOnly}
-            className="px-3 py-1.5 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] text-zinc-300 hover:text-white border border-white/[0.08] transition-colors cursor-pointer text-xs font-medium"
-          >
-            Essential Only
-          </button>
+          {showDetails && (
+            <button
+              onClick={() => savePreferences(prefs)}
+              className="neu-btn px-3 py-1.5 text-xs text-zinc-300 hover:text-white"
+            >
+              Save Preferences
+            </button>
+          )}
           <button
             onClick={acceptAll}
-            className="px-4 py-1.5 rounded-lg bg-white text-black font-semibold hover:bg-zinc-200 transition-colors shadow cursor-pointer text-xs"
+            className="neu-btn-primary px-4 py-1.5 text-xs flex items-center gap-1.5"
           >
-            Accept All
+            <Check size={13} />
+            <span>Accept & Close</span>
           </button>
         </div>
       </div>

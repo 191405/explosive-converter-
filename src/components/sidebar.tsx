@@ -95,7 +95,7 @@ export function Sidebar() {
                   </span>
                 </div>
               </div>
-              <div className="h-2 w-2 rounded-full bg-emerald-400 led-active" title="WASM Engine Ready" />
+              <div className="h-2 w-2 rounded-full bg-amber-400" title="WASM Engine Ready" />
             </Link>
           </div>
 
@@ -171,7 +171,7 @@ export function Sidebar() {
 
           <div className="flex items-center justify-between px-1 text-[10px] font-mono text-zinc-500 pt-1">
             <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
               <span>WASM SIMD 128</span>
             </span>
             <span>Zero Server IO</span>
