@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/sidebar";
+import { CinematicBackground } from "@/components/cinematic-bg";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CommandPalette } from "@/components/command-palette";
 import { OnboardingTutorial } from "@/components/onboarding-tutorial";
@@ -154,9 +155,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-[#050507] text-zinc-100 font-sans antialiased selection:bg-zinc-700 selection:text-white" suppressHydrationWarning>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <div className="flex min-h-screen w-full">
+      <body className="min-h-full flex flex-col bg-[#050507] text-[#f4f4f5] font-sans antialiased selection:bg-zinc-700 selection:text-white relative" suppressHydrationWarning>
+        <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" enableSystem={false}>
+          <CinematicBackground />
+          <div className="flex min-h-screen w-full relative z-10">
             <Sidebar />
             
             {/* Main Content Area */}

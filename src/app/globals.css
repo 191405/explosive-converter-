@@ -1,64 +1,27 @@
 @import "tailwindcss";
 
-/* ── Pro Industrial Design System (Zero-AI-Gimmick Engineering) ── */
-:root {
+/* ── Pro Industrial Design System (Obsidian Engineering Grade) ── */
+:root, .dark, .light {
   --bg-base: #050507;
-  --bg-surface: #0c0c0f;
-  --bg-surface-elevated: #141418;
-  --bg-surface-hover: #1a1a20;
+  --bg-surface: #0c0c10;
+  --bg-surface-elevated: #14141a;
+  --bg-surface-hover: #1a1a22;
   
   --text-primary: #f4f4f5;
   --text-secondary: #a1a1aa;
-  --text-tertiary: #52525b;
+  --text-tertiary: #71717a;
 
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-focus: rgba(255, 255, 255, 0.22);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-focus: rgba(255, 255, 255, 0.25);
   
   --accent-base: #ffffff;
   --accent-amber: #f59e0b;
   --accent-emerald: #10b981;
   --accent-cyan: #06b6d4;
   
-  --glass-bg: rgba(12, 12, 15, 0.75);
-  --glass-hover: rgba(20, 20, 24, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.08);
-}
-
-.light {
-  --bg-base: #fafafa;
-  --bg-surface: #ffffff;
-  --bg-surface-elevated: #f4f4f5;
-  --bg-surface-hover: #e4e4e7;
-  
-  --text-primary: #09090b;
-  --text-secondary: #71717a;
-  --text-tertiary: #a1a1aa;
-
-  --border-subtle: rgba(0, 0, 0, 0.08);
-  --border-focus: rgba(0, 0, 0, 0.25);
-  
-  --accent-base: #09090b;
-  --accent-amber: #d97706;
-  --accent-emerald: #059669;
-  --accent-cyan: #0891b2;
-  
-  --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-hover: rgba(244, 244, 245, 0.9);
-  --glass-border: rgba(0, 0, 0, 0.08);
-}
-
-.dark {
-  --bg-base: #050507;
-  --bg-surface: #0c0c0f;
-  --bg-surface-elevated: #141418;
-  --bg-surface-hover: #1a1a20;
-  
-  --text-primary: #f4f4f5;
-  --text-secondary: #a1a1aa;
-  --text-tertiary: #52525b;
-
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-focus: rgba(255, 255, 255, 0.22);
+  --glass-bg: rgba(12, 12, 16, 0.85);
+  --glass-hover: rgba(20, 20, 26, 0.95);
+  --glass-border: rgba(255, 255, 255, 0.09);
 }
 
 @theme inline {
@@ -71,14 +34,9 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html {
-  scroll-behavior: smooth;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-}
-
-body {
-  background-color: var(--bg-base);
-  color: var(--text-primary);
+html, body {
+  background-color: #050507 !important;
+  color: #f4f4f5 !important;
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -89,11 +47,11 @@ body {
 /* ── Pro Industrial Panel ── */
 .glass-panel {
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
   border-radius: 10px;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
   transition: border-color 0.15s ease, background 0.15s ease;
 }
 
@@ -105,21 +63,21 @@ body {
 /* Pro Primary Button */
 .btn-primary {
   background: #f4f4f5;
-  color: #09090b;
+  color: #050507;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 6px;
-  font-weight: 500;
-  font-size: 0.875rem;
+  font-weight: 600;
+  font-size: 0.8125rem;
   letter-spacing: -0.01em;
   cursor: pointer;
   transition: all 0.15s ease;
   outline: none;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .btn-primary:hover {
   background: #ffffff;
-  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.15);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
 }
 
 .btn-primary:active {
@@ -137,19 +95,19 @@ body {
 
 /* Pro Secondary Button */
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.03);
-  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f4f4f5;
   border: 1px solid var(--border-subtle);
   border-radius: 6px;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   cursor: pointer;
   transition: all 0.15s ease;
   outline: none;
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.08);
   border-color: var(--border-focus);
 }
 
@@ -159,10 +117,10 @@ body {
 
 /* Pro Input Base */
 .input-base {
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.5);
   border: 1px solid var(--border-subtle);
   border-radius: 6px;
-  color: var(--text-primary);
+  color: #f4f4f5;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -173,14 +131,14 @@ body {
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
 }
 
-/* Scrollbar */
+/* Scrollbars */
 .scrollbar-none::-webkit-scrollbar { display: none; }
 .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
 
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.25); }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
 
 /* Tabular numeric typography */
 .tabular-nums {
