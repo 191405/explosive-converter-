@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
@@ -25,6 +25,7 @@ import {
   Network,
   Type,
   Clock,
+  Sparkles,
   X,
 } from "lucide-react";
 
@@ -94,6 +95,7 @@ export const SIDEBAR_CATEGORIES: SidebarCategory[] = [
       { href: "/font-lab", label: "OpenType & WOFF2 Subsetter", sublabel: "Glyph Outline & Font Shrinker", icon: Type, tag: "TTF" },
       { href: "/pdf", label: "PDF Document Studio", sublabel: "Split, Merge & Page Manipulation", icon: FileText, tag: "PDF" },
       { href: "/image", label: "Canvas Image Transcoder", sublabel: "AVIF/WebP/PNG Lossless Engine", icon: ImageIcon, tag: "AVIF" },
+      { href: "/cloudinary", label: "Cloudinary Dynamic Media", sublabel: "Smart Crop, Watermarks & URL Pipeline", icon: Sparkles, tag: "API" },
       { href: "/archive", label: "In-Memory Archive Studio", sublabel: "ZIP / Tarball Repacker", icon: Archive, tag: "ZIP" },
     ],
   },
