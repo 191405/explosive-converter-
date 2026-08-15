@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { ScanText, Download, Copy, Check, FileText, Sparkles, RefreshCw, Layers } from "lucide-react";
@@ -111,7 +111,7 @@ Text layer synthesized directly without external cloud API dependencies.`;
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             Tesseract WASM
           </span>
-          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-white/10 border border-white/[0.12] text-white font-semibold">
             100% Client-Side
           </span>
         </div>
@@ -148,15 +148,15 @@ Text layer synthesized directly without external cloud API dependencies.`;
                 className="bg-black/40 border border-white/[0.1] rounded-md px-3 py-2 text-xs font-mono text-zinc-200 outline-none"
               >
                 <option value="eng">English (Latin)</option>
-                <option value="spa">Spanish (Español)</option>
-                <option value="fra">French (Français)</option>
+                <option value="spa">Spanish (EspaÃ±ol)</option>
+                <option value="fra">French (FranÃ§ais)</option>
                 <option value="deu">German (Deutsch)</option>
-                <option value="jpn">Japanese (日本語)</option>
+                <option value="jpn">Japanese (æ—¥æœ¬èªž)</option>
               </select>
             </div>
 
             {confidence !== null && (
-              <div className="p-3 bg-amber-400/10 border border-amber-400/20 rounded-lg flex items-center justify-between font-mono text-xs text-amber-300">
+              <div className="p-3 bg-white/10 border border-white/[0.12] rounded-lg flex items-center justify-between font-mono text-xs text-zinc-100">
                 <span>Confidence Score</span>
                 <span className="font-bold tabular-nums">{confidence}%</span>
               </div>
@@ -177,7 +177,7 @@ Text layer synthesized directly without external cloud API dependencies.`;
                 disabled={!extractedText || isProcessing}
                 className="flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-white/[0.06] text-white text-xs font-mono hover:bg-white/[0.1] border border-white/[0.08] transition-colors cursor-pointer disabled:opacity-30"
               >
-                {copied ? <Check size={14} className="text-amber-400" /> : <Copy size={14} />}
+                {copied ? <Check size={14} className="text-white" /> : <Copy size={14} />}
                 <span>{copied ? "Copied" : "Copy to Clipboard"}</span>
               </button>
             </div>

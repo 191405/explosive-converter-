@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { NeoDropzone } from "@/components/dropzone";
@@ -197,7 +197,7 @@ ${adjustedCues
 
   return (
     <div className="w-full max-w-6xl flex flex-col gap-6">
-      {/* ── Header ── */}
+      {/* â”€â”€ Header â”€â”€ */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-4">
         <div>
           <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
@@ -217,7 +217,7 @@ ${adjustedCues
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             SMPTE Timecode
           </span>
-          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-white/10 border border-white/[0.12] text-white font-semibold">
             100% In-Memory
           </span>
         </div>
@@ -236,14 +236,14 @@ ${adjustedCues
           {/* File Card & Controls */}
           <div className="neu-tile p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 neu-btn text-amber-400">
+              <div className="p-2.5 neu-btn text-white">
                 <FileText size={20} />
               </div>
               <div>
                 <h3 className="font-mono text-sm font-semibold text-white">{file.name}</h3>
                 <div className="flex items-center gap-3 text-xs text-zinc-400 font-mono mt-0.5">
                   <span>{cues.length} Total Cues</span>
-                  <span>•</span>
+                  <span>â€¢</span>
                   <span>
                     Duration: {cues.length > 0 ? formatTimecode(cues[cues.length - 1].end) : "00:00:00"}
                   </span>
@@ -254,7 +254,7 @@ ${adjustedCues
             <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => exportSubtitles("srt")}
-                className="neu-btn px-3 py-1.5 text-xs text-amber-400 flex items-center gap-1.5"
+                className="neu-btn px-3 py-1.5 text-xs text-white flex items-center gap-1.5"
               >
                 <Download size={13} />
                 <span>SRT</span>
@@ -300,7 +300,7 @@ ${adjustedCues
             <div className="flex flex-col gap-2">
               <div className="flex justify-between">
                 <span className="text-zinc-400">Time Shift Offset:</span>
-                <span className={`font-bold ${offsetMs !== 0 ? "text-amber-400" : "text-white"}`}>
+                <span className={`font-bold ${offsetMs !== 0 ? "text-white" : "text-white"}`}>
                   {offsetMs > 0 ? `+${offsetMs}` : offsetMs} ms
                 </span>
               </div>
@@ -354,7 +354,7 @@ ${adjustedCues
                   <option value={30}>30 fps</option>
                   <option value={60}>60 fps</option>
                 </select>
-                <FastForward size={14} className="text-amber-400 shrink-0" />
+                <FastForward size={14} className="text-white shrink-0" />
                 <select
                   value={targetFps}
                   onChange={(e) => setTargetFps(Number(e.target.value))}
@@ -374,7 +374,7 @@ ${adjustedCues
             <div className="flex flex-col justify-center gap-1">
               <span className="text-zinc-400">CPS Diagnostics:</span>
               <div className="flex items-center gap-2">
-                <CheckCircle2 size={15} className="text-amber-400" />
+                <CheckCircle2 size={15} className="text-white" />
                 <span className="text-zinc-200">Optimal (12-18 CPS)</span>
               </div>
             </div>
@@ -402,9 +402,9 @@ ${adjustedCues
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-zinc-600 font-bold w-8">{c.id}</span>
-                      <div className="flex items-center gap-1.5 text-amber-300 font-bold">
+                      <div className="flex items-center gap-1.5 text-zinc-100 font-bold">
                         <span>{formatTimecode(c.start)}</span>
-                        <span className="text-zinc-600">→</span>
+                        <span className="text-zinc-600">â†’</span>
                         <span>{formatTimecode(c.end)}</span>
                       </div>
                       <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.04] text-zinc-400 border border-white/[0.04]">

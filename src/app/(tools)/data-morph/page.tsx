@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Binary, ArrowRightLeft, Copy, Check, Download, RefreshCw, FileCode, CheckCircle2, AlertCircle } from "lucide-react";
@@ -176,7 +176,7 @@ export default function DataMorphPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             AST Engine
           </span>
-          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-white/10 border border-white/[0.12] text-white font-semibold">
             Bidirectional
           </span>
         </div>
@@ -253,7 +253,7 @@ export default function DataMorphPage() {
                 disabled={!outputCode}
                 className="flex items-center gap-1 px-2.5 py-1 rounded bg-white/[0.06] hover:bg-white/[0.1] text-xs font-mono text-zinc-200 border border-white/[0.08] transition-colors disabled:opacity-30 cursor-pointer"
               >
-                {copied ? <Check size={12} className="text-amber-400" /> : <Copy size={12} />}
+                {copied ? <Check size={12} className="text-white" /> : <Copy size={12} />}
                 <span>{copied ? "Copied" : "Copy"}</span>
               </button>
               <button
@@ -277,7 +277,7 @@ export default function DataMorphPage() {
               readOnly
               value={outputCode}
               placeholder="Target AST representation will render here..."
-              className="w-full flex-1 bg-transparent border-none outline-none font-mono text-xs text-amber-300 resize-none leading-relaxed"
+              className="w-full flex-1 bg-transparent border-none outline-none font-mono text-xs text-zinc-100 resize-none leading-relaxed"
             />
           )}
         </div>

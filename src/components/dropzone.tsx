@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useCallback, useEffect } from "react";
 import { useDropzone, type DropzoneOptions, type FileRejection } from "react-dropzone";
@@ -20,7 +20,7 @@ export function NeoDropzone({
   onDropAccepted,
   onDrop: customOnDrop,
   label = "Drop files to load into memory",
-  sublabel = "Or click to browse from device. Paste files with Ctrl+V / ⌘V",
+  sublabel = "Or click to browse from device. Paste files with Ctrl+V / âŒ˜V",
   acceptedFormatsList,
   icon,
   maxSizeMB = 2048,
@@ -87,7 +87,7 @@ export function NeoDropzone({
         cursor-pointer transition-all duration-200 relative rounded-2xl select-none font-sans neu-inset
         ${
           isDragActive
-            ? "border border-amber-400/80 bg-[#12151e] shadow-2xl"
+            ? "border border-zinc-300 bg-[#12151e] shadow-2xl"
             : "hover:border-zinc-700"
         }
       `}
@@ -98,11 +98,11 @@ export function NeoDropzone({
         <div
           className={`p-3.5 rounded-xl neu-btn transition-colors ${
             isDragActive
-              ? "text-amber-400 border-amber-400/60 active"
+              ? "text-white border-zinc-500 active"
               : "text-zinc-300"
           }`}
         >
-          {icon || <FileUp size={22} className="text-amber-400" />}
+          {icon || <FileUp size={22} className="text-white" />}
         </div>
 
         <div className="flex flex-col gap-1">
@@ -119,12 +119,12 @@ export function NeoDropzone({
             <span>Up to {maxSizeMB >= 1024 ? `${maxSizeMB / 1024} GB` : `${maxSizeMB} MB`}</span>
           </span>
           <span className="flex items-center gap-1.5 bg-[#12141c] px-2.5 py-1 rounded-md border border-white/[0.04]">
-            <ShieldCheck size={11} className="text-amber-400/80" />
+            <ShieldCheck size={11} className="text-white/80" />
             <span>Zero Network Upload</span>
           </span>
           <span className="flex items-center gap-1.5 bg-[#12141c] px-2.5 py-1 rounded-md border border-white/[0.04]">
             <Clipboard size={11} className="text-zinc-400" />
-            <span>⌘V Paste Supported</span>
+            <span>âŒ˜V Paste Supported</span>
           </span>
         </div>
 

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
@@ -357,7 +357,7 @@ export default function AudioTrimPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             AudioBuffer PCM
           </span>
-          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-white/10 border border-white/[0.12] text-white font-semibold">
             Lossless
           </span>
         </div>
@@ -396,7 +396,7 @@ export default function AudioTrimPage() {
                 </h3>
                 <div className="flex items-center gap-3 text-[11px] text-text-primary/40 font-mono mt-0.5">
                   <span>{formatBytes(file.size)}</span>
-                  <span>•</span>
+                  <span>â€¢</span>
                   <span>Duration: {formatTime(duration)}</span>
                 </div>
               </div>

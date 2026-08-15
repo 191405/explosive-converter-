@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { NeoDropzone } from "@/components/dropzone";
@@ -189,7 +189,7 @@ export default function HexDiffPage() {
         if (j < rowChunk.length) {
           const b = rowChunk[j];
           hexArr.push(b.toString(16).padStart(2, "0").toUpperCase());
-          asciiStr += b >= 32 && b <= 126 ? String.fromCharCode(b) : "·";
+          asciiStr += b >= 32 && b <= 126 ? String.fromCharCode(b) : "Â·";
         } else {
           hexArr.push("  ");
           asciiStr += " ";
@@ -211,7 +211,7 @@ export default function HexDiffPage() {
 
   return (
     <div className="w-full max-w-6xl flex flex-col gap-6">
-      {/* ── Workbench Header ── */}
+      {/* â”€â”€ Workbench Header â”€â”€ */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-4">
         <div>
           <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
@@ -231,7 +231,7 @@ export default function HexDiffPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             ArrayBuffer SIMD
           </span>
-          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-white/10 border border-white/[0.12] text-white font-semibold">
             100% In-Memory
           </span>
         </div>
@@ -250,14 +250,14 @@ export default function HexDiffPage() {
           {/* File Overview Card */}
           <div className="neu-tile p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 neu-btn text-amber-400">
+              <div className="p-2.5 neu-btn text-white">
                 <Binary size={20} />
               </div>
               <div>
                 <h3 className="font-mono text-sm font-semibold text-white">{fileA.name}</h3>
                 <div className="flex items-center gap-3 text-xs text-zinc-400 font-mono mt-0.5">
                   <span>{(fileA.size / 1024).toFixed(1)} KB ({fileA.size.toLocaleString()} bytes)</span>
-                  <span>•</span>
+                  <span>â€¢</span>
                   <span>Avg Entropy: <strong className="text-white">{avgEntropy.toFixed(2)} / 8.00</strong></span>
                 </div>
               </div>
@@ -271,7 +271,7 @@ export default function HexDiffPage() {
               >
                 <Hash size={13} />
                 <span>SHA-256: {sha256Hash.slice(0, 8)}...</span>
-                {copied ? <Check size={12} className="text-amber-400" /> : <Copy size={12} />}
+                {copied ? <Check size={12} className="text-white" /> : <Copy size={12} />}
               </button>
               <button
                 onClick={() => {
@@ -292,7 +292,7 @@ export default function HexDiffPage() {
             <button
               onClick={() => setActiveTab("hex")}
               className={`neu-btn px-4 py-1.5 text-xs font-mono flex items-center gap-2 whitespace-nowrap ${
-                activeTab === "hex" ? "active text-white border-amber-400/40" : "text-zinc-400"
+                activeTab === "hex" ? "active text-white border-white/[0.18]" : "text-zinc-400"
               }`}
             >
               <Binary size={14} />
@@ -301,7 +301,7 @@ export default function HexDiffPage() {
             <button
               onClick={() => setActiveTab("entropy")}
               className={`neu-btn px-4 py-1.5 text-xs font-mono flex items-center gap-2 whitespace-nowrap ${
-                activeTab === "entropy" ? "active text-white border-amber-400/40" : "text-zinc-400"
+                activeTab === "entropy" ? "active text-white border-white/[0.18]" : "text-zinc-400"
               }`}
             >
               <Activity size={14} />
@@ -310,7 +310,7 @@ export default function HexDiffPage() {
             <button
               onClick={() => setActiveTab("strings")}
               className={`neu-btn px-4 py-1.5 text-xs font-mono flex items-center gap-2 whitespace-nowrap ${
-                activeTab === "strings" ? "active text-white border-amber-400/40" : "text-zinc-400"
+                activeTab === "strings" ? "active text-white border-white/[0.18]" : "text-zinc-400"
               }`}
             >
               <FileCode size={14} />
@@ -319,7 +319,7 @@ export default function HexDiffPage() {
             <button
               onClick={() => setActiveTab("diff")}
               className={`neu-btn px-4 py-1.5 text-xs font-mono flex items-center gap-2 whitespace-nowrap ${
-                activeTab === "diff" ? "active text-white border-amber-400/40" : "text-zinc-400"
+                activeTab === "diff" ? "active text-white border-white/[0.18]" : "text-zinc-400"
               }`}
             >
               <Columns size={14} />
@@ -334,7 +334,7 @@ export default function HexDiffPage() {
                 <div className="flex items-center gap-2">
                   <span className="text-zinc-500">Offset:</span>
                   <span className="text-white font-bold">
-                    0x{pageOffset.toString(16).padStart(8, "0").toUpperCase()} – 0x
+                    0x{pageOffset.toString(16).padStart(8, "0").toUpperCase()} â€“ 0x
                     {Math.min(pageOffset + pageSize, bufferA ? bufferA.length : 0)
                       .toString(16)
                       .padStart(8, "0")
@@ -410,7 +410,7 @@ export default function HexDiffPage() {
                   <span className="px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20">
                     &gt;7.5 Encrypted/Packed
                   </span>
-                  <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                  <span className="px-2 py-0.5 rounded bg-white/10 text-white border border-zinc-100/20">
                     5-7 Structured
                   </span>
                   <span className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
@@ -471,7 +471,7 @@ export default function HexDiffPage() {
                   <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
                     <div className="flex items-center gap-3">
                       <span className="text-white font-bold">{fileA.name}</span>
-                      <ArrowRight size={14} className="text-amber-400" />
+                      <ArrowRight size={14} className="text-white" />
                       <span className="text-white font-bold">{fileB.name}</span>
                     </div>
                     <button
@@ -500,7 +500,7 @@ export default function HexDiffPage() {
                       </div>
                       <div className="p-2 rounded bg-white/[0.02]">
                         <span className="text-zinc-500 text-[10px] block">DELTA STATUS</span>
-                        <span className={bufferA?.length === bufferB?.length ? "text-zinc-200" : "text-amber-400"}>
+                        <span className={bufferA?.length === bufferB?.length ? "text-zinc-200" : "text-white"}>
                           {bufferA?.length === bufferB?.length ? "Identical Length" : "Shifted / Resized"}
                         </span>
                       </div>

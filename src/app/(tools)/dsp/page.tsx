@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, useEffect } from "react";
 import { Radio, Play, Pause, Download, Sliders, Volume2, MicOff, Disc, RotateCcw } from "lucide-react";
@@ -233,7 +233,7 @@ export default function AudioDspStudioPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             WebAudio Biquad Node Matrix
           </span>
-          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-white/10 border border-white/[0.12] text-white font-semibold">
             48 kHz PCM
           </span>
         </div>
@@ -266,7 +266,7 @@ export default function AudioDspStudioPage() {
                 onClick={() => setVocalCut(!vocalCut)}
                 className={`px-3 py-1.5 rounded text-xs font-mono border transition-colors ${
                   vocalCut
-                    ? "bg-amber-400 text-black border-amber-400 font-bold"
+                    ? "bg-white text-black border-white font-bold"
                     : "bg-white/[0.05] text-zinc-400 border-white/[0.08]"
                 }`}
               >
@@ -344,7 +344,7 @@ export default function AudioDspStudioPage() {
               <button
                 onClick={isPlaying ? stopAudio : playAudio}
                 className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-md font-semibold text-xs transition-all cursor-pointer shadow ${
-                  isPlaying ? "bg-amber-500 text-black hover:bg-amber-400" : "bg-white text-black hover:bg-zinc-200"
+                  isPlaying ? "bg-white text-black hover:bg-white" : "bg-white text-black hover:bg-zinc-200"
                 }`}
               >
                 {isPlaying ? <Pause size={14} /> : <Play size={14} />}
@@ -366,7 +366,7 @@ export default function AudioDspStudioPage() {
           <div className="md:col-span-2 bg-[#09090c] border border-white/[0.08] rounded-xl p-5 flex flex-col justify-between min-h-[380px]">
             <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
               <span className="text-xs font-mono text-zinc-300">Live 128-Bin FFT Spectrum Analyzer</span>
-              <span className="text-[10px] font-mono text-amber-400">WebAudio 48kHz Pipeline</span>
+              <span className="text-[10px] font-mono text-white">WebAudio 48kHz Pipeline</span>
             </div>
 
             <div className="flex-1 flex items-center justify-center py-4">

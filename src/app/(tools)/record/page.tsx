@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, useEffect } from "react";
 import { Video, Monitor, Camera, Mic, MicOff, Play, Pause, Square, Download, RotateCcw, Volume2, ShieldCheck, CheckCircle2 } from "lucide-react";
@@ -214,7 +214,7 @@ export default function ScreenRecordPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             VP9 / Opus Hardware Stream
           </span>
-          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-white/10 border border-white/[0.12] text-white font-semibold">
             60 FPS
           </span>
         </div>
@@ -226,8 +226,8 @@ export default function ScreenRecordPage() {
           <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
             <span className="text-zinc-300 font-semibold uppercase tracking-wider">Capture Source</span>
             {stream && (
-              <span className="text-[10px] text-amber-400 font-bold flex items-center gap-1">
-                <span className="h-1.5 w-1.5 rounded-full bg-amber-400"></span> LIVE
+              <span className="text-[10px] text-white font-bold flex items-center gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-white"></span> LIVE
               </span>
             )}
           </div>
@@ -285,7 +285,7 @@ export default function ScreenRecordPage() {
             <button
               onClick={() => setEnableMic(!enableMic)}
               className={`px-2.5 py-1 rounded border text-[10px] ${
-                enableMic ? "bg-amber-500/20 text-amber-300 border-amber-500/30" : "bg-white/[0.03] text-zinc-500 border-white/[0.06]"
+                enableMic ? "bg-white/20 text-zinc-100 border-zinc-100/30" : "bg-white/[0.03] text-zinc-500 border-white/[0.06]"
               }`}
             >
               {enableMic ? "Enabled" : "Muted"}
@@ -301,7 +301,7 @@ export default function ScreenRecordPage() {
               </div>
               <div className="w-full bg-white/[0.06] rounded-full h-1.5 overflow-hidden">
                 <div
-                  className="bg-amber-400 h-full transition-all duration-75"
+                  className="bg-white h-full transition-all duration-75"
                   style={{ width: `${audioLevel}%` }}
                 />
               </div>
@@ -377,9 +377,9 @@ export default function ScreenRecordPage() {
             )}
 
             {downloadUrl && !stream && (
-              <div className="w-full p-5 bg-[#0e0e14] border border-amber-400/30 rounded-xl flex flex-col gap-4">
+              <div className="w-full p-5 bg-[#0e0e14] border border-white/[0.15] rounded-xl flex flex-col gap-4">
                 <div className="flex items-center gap-2 text-zinc-200 font-bold text-sm">
-                  <CheckCircle2 size={18} className="text-amber-400" />
+                  <CheckCircle2 size={18} className="text-white" />
                   <span>Recording Captured Successfully ({formatSeconds(duration)})</span>
                 </div>
 
@@ -388,7 +388,7 @@ export default function ScreenRecordPage() {
                   <a
                     href={downloadUrl}
                     download={`recording-${Date.now()}.webm`}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-amber-500 text-black font-semibold text-xs hover:bg-amber-400 transition-colors shadow"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-white text-black font-semibold text-xs hover:bg-white transition-colors shadow"
                   >
                     <Download size={14} />
                     <span>Download Video Recording</span>

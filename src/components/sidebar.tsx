@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
@@ -51,7 +51,7 @@ export const SIDEBAR_CATEGORIES: SidebarCategory[] = [
     items: [
       { href: "/hex-diff", label: "Binary Hex & Entropy Disasm", sublabel: "Shannon H(X) & Byte Diff", icon: Binary, tag: "SIMD" },
       { href: "/metadata", label: "Metadata & Steganography", sublabel: "EXIF/GPS Scrubber & LSB Bitplane", icon: ShieldCheck, tag: "RAW" },
-      { href: "/vectorize", label: "Raster to SVG Vectorizer", sublabel: "Bézier Trace & Infinite Scaling", icon: Shapes, tag: "SVG" },
+      { href: "/vectorize", label: "Raster to SVG Vectorizer", sublabel: "BÃ©zier Trace & Infinite Scaling", icon: Shapes, tag: "SVG" },
       { href: "/ocr", label: "Neural Document OCR", sublabel: "Tesseract.js WASM In-Memory", icon: ScanText, tag: "OCR" },
     ],
   },
@@ -144,16 +144,16 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   return (
     <aside className="flex flex-col h-full bg-[#090a0f] border-r border-white/[0.08] select-none text-zinc-300">
-      {/* ── Brand & Search Header ── */}
+      {/* â”€â”€ Brand & Search Header â”€â”€ */}
       <div className="p-4 border-b border-white/[0.08] bg-[#0c0d14] flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <Link href="/" onClick={onClose} className="flex items-center gap-2.5 group">
-            <div className="h-7 w-7 rounded-lg bg-amber-400 text-black flex items-center justify-center font-bold text-xs shadow-md shadow-amber-400/10 group-hover:bg-amber-300 transition-colors">
+            <div className="h-7 w-7 rounded-lg bg-white text-black flex items-center justify-center font-bold text-xs shadow-md shadow-white/[0.04] group-hover:bg-zinc-100 transition-colors">
               <Zap size={15} className="fill-current" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="text-sm font-semibold tracking-tight text-white group-hover:text-amber-300 transition-colors">
+                <span className="text-sm font-semibold tracking-tight text-white group-hover:text-zinc-100 transition-colors">
                   Explosive
                 </span>
                 <span className="text-[10px] font-mono font-bold bg-white/[0.08] text-zinc-300 px-1.5 py-0.5 rounded">
@@ -185,20 +185,20 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             placeholder="Search workstations & tools..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-amber-400/40 focus:ring-1 focus:ring-amber-400/30 transition-all font-sans"
+            className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-white/[0.18] focus:ring-1 focus:ring-white/30 transition-all font-sans"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
               className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 text-xs"
             >
-              ×
+              Ã—
             </button>
           )}
         </div>
       </div>
 
-      {/* ── Category Accordion Navigation ── */}
+      {/* â”€â”€ Category Accordion Navigation â”€â”€ */}
       <div className="flex-1 overflow-y-auto p-3 space-y-3 scrollbar-thin">
         {filteredCategories.length === 0 ? (
           <div className="text-center py-8 px-4 text-xs text-zinc-500 font-mono">
@@ -220,12 +220,12 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   onClick={() => toggleCategory(category.id)}
                   className={`w-full px-3 py-2.5 flex items-center justify-between text-left transition-colors cursor-pointer ${
                     hasActiveTool
-                      ? "bg-amber-400/5 text-amber-300"
+                      ? "bg-white/5 text-zinc-100"
                       : "hover:bg-white/[0.03] text-zinc-300"
                   }`}
                 >
                   <div className="flex items-center gap-2 min-w-0">
-                    <CategoryIcon size={14} className={hasActiveTool ? "text-amber-400" : "text-zinc-500"} />
+                    <CategoryIcon size={14} className={hasActiveTool ? "text-white" : "text-zinc-500"} />
                     <span className="text-xs font-semibold tracking-tight truncate font-sans">
                       {category.name}
                     </span>
@@ -238,7 +238,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     <ChevronDown
                       size={14}
                       className={`text-zinc-500 transition-transform duration-200 ${
-                        isCategoryOpen ? "rotate-180 text-amber-400" : ""
+                        isCategoryOpen ? "rotate-180 text-white" : ""
                       }`}
                     />
                   </div>
@@ -258,14 +258,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                           onClick={onClose}
                           className={`group flex items-start gap-2.5 p-2 rounded-lg text-xs transition-all ${
                             isActive
-                              ? "bg-amber-400/10 text-white font-medium border border-amber-400/25 shadow-sm"
+                              ? "bg-white/10 text-white font-medium border border-white/25 shadow-sm"
                               : "text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04]"
                           }`}
                         >
                           <div
                             className={`p-1.5 rounded-md shrink-0 mt-0.5 transition-colors ${
                               isActive
-                                ? "bg-amber-400/20 text-amber-300"
+                                ? "bg-white/20 text-zinc-100"
                                 : "bg-white/[0.04] text-zinc-500 group-hover:text-zinc-300"
                             }`}
                           >
@@ -280,7 +280,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                               <span
                                 className={`text-[9px] font-mono font-bold px-1 rounded shrink-0 ${
                                   isActive
-                                    ? "bg-amber-400/20 text-amber-300"
+                                    ? "bg-white/20 text-zinc-100"
                                     : "bg-white/[0.04] text-zinc-500"
                                 }`}
                               >
@@ -302,7 +302,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         )}
       </div>
 
-      {/* ── Sidebar Footer / Quick Tools ── */}
+      {/* â”€â”€ Sidebar Footer / Quick Tools â”€â”€ */}
       <div className="p-3 bg-[#0c0d14] border-t border-white/[0.08] flex flex-col gap-2">
         <div className="grid grid-cols-2 gap-2">
           <button
@@ -312,7 +312,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             }}
             className="flex items-center justify-center gap-1.5 px-2 py-2 rounded-lg bg-white/[0.03] hover:bg-white/[0.08] text-zinc-300 text-xs font-mono border border-white/[0.06] transition-colors cursor-pointer"
           >
-            <Terminal size={12} className="text-amber-400" />
+            <Terminal size={12} className="text-white" />
             <span>Terminal</span>
           </button>
 
@@ -324,13 +324,13 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             className="flex items-center justify-center gap-1.5 px-2 py-2 rounded-lg bg-white/[0.03] hover:bg-white/[0.08] text-zinc-300 text-xs font-mono border border-white/[0.06] transition-colors cursor-pointer"
           >
             <Search size={12} className="text-zinc-400" />
-            <span>Search ⌘K</span>
+            <span>Search âŒ˜K</span>
           </button>
         </div>
 
         <div className="flex items-center justify-between px-1 text-[10px] font-mono text-zinc-500 pt-1 border-t border-white/[0.04]">
           <span className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-400"></span>
+            <span className="h-1.5 w-1.5 rounded-full bg-white"></span>
             <span>Client RAM Sandbox</span>
           </span>
           <span className="text-zinc-400 font-semibold">0B Cloud IO</span>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef } from "react";
 import { ShieldCheck, Eye, Trash2, Download, Binary, MapPin, Camera, FileText, CheckCircle2, AlertCircle } from "lucide-react";
@@ -75,7 +75,7 @@ export default function MetadataForensicsPage() {
             parsedTags.push({
               category: "Location",
               tag: "GPS Latitude/Longitude",
-              value: "37.7749° N, 122.4194° W (San Francisco, CA)",
+              value: "37.7749Â° N, 122.4194Â° W (San Francisco, CA)",
               isSensitive: true,
             });
             parsedTags.push({
@@ -200,7 +200,7 @@ export default function MetadataForensicsPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             RAW EXIF 2.32
           </span>
-          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-white/10 border border-white/[0.12] text-white font-semibold">
             100% In-Memory
           </span>
         </div>
@@ -246,7 +246,7 @@ export default function MetadataForensicsPage() {
           <div
             className={`p-3.5 rounded-lg border flex items-center justify-between font-mono text-xs ${
               sensitiveCount > 0
-                ? "bg-amber-500/10 border-amber-500/20 text-amber-200"
+                ? "bg-white/10 border-zinc-100/20 text-amber-200"
                 : "bg-white/[0.04] border-white/[0.08] text-zinc-300"
             }`}
           >
@@ -276,7 +276,7 @@ export default function MetadataForensicsPage() {
                     </span>
                     <span className="text-zinc-300">{t.tag}</span>
                   </div>
-                  <span className={t.isSensitive ? "text-amber-400 font-semibold" : "text-zinc-400"}>
+                  <span className={t.isSensitive ? "text-white font-semibold" : "text-zinc-400"}>
                     {t.value}
                   </span>
                 </div>
@@ -290,7 +290,7 @@ export default function MetadataForensicsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="font-semibold text-sm text-white flex items-center gap-2">
-                    <Binary size={15} className="text-amber-400" />
+                    <Binary size={15} className="text-white" />
                     <span>Least Significant Bit (LSB) Steganography Analyzer</span>
                   </h3>
                   <p className="text-xs text-zinc-400 mt-0.5">
@@ -320,15 +320,15 @@ export default function MetadataForensicsPage() {
 
           {/* Download Scrubbed File */}
           {sanitizedUrl && (
-            <div className="p-4 bg-[#12131a] border border-amber-400/30 rounded-xl flex items-center justify-between">
+            <div className="p-4 bg-[#12131a] border border-white/[0.15] rounded-xl flex items-center justify-between">
               <div className="flex items-center gap-2 text-zinc-200 font-mono text-xs">
-                <CheckCircle2 size={16} className="text-amber-400" />
+                <CheckCircle2 size={16} className="text-white" />
                 <span>Sanitized File Ready for Distribution</span>
               </div>
               <a
                 href={sanitizedUrl}
                 download={`sanitized-${file.name.replace(/\.[^/.]+$/, "")}.png`}
-                className="flex items-center gap-2 px-4 py-2 rounded-md bg-amber-500 text-black font-semibold text-xs hover:bg-amber-400 transition-colors shadow"
+                className="flex items-center gap-2 px-4 py-2 rounded-md bg-white text-black font-semibold text-xs hover:bg-white transition-colors shadow"
               >
                 <Download size={14} />
                 <span>Download Scrubbed File</span>

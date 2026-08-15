@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { NeoDropzone } from "@/components/dropzone";
@@ -20,7 +20,7 @@ type PDFMode = "merge" | "split" | "rotate";
 const modes: { value: PDFMode; label: string; icon: typeof Merge; desc: string }[] = [
   { value: "merge", label: "Merge Documents", icon: Merge, desc: "Combine multiple PDF files into one single document" },
   { value: "split", label: "Split / Extract Pages", icon: Scissors, desc: "Extract specific page numbers or ranges (e.g. 1-3, 5)" },
-  { value: "rotate", label: "Rotate Orientation", icon: RotateCw, desc: "Rotate document page orientations by 90°, 180° or 270°" },
+  { value: "rotate", label: "Rotate Orientation", icon: RotateCw, desc: "Rotate document page orientations by 90Â°, 180Â° or 270Â°" },
 ];
 
 export default function PDFTool() {
@@ -146,7 +146,7 @@ export default function PDFTool() {
   const rotatePDF = async () => {
     if (files.length === 0) return;
     setIsProcessing(true);
-    emitLog(`Rotating [${files[0].name}] by ${rotateAngle}°...`, "info", "WASM_CORE");
+    emitLog(`Rotating [${files[0].name}] by ${rotateAngle}Â°...`, "info", "WASM_CORE");
 
     try {
       const buf = await files[0].arrayBuffer();
@@ -164,8 +164,8 @@ export default function PDFTool() {
       setResultSize(blob.size);
       setResultName(`rotated-${files[0].name}`);
       setDownloadUrl(URL.createObjectURL(blob));
-      emitLog(`Rotated ${total} pages by ${rotateAngle}°.`, "info", "WASM_CORE");
-      toast.success(`Rotated ${total} pages by ${rotateAngle}°.`);
+      emitLog(`Rotated ${total} pages by ${rotateAngle}Â°.`, "info", "WASM_CORE");
+      toast.success(`Rotated ${total} pages by ${rotateAngle}Â°.`);
     } catch {
       toast.error("Rotation failed.");
     } finally {
@@ -195,7 +195,7 @@ export default function PDFTool() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             PDF-Lib Core
           </span>
-          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-white/10 border border-white/[0.12] text-white font-semibold">
             In-Memory
           </span>
         </div>
@@ -298,7 +298,7 @@ export default function PDFTool() {
                       rotateAngle === deg ? "bg-white text-black font-bold border-white" : "bg-white/[0.03] text-zinc-400 border-white/[0.06]"
                     }`}
                   >
-                    +{deg}°
+                    +{deg}Â°
                   </button>
                 ))}
               </div>
@@ -324,7 +324,7 @@ export default function PDFTool() {
                   ? `Merge ${files.length} PDFs`
                   : mode === "split"
                   ? "Extract Specified Pages"
-                  : `Rotate Pages +${rotateAngle}°`}
+                  : `Rotate Pages +${rotateAngle}Â°`}
               </span>
             </button>
 
@@ -332,7 +332,7 @@ export default function PDFTool() {
               <a
                 href={downloadUrl}
                 download={resultName}
-                className="flex items-center gap-2 px-4 py-2 rounded-md bg-amber-500 text-black font-semibold text-xs hover:bg-amber-400 transition-colors shadow"
+                className="flex items-center gap-2 px-4 py-2 rounded-md bg-white text-black font-semibold text-xs hover:bg-white transition-colors shadow"
               >
                 <Download size={14} />
                 <span>Download ({formatBytes(resultSize)})</span>

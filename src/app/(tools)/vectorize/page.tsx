@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef } from "react";
 import { Shapes, Download, Sliders, RefreshCw, Copy, Check, Eye } from "lucide-react";
@@ -53,7 +53,7 @@ export default function VectorizerPage() {
       const imgData = ctx.getImageData(0, 0, w, h);
       const data = imgData.data;
 
-      emitLog(`Running edge boundary tracer and Bézier curve synthesizer...`, "debug", "WASM_CORE");
+      emitLog(`Running edge boundary tracer and BÃ©zier curve synthesizer...`, "debug", "WASM_CORE");
 
       // Generate SVG path points using thresholding
       let pathData = "";
@@ -123,7 +123,7 @@ export default function VectorizerPage() {
           <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
             <span>Vectors</span>
             <span>/</span>
-            <span className="text-zinc-300">Bézier Tracer</span>
+            <span className="text-zinc-300">BÃ©zier Tracer</span>
           </div>
           <h1 className="text-xl font-bold tracking-tight text-white font-sans mt-0.5">
             Raster to SVG Vectorizer
@@ -135,9 +135,9 @@ export default function VectorizerPage() {
 
         <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
-            Bézier Curve Engine
+            BÃ©zier Curve Engine
           </span>
-          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-white/10 border border-white/[0.12] text-white font-semibold">
             Real-Time
           </span>
         </div>
@@ -238,7 +238,7 @@ export default function VectorizerPage() {
                 disabled={!svgOutput || isProcessing}
                 className="flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-white/[0.06] text-white text-xs font-mono hover:bg-white/[0.1] border border-white/[0.08] transition-colors cursor-pointer disabled:opacity-30"
               >
-                {copied ? <Check size={14} className="text-amber-400" /> : <Copy size={14} />}
+                {copied ? <Check size={14} className="text-white" /> : <Copy size={14} />}
                 <span>{copied ? "Copied SVG" : "Copy SVG Code"}</span>
               </button>
             </div>
@@ -249,7 +249,7 @@ export default function VectorizerPage() {
             {isProcessing ? (
               <div className="flex flex-col items-center gap-3">
                 <RefreshCw size={24} className="animate-spin text-zinc-400" />
-                <span className="text-xs font-mono text-zinc-400">Computing Bézier Vector Curves...</span>
+                <span className="text-xs font-mono text-zinc-400">Computing BÃ©zier Vector Curves...</span>
               </div>
             ) : svgOutput ? (
               <div

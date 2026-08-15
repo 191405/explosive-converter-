@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { Command } from "cmdk";
@@ -131,7 +131,7 @@ export function CommandPalette() {
                     className="flex items-center justify-between px-3 py-2 rounded-md hover:bg-white/[0.08] cursor-pointer text-zinc-300 hover:text-white transition-colors"
                   >
                     <div className="flex items-center gap-2.5">
-                      <Terminal size={15} className="text-amber-400" />
+                      <Terminal size={15} className="text-white" />
                       <span>Toggle Stdout Terminal Drawer</span>
                     </div>
                     <kbd className="text-[10px] bg-white/[0.06] px-1 rounded text-zinc-400">`~`</kbd>

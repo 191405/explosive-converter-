@@ -54,7 +54,7 @@ export default function HomePage() {
   const faqItems = [
     {
       q: "How does file processing work without a server?",
-      a: "We compile native C/C++ and Rust libraries to WebAssembly. Your browser executes these binaries locally with hardware SIMD acceleration — no upload, no queue, no waiting.",
+      a: "We compile native C/C++ and Rust libraries to WebAssembly. Your browser executes these binaries locally with hardware SIMD acceleration â€” no upload, no queue, no waiting.",
     },
     {
       q: "Is there a file size limit?",
@@ -71,14 +71,14 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="flex flex-col w-full font-sans text-zinc-300 -mt-4 sm:-mt-6">
+    <div className="flex flex-col w-full font-sans text-zinc-300 -mt-20">
 
-      {/* ═══════════════════════════════════════════
-          LAYER 1 — IMMERSIVE HERO
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+          LAYER 1 â€” IMMERSIVE HERO
           Full-viewport with artwork as background
-      ═══════════════════════════════════════════ */}
+      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section className="relative w-screen -mx-3 sm:-mx-6 min-h-[92vh] flex items-end justify-center overflow-hidden">
-        {/* Background Artwork — fills entire viewport */}
+        {/* Background Artwork â€” fills entire viewport */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: "url('/hero-artwork.jpg')" }}
@@ -87,7 +87,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#07080b] via-[#07080b]/70 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#07080b]/50 via-transparent to-[#07080b]/50" />
 
-        {/* Hero Content — anchored to bottom for layered depth */}
+        {/* Hero Content â€” anchored to bottom for layered depth */}
         <div className="relative z-10 max-w-4xl mx-auto px-6 pb-16 sm:pb-24 text-center flex flex-col items-center gap-6">
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extralight tracking-[-0.03em] text-white leading-[1.08]">
             Convert. Process.
@@ -129,10 +129,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          LAYER 2 — TRUST STRIP
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+          LAYER 2 â€” TRUST STRIP
           Horizontal proof points, no badges, no icons spam
-      ═══════════════════════════════════════════ */}
+      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section className="w-screen -mx-3 sm:-mx-6 bg-[#0a0b10] border-y border-white/[0.04]">
         <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 divide-x divide-white/[0.04]">
           {[
@@ -153,10 +153,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          LAYER 3 — HOW IT WORKS
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+          LAYER 3 â€” HOW IT WORKS
           Three clean steps, no numbered AI cards
-      ═══════════════════════════════════════════ */}
+      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section id="how" className="w-screen -mx-3 sm:-mx-6 py-20 sm:py-28">
         <div className="max-w-5xl mx-auto px-6 sm:px-8">
           <div className="max-w-lg mb-14">
@@ -172,7 +172,7 @@ export default function HomePage() {
             {[
               {
                 step: "Drop",
-                body: "Drag any file into a workstation. It's read directly into your browser's volatile memory — nothing leaves your machine.",
+                body: "Drag any file into a workstation. It's read directly into your browser's volatile memory â€” nothing leaves your machine.",
               },
               {
                 step: "Process",
@@ -200,10 +200,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          LAYER 4 — TOOL CATALOG
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+          LAYER 4 â€” TOOL CATALOG
           E-commerce product grid with proper tabs
-      ═══════════════════════════════════════════ */}
+      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section
         id="tools"
         className="w-screen -mx-3 sm:-mx-6 bg-[#0a0b10] border-t border-white/[0.04] py-20 sm:py-28 scroll-mt-20"
@@ -273,11 +273,11 @@ export default function HomePage() {
                   className="group relative bg-[#0d0e15] rounded-xl border border-white/[0.06] hover:border-white/[0.14] transition-all duration-200 overflow-hidden"
                 >
                   {/* Card top accent line */}
-                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.25] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
                   <div className="p-6 flex flex-col gap-4">
                     <div className="flex items-start justify-between">
-                      <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-zinc-400 group-hover:text-amber-400 group-hover:border-amber-400/20 transition-colors">
+                      <div className="w-10 h-10 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-zinc-400 group-hover:text-white group-hover:border-white/[0.12] transition-colors">
                         <Icon size={18} />
                       </div>
                       <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider mt-1">
@@ -286,7 +286,7 @@ export default function HomePage() {
                     </div>
 
                     <div>
-                      <h3 className="text-[15px] font-medium text-white group-hover:text-amber-300 transition-colors leading-tight">
+                      <h3 className="text-[15px] font-medium text-white group-hover:text-zinc-100 transition-colors leading-tight">
                         {tool.label}
                       </h3>
                       <p className="mt-1.5 text-xs text-zinc-500 leading-relaxed line-clamp-2">
@@ -298,7 +298,7 @@ export default function HomePage() {
                       <span className="text-[11px] text-zinc-600 font-medium">
                         {tool.categoryName}
                       </span>
-                      <span className="text-xs text-zinc-500 group-hover:text-amber-400 flex items-center gap-1 font-medium transition-colors">
+                      <span className="text-xs text-zinc-500 group-hover:text-white flex items-center gap-1 font-medium transition-colors">
                         Open
                         <ArrowRight
                           size={12}
@@ -314,10 +314,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          LAYER 5 — SECURITY / COMPARISON
-          Side-by-side, no table — stacked comparison cards
-      ═══════════════════════════════════════════ */}
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+          LAYER 5 â€” SECURITY / COMPARISON
+          Side-by-side, no table â€” stacked comparison cards
+      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section className="w-screen -mx-3 sm:-mx-6 py-20 sm:py-28">
         <div className="max-w-5xl mx-auto px-6 sm:px-8">
           <div className="max-w-lg mb-14">
@@ -333,8 +333,8 @@ export default function HomePage() {
             {/* Our approach */}
             <div className="rounded-2xl border border-white/[0.08] bg-[#0a0b10] p-8 flex flex-col gap-6">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-amber-400/10 border border-amber-400/20 flex items-center justify-center">
-                  <Shield size={18} className="text-amber-400" />
+                <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/[0.12] flex items-center justify-center">
+                  <Shield size={18} className="text-white" />
                 </div>
                 <div>
                   <div className="text-sm font-semibold text-white">Explosive Studio</div>
@@ -347,11 +347,11 @@ export default function HomePage() {
                   "Files never leave your device",
                   "Instant processing, no server queue",
                   "Works completely offline",
-                  "Zero data retention — volatile RAM only",
+                  "Zero data retention â€” volatile RAM only",
                   "GDPR & HIPAA compliant by architecture",
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-3">
-                    <Check size={15} className="text-amber-400 shrink-0 mt-0.5" />
+                    <Check size={15} className="text-white shrink-0 mt-0.5" />
                     <span className="text-sm text-zinc-300">{item}</span>
                   </div>
                 ))}
@@ -389,10 +389,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          LAYER 6 — FAQ
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+          LAYER 6 â€” FAQ
           Clean accordion, no generic cards
-      ═══════════════════════════════════════════ */}
+      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <section
         id="faq"
         className="w-screen -mx-3 sm:-mx-6 bg-[#0a0b10] border-t border-white/[0.04] py-20 sm:py-28"
@@ -429,18 +429,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          LAYER 7 — FOOTER
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+          LAYER 7 â€” FOOTER
           Minimal, no emoji, no version badges
-      ═══════════════════════════════════════════ */}
+      â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <footer className="w-screen -mx-3 sm:-mx-6 border-t border-white/[0.04] py-10">
         <div className="max-w-6xl mx-auto px-6 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center">
+            <div className="w-5 h-5 rounded bg-gradient-to-br from-white to-zinc-200 flex items-center justify-center">
               <Zap size={10} className="text-black fill-current" />
             </div>
             <span className="text-zinc-400 font-medium">Explosive Studio</span>
-            <span className="text-zinc-700">·</span>
+            <span className="text-zinc-700">Â·</span>
             <span>All processing happens locally</span>
           </div>
           <div className="flex items-center gap-5 text-zinc-600">

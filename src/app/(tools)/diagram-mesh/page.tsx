@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useRef, useEffect } from "react";
 import {
@@ -156,7 +156,7 @@ export default function DiagramMeshPage() {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Architecture Diagram — Explosive Tools</title>
+  <title>Architecture Diagram â€” Explosive Tools</title>
   <style>
     body { background: #0b0c10; color: #f0f2f6; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; font-family: sans-serif; }
     .container { max-width: 90vw; padding: 2rem; background: #101218; border-radius: 16px; border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
@@ -189,7 +189,7 @@ export default function DiagramMeshPage() {
 
   return (
     <div className="w-full max-w-6xl flex flex-col gap-6">
-      {/* ── Header ── */}
+      {/* â”€â”€ Header â”€â”€ */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-4">
         <div>
           <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
@@ -209,7 +209,7 @@ export default function DiagramMeshPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             Mermaid.js Core
           </span>
-          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-white/10 border border-white/[0.12] text-white font-semibold">
             100% In-Memory
           </span>
         </div>
@@ -236,7 +236,7 @@ export default function DiagramMeshPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={exportSvg}
-            className="neu-btn px-3 py-1.5 text-xs text-amber-400 flex items-center gap-1.5"
+            className="neu-btn px-3 py-1.5 text-xs text-white flex items-center gap-1.5"
           >
             <Download size={13} />
             <span>SVG</span>
@@ -264,7 +264,7 @@ export default function DiagramMeshPage() {
         <div className="neu-tile p-4 flex flex-col gap-3">
           <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
             <span className="text-xs font-mono text-zinc-300 font-semibold flex items-center gap-2">
-              <Code size={14} className="text-amber-400" />
+              <Code size={14} className="text-white" />
               <span>Diagram Code (Mermaid Syntax)</span>
             </span>
 
@@ -273,7 +273,7 @@ export default function DiagramMeshPage() {
                 onClick={copyCode}
                 className="neu-btn px-2.5 py-1 text-[11px] text-zinc-400 hover:text-white flex items-center gap-1"
               >
-                {copied ? <Check size={11} className="text-amber-400" /> : <Copy size={11} />}
+                {copied ? <Check size={11} className="text-white" /> : <Copy size={11} />}
                 <span>Copy</span>
               </button>
               <button
@@ -299,7 +299,7 @@ export default function DiagramMeshPage() {
         <div className="neu-tile p-4 flex flex-col gap-3">
           <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
             <span className="text-xs font-mono text-zinc-300 font-semibold flex items-center gap-2">
-              <Network size={14} className="text-amber-400" />
+              <Network size={14} className="text-white" />
               <span>Vector Canvas Preview</span>
             </span>
 

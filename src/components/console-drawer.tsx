@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useRef } from "react";
 import { Terminal, X, Trash2, Download, Minimize2, Maximize2, ChevronUp } from "lucide-react";
@@ -47,7 +47,7 @@ export function ConsoleDrawer() {
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-2 bg-[#111114] border-b border-white/[0.06] text-xs text-zinc-400 select-none">
         <div className="flex items-center gap-2 font-medium text-zinc-200">
-          <Terminal size={14} className="text-amber-400" />
+          <Terminal size={14} className="text-white" />
           <span>WASM & Engine Stdout Terminal</span>
           <span className="text-[10px] text-zinc-500 bg-white/[0.05] px-1.5 py-0.5 rounded border border-white/[0.05]">
             {logs.length} events
@@ -59,7 +59,7 @@ export function ConsoleDrawer() {
             onClick={() => setAutoScroll(!autoScroll)}
             className={`px-2 py-1 rounded text-[10px] border transition-colors ${
               autoScroll
-                ? "bg-amber-400/10 text-amber-400 border-amber-400/20"
+                ? "bg-white/10 text-white border-white/[0.12]"
                 : "bg-white/[0.05] text-zinc-400 border-white/[0.08]"
             }`}
           >
@@ -111,7 +111,7 @@ export function ConsoleDrawer() {
                     : log.source === "SERVER_STREAM"
                     ? "bg-blue-950/60 text-blue-300 border border-blue-800/40"
                     : log.source === "DSP_ENGINE"
-                    ? "bg-amber-950/60 text-amber-300 border border-amber-800/40"
+                    ? "bg-amber-950/60 text-zinc-100 border border-amber-800/40"
                     : "bg-zinc-800 text-zinc-300 border border-zinc-700"
                 }`}
               >
@@ -122,7 +122,7 @@ export function ConsoleDrawer() {
                   log.level === "error"
                     ? "text-red-400 font-semibold"
                     : log.level === "warn"
-                    ? "text-amber-400"
+                    ? "text-white"
                     : log.level === "debug"
                     ? "text-zinc-500"
                     : "text-zinc-300"

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import { NeoDropzone } from "@/components/dropzone";
@@ -125,7 +125,7 @@ export default function CryptoVaultPage() {
 
   return (
     <div className="w-full max-w-5xl flex flex-col gap-6">
-      {/* ── Header ── */}
+      {/* â”€â”€ Header â”€â”€ */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-4">
         <div>
           <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
@@ -145,7 +145,7 @@ export default function CryptoVaultPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             WebCrypto Subtle
           </span>
-          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-white/10 border border-white/[0.12] text-white font-semibold">
             Zero Telemetry
           </span>
         </div>
@@ -157,7 +157,7 @@ export default function CryptoVaultPage() {
           <div className="neu-tile p-4 flex flex-col gap-3">
             <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
               <span className="text-xs font-mono text-zinc-300 font-semibold flex items-center gap-2">
-                <FileCode size={14} className="text-amber-400" />
+                <FileCode size={14} className="text-white" />
                 <span>Paste PEM / X.509 / JWK Certificate</span>
               </span>
               <button
@@ -197,10 +197,10 @@ export default function CryptoVaultPage() {
           <div className="neu-tile p-4 flex flex-col gap-3">
             <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
               <span className="text-xs font-mono text-zinc-300 font-semibold flex items-center gap-2">
-                <Key size={14} className="text-amber-400" />
+                <Key size={14} className="text-white" />
                 <span>WebCrypto In-Browser Keypair Generator</span>
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-400/10 text-amber-400 border border-amber-400/20">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-white border border-white/[0.12]">
                 W3C WebCrypto
               </span>
             </div>
@@ -240,7 +240,7 @@ export default function CryptoVaultPage() {
                   onClick={() => copyToClipboard(parsedKeyInfo.fingerprint)}
                   className="neu-btn p-1 text-zinc-400 hover:text-white"
                 >
-                  {copied ? <Check size={12} className="text-amber-400" /> : <Copy size={12} />}
+                  {copied ? <Check size={12} className="text-white" /> : <Copy size={12} />}
                 </button>
               )}
             </div>
@@ -251,14 +251,14 @@ export default function CryptoVaultPage() {
               </div>
             ) : (
               <div className="flex flex-col gap-3 font-mono text-[11px]">
-                <div className="p-2.5 rounded-lg bg-amber-400/10 border border-amber-400/20 text-amber-300 flex items-center gap-2">
+                <div className="p-2.5 rounded-lg bg-white/10 border border-white/[0.12] text-zinc-100 flex items-center gap-2">
                   <ShieldCheck size={16} />
                   <span>{parsedKeyInfo.type}</span>
                 </div>
 
                 <div className="neu-inset p-3 flex flex-col gap-2">
                   <span className="text-zinc-500 text-[10px]">SHA-256 FINGERPRINT</span>
-                  <span className="text-amber-300 select-all break-all leading-relaxed">
+                  <span className="text-zinc-100 select-all break-all leading-relaxed">
                     {parsedKeyInfo.fingerprint}
                   </span>
                 </div>

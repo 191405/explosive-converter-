@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -42,7 +42,7 @@ const STEPS: Step[] = [
       },
       {
         title: "Hardware Concurrency & SIMD",
-        desc: "Neural OCR, Bézier vectorization, and video codecs run across all available CPU threads with vector acceleration.",
+        desc: "Neural OCR, BÃ©zier vectorization, and video codecs run across all available CPU threads with vector acceleration.",
       },
     ],
   },
@@ -99,7 +99,7 @@ const STEPS: Step[] = [
         desc: "Press `~` or click the top telemetry bar to view real-time FFmpeg and WASM stdout/stderr logs.",
       },
       {
-        title: "Command Deck (⌘K / Ctrl+K)",
+        title: "Command Deck (âŒ˜K / Ctrl+K)",
         desc: "Jump to any tool or trigger actions instantly with global keyboard shortcuts.",
       },
     ],
@@ -185,8 +185,8 @@ export function OnboardingTutorial() {
           {/* Header Bar */}
           <div className="flex items-center justify-between px-6 pt-5 pb-3 border-b border-white/[0.06]">
             <div className="flex items-center gap-2 font-mono text-[11px] text-zinc-400">
-              <Zap size={13} className="text-amber-400" />
-              <span>Explosive Studio Guide • Step {currentStep + 1} of {STEPS.length}</span>
+              <Zap size={13} className="text-white" />
+              <span>Explosive Studio Guide â€¢ Step {currentStep + 1} of {STEPS.length}</span>
             </div>
             <button
               onClick={handleDismiss}
@@ -245,7 +245,7 @@ export function OnboardingTutorial() {
                       className="p-3 rounded-lg bg-[#050507] border border-white/[0.06] flex flex-col gap-1"
                     >
                       <span className="text-xs font-semibold text-zinc-200 flex items-center gap-1.5 font-mono">
-                        <CheckCircle2 size={13} className="text-amber-400 shrink-0" />
+                        <CheckCircle2 size={13} className="text-white shrink-0" />
                         {pt.title}
                       </span>
                       <span className="text-[11px] text-zinc-400 leading-relaxed pl-5 font-mono">

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -47,7 +47,7 @@ export function AppHeader() {
             </button>
 
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-amber-400 to-amber-500 text-black flex items-center justify-center shadow-lg shadow-amber-500/25 group-hover:shadow-amber-400/40 transition-shadow">
+              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-white to-zinc-200 text-black flex items-center justify-center shadow-lg shadow-white/[0.08] group-hover:shadow-white/[0.12] transition-shadow">
                 <Zap size={16} className="fill-current" />
               </div>
               <span className="text-[15px] font-semibold tracking-[-0.02em] text-white">
@@ -56,7 +56,7 @@ export function AppHeader() {
             </Link>
           </div>
 
-          {/* Center: Tabs — styled like e-commerce mega-nav */}
+          {/* Center: Tabs â€” styled like e-commerce mega-nav */}
           <nav className="hidden lg:flex items-center h-full">
             {SIDEBAR_CATEGORIES.map((cat) => (
               <Link
@@ -65,7 +65,7 @@ export function AppHeader() {
                 className="relative h-full flex items-center px-4 text-[13px] font-medium text-zinc-400 hover:text-white transition-colors group"
               >
                 <span>{cat.name}</span>
-                <span className="absolute bottom-0 left-4 right-4 h-[2px] bg-amber-400 scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                <span className="absolute bottom-0 left-4 right-4 h-[2px] bg-white scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
               </Link>
             ))}
           </nav>
@@ -79,12 +79,12 @@ export function AppHeader() {
                 )
               }
               className="h-9 flex items-center gap-2 px-3.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-zinc-400 hover:text-zinc-200 text-[12px] transition-all cursor-pointer"
-              title="Search (⌘K)"
+              title="Search (âŒ˜K)"
             >
               <Search size={14} />
               <span className="hidden sm:inline">Search</span>
               <kbd className="hidden md:inline text-[10px] font-mono text-zinc-500 ml-1 px-1.5 py-0.5 rounded bg-white/[0.05]">
-                ⌘K
+                âŒ˜K
               </kbd>
             </button>
           </div>

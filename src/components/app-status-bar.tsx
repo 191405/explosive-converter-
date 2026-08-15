@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { Cpu, Zap, Layers, ShieldCheck, Terminal, Settings2 } from "lucide-react";
@@ -34,7 +34,7 @@ export function AppStatusBar() {
           <span
             className={`h-1.5 w-1.5 rounded-full ${
               telemetry.engineStatus === "processing"
-                ? "bg-amber-400 animate-pulse"
+                ? "bg-white animate-pulse"
                 : "bg-zinc-400"
             }`}
           />
@@ -47,7 +47,7 @@ export function AppStatusBar() {
 
         {/* SIMD */}
         <div className="flex items-center gap-1">
-          <Zap size={11} className={telemetry.simdActive ? "text-amber-400" : "text-zinc-600"} />
+          <Zap size={11} className={telemetry.simdActive ? "text-white" : "text-zinc-600"} />
           <span>SIMD:</span>
           <span className={telemetry.simdActive ? "text-zinc-200 font-semibold" : "text-zinc-500"}>
             {telemetry.simdActive ? "128-BIT" : "STANDARD"}
@@ -73,7 +73,7 @@ export function AppStatusBar() {
         )}
 
         <div className="hidden lg:flex items-center gap-1 text-zinc-500">
-          <ShieldCheck size={11} className="text-amber-400/80" />
+          <ShieldCheck size={11} className="text-white/80" />
           <span>ZERO-SERVER PRIVACY BUFFER</span>
         </div>
       </div>
@@ -89,7 +89,7 @@ export function AppStatusBar() {
 
         <button
           onClick={() => window.dispatchEvent(new Event("toggle-console-drawer"))}
-          className="flex items-center gap-1 text-amber-400 hover:text-amber-300 transition-colors cursor-pointer text-[10px]"
+          className="flex items-center gap-1 text-white hover:text-zinc-100 transition-colors cursor-pointer text-[10px]"
         >
           <Terminal size={11} />
           <span>STDOUT</span>

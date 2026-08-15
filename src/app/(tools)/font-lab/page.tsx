@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { NeoDropzone } from "@/components/dropzone";
@@ -158,7 +158,7 @@ export default function FontLabPage() {
       URL.revokeObjectURL(url);
 
       const reduction = (((file.size - blob.size) / file.size) * 100).toFixed(1);
-      toast.success(`Subset font generated! Reduced by ${reduction}% (${(file.size / 1024).toFixed(0)}KB → ${(blob.size / 1024).toFixed(0)}KB)`);
+      toast.success(`Subset font generated! Reduced by ${reduction}% (${(file.size / 1024).toFixed(0)}KB â†’ ${(blob.size / 1024).toFixed(0)}KB)`);
     } catch (err) {
       console.error(err);
       toast.error("Failed to subset font");
@@ -169,7 +169,7 @@ export default function FontLabPage() {
 
   return (
     <div className="w-full max-w-6xl flex flex-col gap-6">
-      {/* ── Header ── */}
+      {/* â”€â”€ Header â”€â”€ */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-4">
         <div>
           <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
@@ -181,7 +181,7 @@ export default function FontLabPage() {
             Font Subsetter, WOFF2 Studio & Glyph Extractor
           </h1>
           <p className="text-xs text-zinc-400 font-sans mt-0.5 max-w-2xl">
-            In-memory OpenType/TrueType/WOFF2 parser. Extract vector Bézier curves to SVG, inspect character maps, and strip unused glyphs to slash web font sizes by up to 90%.
+            In-memory OpenType/TrueType/WOFF2 parser. Extract vector BÃ©zier curves to SVG, inspect character maps, and strip unused glyphs to slash web font sizes by up to 90%.
           </p>
         </div>
 
@@ -189,7 +189,7 @@ export default function FontLabPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             OpenType.js Engine
           </span>
-          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-white/10 border border-white/[0.12] text-white font-semibold">
             100% In-Memory
           </span>
         </div>
@@ -208,7 +208,7 @@ export default function FontLabPage() {
           {/* Metadata Card */}
           <div className="neu-tile p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 neu-btn text-amber-400">
+              <div className="p-2.5 neu-btn text-white">
                 <Type size={20} />
               </div>
               <div>
@@ -217,11 +217,11 @@ export default function FontLabPage() {
                 </h3>
                 <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-400 font-mono mt-0.5">
                   <span>{fontMetadata.numGlyphs.toLocaleString()} Glyphs</span>
-                  <span>•</span>
+                  <span>â€¢</span>
                   <span>{fontMetadata.unitsPerEm} UPM</span>
-                  <span>•</span>
+                  <span>â€¢</span>
                   <span>Asc/Desc: {fontMetadata.ascender}/{fontMetadata.descender}</span>
-                  <span>•</span>
+                  <span>â€¢</span>
                   <span>{(file!.size / 1024).toFixed(1)} KB</span>
                 </div>
               </div>
@@ -271,7 +271,7 @@ export default function FontLabPage() {
                   {Array.from({ length: Math.min(font.glyphs.length, 300) }).map((_, idx) => {
                     const g = font.glyphs.get(idx);
                     const isSelected = selectedGlyphIndex === idx;
-                    const charDisplay = g.unicode ? String.fromCharCode(g.unicode) : "□";
+                    const charDisplay = g.unicode ? String.fromCharCode(g.unicode) : "â–¡";
 
                     return (
                       <button
@@ -279,10 +279,10 @@ export default function FontLabPage() {
                         onClick={() => setSelectedGlyphIndex(idx)}
                         className={`p-2 rounded-lg text-center text-sm font-mono transition-all flex items-center justify-center h-10 ${
                           isSelected
-                            ? "bg-amber-400 text-black font-bold shadow-lg"
+                            ? "bg-white text-black font-bold shadow-lg"
                             : "neu-btn text-zinc-300 hover:text-white"
                         }`}
-                        title={`Index ${idx} • ${g.name || ""} (U+${g.unicode?.toString(16).toUpperCase() || "????"})`}
+                        title={`Index ${idx} â€¢ ${g.name || ""} (U+${g.unicode?.toString(16).toUpperCase() || "????"})`}
                       >
                         {charDisplay}
                       </button>
@@ -336,7 +336,7 @@ export default function FontLabPage() {
                   <span className="text-xs font-mono text-zinc-300 font-semibold">Vector Curve Inspector</span>
                   <button
                     onClick={exportGlyphSvg}
-                    className="neu-btn px-2.5 py-1 text-xs text-amber-400 flex items-center gap-1"
+                    className="neu-btn px-2.5 py-1 text-xs text-white flex items-center gap-1"
                   >
                     <FileDown size={12} />
                     <span>SVG</span>
@@ -358,7 +358,7 @@ export default function FontLabPage() {
                       </div>
                       <div className="flex justify-between py-1">
                         <span>Unicode:</span>
-                        <span className="text-amber-400">
+                        <span className="text-white">
                           {selectedGlyph.unicode
                             ? `U+${selectedGlyph.unicode.toString(16).padStart(4, "0").toUpperCase()}`
                             : "N/A"}
@@ -377,7 +377,7 @@ export default function FontLabPage() {
               <div className="neu-tile p-4 flex flex-col gap-3">
                 <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
                   <span className="text-xs font-mono text-zinc-300 font-semibold">Font Subsetting Studio</span>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-400/10 text-amber-400 border border-amber-400/20">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-white border border-white/[0.12]">
                     -85% Payload
                   </span>
                 </div>
@@ -390,7 +390,7 @@ export default function FontLabPage() {
                         key={m}
                         onClick={() => setSubsetMode(m)}
                         className={`neu-btn py-1 text-xs capitalize ${
-                          subsetMode === m ? "active text-white border-amber-400/40" : "text-zinc-400"
+                          subsetMode === m ? "active text-white border-white/[0.18]" : "text-zinc-400"
                         }`}
                       >
                         {m}

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import { ShieldCheck, Cookie, Settings2, Check, X, Lock, Cpu, Database } from "lucide-react";
@@ -74,7 +74,7 @@ export function CookieConsent() {
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-amber-400/10 border border-amber-400/20 text-amber-400">
+          <div className="p-2 rounded-xl bg-white/10 border border-white/[0.12] text-white">
             <Cookie size={18} />
           </div>
           <div>
@@ -82,7 +82,7 @@ export function CookieConsent() {
               Privacy & Local Storage Controls
             </h2>
             <span className="text-[11px] text-zinc-400 font-mono">
-              100% In-Browser • Zero Remote Tracking
+              100% In-Browser â€¢ Zero Remote Tracking
             </span>
           </div>
         </div>
@@ -97,7 +97,7 @@ export function CookieConsent() {
       </div>
 
       <p className="text-zinc-400 text-xs leading-relaxed">
-        Explosive Tools processes all audio, video, PDFs, and files directly inside your browser’s local memory sandbox. We use local storage purely to maintain your workspace state and cache WebAssembly compilation modules for faster startup.
+        Explosive Tools processes all audio, video, PDFs, and files directly inside your browserâ€™s local memory sandbox. We use local storage purely to maintain your workspace state and cache WebAssembly compilation modules for faster startup.
       </p>
 
       {showDetails && (
@@ -105,13 +105,13 @@ export function CookieConsent() {
           {/* Essential */}
           <div className="flex items-center justify-between p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.06]">
             <div className="flex items-center gap-2.5">
-              <Lock size={14} className="text-amber-400 shrink-0" />
+              <Lock size={14} className="text-white shrink-0" />
               <div>
                 <span className="text-white font-semibold block">Essential Workspace State</span>
                 <span className="text-[10px] text-zinc-500">Theme, tool parameters, and session state (Required)</span>
               </div>
             </div>
-            <span className="text-[10px] bg-amber-400/10 text-amber-400 px-2 py-0.5 rounded font-bold border border-amber-400/20">
+            <span className="text-[10px] bg-white/10 text-white px-2 py-0.5 rounded font-bold border border-white/[0.12]">
               ALWAYS ACTIVE
             </span>
           </div>
@@ -129,7 +129,7 @@ export function CookieConsent() {
               type="checkbox"
               checked={prefs.wasmCache}
               onChange={(e) => setPrefs({ ...prefs, wasmCache: e.target.checked })}
-              className="accent-amber-400 w-4 h-4 rounded cursor-pointer"
+              className="accent-white w-4 h-4 rounded cursor-pointer"
             />
           </div>
 
@@ -146,7 +146,7 @@ export function CookieConsent() {
               type="checkbox"
               checked={prefs.hardwareTelemetry}
               onChange={(e) => setPrefs({ ...prefs, hardwareTelemetry: e.target.checked })}
-              className="accent-amber-400 w-4 h-4 rounded cursor-pointer"
+              className="accent-white w-4 h-4 rounded cursor-pointer"
             />
           </div>
         </div>

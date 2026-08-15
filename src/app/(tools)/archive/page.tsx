@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Archive, Folder, File as FileIcon, Download, Trash2, Plus, HardDrive, RefreshCw, CheckCircle2 } from "lucide-react";
@@ -85,7 +85,7 @@ export default function ArchiveStudioPage() {
           <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
             Fflate Stream IO
           </span>
-          <span className="px-2.5 py-1 rounded bg-amber-400/10 border border-amber-400/20 text-amber-400 font-semibold">
+          <span className="px-2.5 py-1 rounded bg-white/10 border border-white/[0.12] text-white font-semibold">
             In-Memory
           </span>
         </div>
@@ -126,7 +126,7 @@ export default function ArchiveStudioPage() {
                 <div>
                   <h3 className="font-mono text-sm font-semibold text-white">{archiveFile.name}</h3>
                   <span className="text-xs text-zinc-400 font-mono">
-                    {(archiveFile.size / 1024).toFixed(1)} KB • {entries.length} entries
+                    {(archiveFile.size / 1024).toFixed(1)} KB â€¢ {entries.length} entries
                   </span>
                 </div>
               </div>
@@ -157,7 +157,7 @@ export default function ArchiveStudioPage() {
                     </div>
                     <div className="flex items-center gap-8 tabular-nums text-zinc-400">
                       <span>{(entry.size / 1024).toFixed(1)} KB</span>
-                      <span className="text-amber-400">{(entry.compressedSize / 1024).toFixed(1)} KB</span>
+                      <span className="text-white">{(entry.compressedSize / 1024).toFixed(1)} KB</span>
                     </div>
                   </div>
                 ))}
@@ -207,7 +207,7 @@ export default function ArchiveStudioPage() {
                   <a
                     href={outputArchiveUrl}
                     download={`explosive-archive-${Date.now()}.zip`}
-                    className="flex items-center gap-2 px-4 py-2 rounded-md bg-amber-500 text-black font-semibold text-xs hover:bg-amber-400 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 rounded-md bg-white text-black font-semibold text-xs hover:bg-white transition-colors"
                   >
                     <Download size={14} />
                     <span>Download Repacked ZIP</span>
