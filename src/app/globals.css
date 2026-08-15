@@ -1,146 +1,277 @@
 @import "tailwindcss";
 
-/* ── Pro Industrial Design System (Obsidian Engineering Grade) ── */
+/* ── Swiss International Industrial Studio Design System ── */
 :root, .dark, .light {
-  --bg-base: #050507;
-  --bg-surface: #0c0c10;
-  --bg-surface-elevated: #14141a;
-  --bg-surface-hover: #1a1a22;
-  
-  --text-primary: #f4f4f5;
-  --text-secondary: #a1a1aa;
-  --text-tertiary: #71717a;
+  --studio-bg: #08090d;
+  --studio-surface-1: #0e1015;
+  --studio-surface-2: #14171f;
+  --studio-surface-3: #1a1e29;
+  --studio-surface-hover: #212634;
 
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-focus: rgba(255, 255, 255, 0.25);
-  
-  --accent-base: #ffffff;
-  --accent-amber: #f59e0b;
-  --accent-emerald: #10b981;
-  --accent-cyan: #06b6d4;
-  
-  --glass-bg: rgba(12, 12, 16, 0.85);
-  --glass-hover: rgba(20, 20, 26, 0.95);
-  --glass-border: rgba(255, 255, 255, 0.09);
+  --studio-border: rgba(255, 255, 255, 0.08);
+  --studio-border-subtle: rgba(255, 255, 255, 0.05);
+  --studio-border-strong: rgba(255, 255, 255, 0.18);
+  --studio-border-active: #ff9e00;
+
+  --studio-text: #f0f2f5;
+  --studio-text-muted: #8c93a4;
+  --studio-text-dim: #4d5466;
+
+  --accent-amber: #ff9e00;
+  --accent-amber-glow: rgba(255, 158, 0, 0.15);
+  --accent-emerald: #00f076;
+  --accent-emerald-glow: rgba(0, 240, 118, 0.15);
+  --accent-cyan: #00d4ff;
+  --accent-cyan-glow: rgba(0, 212, 255, 0.15);
+  --accent-orange: #ff5500;
 }
 
 @theme inline {
-  --color-background: var(--bg-base);
-  --color-foreground: var(--text-primary);
-  
+  --color-background: var(--studio-bg);
+  --color-foreground: var(--studio-text);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-*, *::before, *::after { box-sizing: border-box; }
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 
 html, body {
-  background-color: #050507 !important;
-  color: #f4f4f5 !important;
+  background-color: var(--studio-bg) !important;
+  color: var(--studio-text) !important;
   margin: 0;
   padding: 0;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
 }
 
-/* ── Pro Industrial Panel ── */
-.glass-panel {
-  background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-border);
-  border-radius: 10px;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
-  transition: border-color 0.15s ease, background 0.15s ease;
+/* ── Tactile Instrument Panel ── */
+.studio-panel {
+  background: var(--studio-surface-1);
+  border: 1px solid var(--studio-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  position: relative;
 }
 
-.glass-panel:hover {
-  background: var(--glass-hover);
-  border-color: var(--border-focus);
+.studio-panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  pointer-events: none;
 }
 
-/* Pro Primary Button */
-.btn-primary {
-  background: #f4f4f5;
-  color: #050507;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 0.8125rem;
-  letter-spacing: -0.01em;
+/* ── Tactile Mechanical Buttons ── */
+.btn-studio-primary {
+  background: #f0f2f5;
+  color: #08090d;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
   cursor: pointer;
-  transition: all 0.15s ease;
-  outline: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  transition: all 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-.btn-primary:hover {
+.btn-studio-primary:hover {
   background: #ffffff;
-  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 1);
+  transform: translateY(-1px);
 }
 
-.btn-primary:active {
+.btn-studio-primary:active {
   transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
-.btn-primary:disabled {
-  background: #27272a;
-  color: #71717a;
+.btn-studio-primary:disabled {
+  background: #202430;
+  color: #555d70;
   border-color: transparent;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
-/* Pro Secondary Button */
-.btn-secondary {
-  background: rgba(255, 255, 255, 0.04);
-  color: #f4f4f5;
-  border: 1px solid var(--border-subtle);
-  border-radius: 6px;
-  font-weight: 500;
-  font-size: 0.8125rem;
+.btn-studio-accent {
+  background: var(--accent-amber);
+  color: #08090d;
+  border: 1px solid rgba(255, 200, 100, 0.6);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
   cursor: pointer;
-  transition: all 0.15s ease;
-  outline: none;
+  transition: all 0.1s ease;
+  box-shadow: 0 2px 8px var(--accent-amber-glow);
 }
 
-.btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--border-focus);
+.btn-studio-accent:hover {
+  background: #ffaa1a;
+  box-shadow: 0 0 16px var(--accent-amber-glow);
+  transform: translateY(-1px);
 }
 
-.btn-secondary:active {
+.btn-studio-accent:active {
   transform: translateY(1px);
 }
 
-/* Pro Input Base */
-.input-base {
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid var(--border-subtle);
-  border-radius: 6px;
-  color: #f4f4f5;
+.btn-studio-secondary {
+  background: var(--studio-surface-2);
+  color: var(--studio-text);
+  border: 1px solid var(--studio-border);
+  border-radius: 4px;
   font-family: var(--font-mono);
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.45rem 0.85rem;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.btn-studio-secondary:hover {
+  background: var(--studio-surface-3);
+  border-color: var(--studio-border-strong);
+  color: #ffffff;
+}
+
+.btn-studio-secondary:active {
+  transform: translateY(1px);
+}
+
+/* ── Segmented Control Rack ── */
+.segmented-rack {
+  display: flex;
+  background: #090b0f;
+  border: 1px solid var(--studio-border);
+  border-radius: 4px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.segmented-item {
+  flex: 1;
+  padding: 4px 8px;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 3px;
+  color: var(--studio-text-muted);
+  transition: all 0.1s ease;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.segmented-item:hover {
+  color: var(--studio-text);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.segmented-item.active {
+  background: var(--studio-surface-3);
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--studio-border-strong);
+}
+
+/* ── Studio Precision Inputs ── */
+.studio-input {
+  background: #090a0e;
+  border: 1px solid var(--studio-border);
+  border-radius: 4px;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 0.4rem 0.65rem;
+  outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.input-base:focus-within, .input-base.drag-active {
-  border-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+.studio-input:focus {
+  border-color: var(--accent-amber);
+  box-shadow: 0 0 0 1px var(--accent-amber), 0 0 10px var(--accent-amber-glow);
+}
+
+/* ── Studio Sliders with Calibration Ticks ── */
+input[type="range"].studio-slider {
+  appearance: none;
+  -webkit-appearance: none;
+  background: #141720;
+  height: 4px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  outline: none;
+}
+
+input[type="range"].studio-slider::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: #f0f2f5;
+  border: 1px solid #ffffff;
+  cursor: ew-resize;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+  transition: transform 0.1s ease;
+}
+
+input[type="range"].studio-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  background: var(--accent-amber);
+  border-color: #ffcc66;
+}
+
+/* ── Hardware LED Status ── */
+.led-active {
+  box-shadow: 0 0 8px var(--accent-emerald);
+}
+
+.led-busy {
+  box-shadow: 0 0 8px var(--accent-amber);
+}
+
+.led-alert {
+  box-shadow: 0 0 8px var(--accent-orange);
+}
+
+/* Tabular Numerics */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
 /* Scrollbars */
-.scrollbar-none::-webkit-scrollbar { display: none; }
-.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
-
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
-
-/* Tabular numeric typography */
-.tabular-nums {
-  font-variant-numeric: tabular-nums;
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #08090d;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e222e;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2c3244;
 }
