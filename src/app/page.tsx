@@ -402,8 +402,8 @@ export default function HomePage() {
       <footer className="w-full border-t border-black/[0.06] dark:border-white/[0.06] py-10 mt-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--text-dim)]">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded bg-zinc-900 dark:bg-white flex items-center justify-center">
-              <Zap size={10} className="text-white dark:text-black fill-current" />
+            <div className="w-5 h-5 rounded bg-white dark:bg-zinc-900 border border-black/10 dark:border-white/10 flex items-center justify-center">
+              <Zap size={10} className="text-black dark:text-white fill-current" />
             </div>
             <span className="text-[var(--text-main)] font-medium">Explosive Studio</span>
             <span>·</span>

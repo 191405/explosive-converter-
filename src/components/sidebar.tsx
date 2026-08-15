@@ -264,8 +264,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       <div className="p-4 border-b border-black/[0.08] dark:border-white/[0.08] bg-[var(--bg-tile)] flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <Link href="/" onClick={onClose} className="flex items-center gap-2.5 group">
-            <div className="h-7 w-7 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-black flex items-center justify-center font-bold text-xs shadow-md transition-colors">
-              <Zap size={15} className="fill-current" />
+            <div className="h-7 w-7 rounded-lg bg-white dark:bg-zinc-900 border border-black/10 dark:border-white/10 text-black dark:text-white flex items-center justify-center font-bold text-xs shadow-md transition-colors">
+              <Zap size={15} className="fill-current text-black dark:text-white" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
