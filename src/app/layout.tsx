@@ -9,6 +9,7 @@ import { OnboardingTutorial } from "@/components/onboarding-tutorial";
 import { FeedbackModal } from "@/components/feedback-modal";
 import { EngineTelemetryBar } from "@/components/engine-telemetry-bar";
 import { ConsoleDrawer } from "@/components/console-drawer";
+import { CookieConsent } from "@/components/cookie-consent";
 import { Toaster } from "sonner";
 
 const geistSans = Geist({
@@ -192,6 +193,7 @@ export default function RootLayout({
           <CommandPalette />
           <OnboardingTutorial />
           <FeedbackModal />
+          <CookieConsent />
           <Toaster position="bottom-right" theme="dark" richColors />
         </ThemeProvider>
       </body>

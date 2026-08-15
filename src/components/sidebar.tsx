@@ -47,7 +47,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     section: "Spatial Audio & Media",
     items: [
-      { href: "/dsp", label: "Spatial Audio & Stem Isolator", icon: Radio, tag: "DSP" },
+      { href: "/dsp", label: "Spatial Audio & Stem DSP", icon: Radio, tag: "DSP" },
       { href: "/animator", label: "Animated WebP / GIF Diff", icon: Film, tag: "DIFF" },
       { href: "/audio", label: "Audio Stream Converter", icon: Music },
       { href: "/trim", label: "Waveform PCM Slicer", icon: Scissors },
