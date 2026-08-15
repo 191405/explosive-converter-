@@ -86,7 +86,7 @@ export function FeedbackModal() {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           transition={{ type: "spring", stiffness: 400, damping: 30 }}
-          className="relative w-full max-w-lg bg-bg-surface border border-border-focus rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+          className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-[#0d0e15] border border-white/[0.12] rounded-2xl shadow-2xl flex flex-col"
         >
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle">

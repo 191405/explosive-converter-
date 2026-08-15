@@ -72,7 +72,7 @@ export function CookieConsent() {
   return (
     <aside
       aria-label="Privacy & Cookie Preferences"
-      className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[120] max-w-lg w-[calc(100vw-2rem)] bg-[#0d0e15]/95 backdrop-blur-xl border border-white/[0.12] rounded-2xl shadow-2xl p-5 text-zinc-200 font-sans text-xs flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-300"
+      className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[120] max-w-lg w-[calc(100vw-2rem)] max-h-[90vh] overflow-y-auto bg-[#0d0e15]/95 backdrop-blur-xl border border-white/[0.12] rounded-2xl shadow-2xl p-4 sm:p-5 text-zinc-200 font-sans text-xs flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-300"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2.5">

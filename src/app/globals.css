@@ -41,6 +41,8 @@ html, body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -53,6 +55,7 @@ html, body {
   border: 1px solid rgba(255, 255, 255, 0.04);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
+  max-width: 100%;
 }
 
 .neu-tile:hover {
@@ -67,6 +70,7 @@ html, body {
   box-shadow: var(--neu-flat);
   border: 1px solid rgba(255, 255, 255, 0.05);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 100%;
 }
 
 .neu-tile-interactive:hover {
@@ -80,6 +84,7 @@ html, body {
   box-shadow: var(--neu-inset);
   border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.5);
+  max-width: 100%;
 }
 
 /* ── Neumorphic Buttons ── */
@@ -92,6 +97,7 @@ html, body {
   font-weight: 600;
   transition: all 0.15s ease;
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 .neu-btn:hover {
@@ -116,6 +122,7 @@ html, body {
   font-weight: 600;
   transition: all 0.15s ease;
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 .neu-btn-primary:hover {
@@ -138,13 +145,14 @@ input[type="range"].neu-slider {
   height: 8px;
   border-radius: 4px;
   outline: none;
+  touch-action: manipulation;
 }
 
 input[type="range"].neu-slider::-webkit-slider-thumb {
   appearance: none;
   -webkit-appearance: none;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: var(--neu-convex);
   box-shadow: 2px 2px 6px #050608, -2px -2px 6px #1c202c;
@@ -160,6 +168,29 @@ input[type="range"].neu-slider::-webkit-slider-thumb:hover {
 /* Tabular Numerics */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+}
+
+/* Responsive Table Wrapper */
+.neu-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile Screen Breakpoint Tweaks */
+@media (max-width: 640px) {
+  :root, .dark, .light {
+    --neu-flat: 4px 4px 8px #06070a, -4px -4px 8px #1a1d26;
+    --neu-raised: 5px 5px 10px #050608, -5px -5px 10px #1c202c;
+  }
+
+  .neu-tile {
+    border-radius: 12px;
+  }
+
+  .neu-inset {
+    border-radius: 10px;
+  }
 }
 
 /* Scrollbars */

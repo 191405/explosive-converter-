@@ -237,7 +237,7 @@ export default function Home() {
       </div>
 
       {/* ── Neumorphic Interactive Tiles Grid ── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
         {/* ── Tile 1: Spatial Audio & DSP (Interactive Synthesizer) ── */}
         {(activeCategory === "all" || activeCategory === "audio") && (
           <div className="neu-tile p-5 flex flex-col justify-between gap-4 group">
