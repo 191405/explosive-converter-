@@ -336,29 +336,45 @@ export default function AudioTrimPage() {
   };
 
   return (
-    <div className="w-full max-w-4xl flex flex-col items-center gap-10">
-      {/* Header */}
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl sm:text-5xl font-black text-glow tracking-tight flex items-center justify-center gap-3">
-          <Scissors className="w-9 h-9 sm:w-11 sm:h-11" strokeWidth={1.75} />
-          Audio Cutter & Trimmer
-        </h1>
-        <p className="text-text-primary/50 font-light text-lg max-w-2xl mx-auto">
-          Precision waveform trimming with real-time audio playback preview and instant lossless export.
-        </p>
+    <div className="w-full max-w-5xl flex flex-col gap-6">
+      {/* Workbench Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-4">
+        <div>
+          <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
+            <span>Audio</span>
+            <span>/</span>
+            <span className="text-zinc-300">PCM Waveform Slicer</span>
+          </div>
+          <h1 className="text-xl font-bold tracking-tight text-white font-sans mt-0.5">
+            Waveform Audio Cutter & Slicer
+          </h1>
+          <p className="text-xs text-zinc-400 font-sans mt-0.5 max-w-2xl">
+            Precision visual waveform slicing with millisecond range selection, real-time playback preview, and lossless client export.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
+          <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
+            AudioBuffer PCM
+          </span>
+          <span className="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold">
+            Lossless
+          </span>
+        </div>
       </div>
 
       {!file ? (
-        <NeoDropzone
-          onDropAccepted={handleDrop}
-          accept={{
-            "audio/*": [".mp3", ".wav", ".aac", ".flac", ".ogg", ".m4a", ".opus"],
-          }}
-          multiple={false}
-          label="Drop an audio file to trim"
-          sublabel="MP3, WAV, AAC, FLAC, OGG & M4A supported"
-          icon={<Music size={40} strokeWidth={1.5} />}
-        />
+        <div className="w-full">
+          <NeoDropzone
+            onDropAccepted={handleDrop}
+            accept={{
+              "audio/*": [".mp3", ".wav", ".aac", ".flac", ".ogg", ".m4a", ".opus"],
+            }}
+            multiple={false}
+            label="Drop an audio file to trim"
+            sublabel="MP3, WAV, AAC, FLAC, OGG & M4A supported"
+          />
+        </div>
       ) : isLoading ? (
         <div className="glass-panel p-8 rounded-xl flex flex-col items-center gap-4 animate-pulse max-w-md w-full">
           <svg className="animate-spin text-text-primary/50" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

@@ -133,23 +133,35 @@ export default function VideoCompressPage() {
   };
 
   return (
-    <div className="w-full max-w-4xl flex flex-col items-center gap-8 font-sans">
-      {/* Header */}
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-zinc-300 text-xs font-mono">
-          <Video size={13} />
-          <span>FFmpeg 0.12 WASM Core • libx264 Encoder</span>
+    <div className="w-full max-w-5xl flex flex-col gap-6 font-sans">
+      {/* Workbench Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-4">
+        <div>
+          <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
+            <span>Video</span>
+            <span>/</span>
+            <span className="text-zinc-300">libx264 Compression</span>
+          </div>
+          <h1 className="text-xl font-bold tracking-tight text-white font-sans mt-0.5">
+            Hardware-Accelerated Video Compressor
+          </h1>
+          <p className="text-xs text-zinc-400 font-sans mt-0.5 max-w-2xl">
+            Reduce MP4, MOV, MKV, and WebM video bitrates using libx264 with granular Constant Rate Factor (CRF) and custom resolution downscaling.
+          </p>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
-          Hardware-Accelerated Video Compressor
-        </h1>
-        <p className="text-zinc-400 text-sm max-w-xl mx-auto">
-          Reduce MP4, MOV, MKV, and WebM video bitrates using libx264 with granular Constant Rate Factor (CRF), custom resolution scaling, and zero server uploads.
-        </p>
+
+        <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
+          <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
+            FFmpeg WASM (libx264)
+          </span>
+          <span className="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold">
+            Zero Server Upload
+          </span>
+        </div>
       </div>
 
       {!file ? (
-        <div className="w-full max-w-2xl">
+        <div className="w-full">
           <NeoDropzone
             onDropAccepted={(files) => setFile(files[0])}
             accept={{ "video/*": [".mp4", ".mov", ".avi", ".webm", ".mkv"] }}

@@ -122,18 +122,31 @@ export default function ImageConvertPage() {
   };
 
   return (
-    <div className="w-full max-w-4xl flex flex-col items-center gap-8">
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-zinc-300 text-xs font-mono">
-          <ImageIcon size={13} />
-          <span>Client-Side Hardware Accelerated Transcoder</span>
+    <div className="w-full max-w-5xl flex flex-col gap-6 font-sans">
+      {/* Workbench Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-4">
+        <div>
+          <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
+            <span>Media</span>
+            <span>/</span>
+            <span className="text-zinc-300">Canvas Transcoder</span>
+          </div>
+          <h1 className="text-xl font-bold tracking-tight text-white font-sans mt-0.5">
+            Pro Image Transcoder & Scaler
+          </h1>
+          <p className="text-xs text-zinc-400 font-sans mt-0.5 max-w-2xl">
+            Batch transcode raster images between WebP, PNG, AVIF, and JPEG with custom dimension scaling and hardware acceleration.
+          </p>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
-          Pro Image Transcoder & Scaler
-        </h1>
-        <p className="text-zinc-400 text-sm max-w-xl mx-auto">
-          Batch transcode raster images between WebP, PNG, and JPEG with custom dimension scaling and lossless compression in browser memory.
-        </p>
+
+        <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
+          <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
+            HTML5 Canvas GPU
+          </span>
+          <span className="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold">
+            In-Memory
+          </span>
+        </div>
       </div>
 
       {/* Global Config Bar */}

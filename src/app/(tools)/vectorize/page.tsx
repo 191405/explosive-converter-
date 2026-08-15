@@ -116,22 +116,35 @@ export default function VectorizerPage() {
   };
 
   return (
-    <div className="w-full max-w-4xl flex flex-col items-center gap-8">
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-mono">
-          <Shapes size={13} />
-          <span>High-Precision Raster to Vector Synthesis</span>
+    <div className="w-full max-w-5xl flex flex-col gap-6">
+      {/* Workbench Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-4">
+        <div>
+          <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
+            <span>Vectors</span>
+            <span>/</span>
+            <span className="text-zinc-300">Bézier Tracer</span>
+          </div>
+          <h1 className="text-xl font-bold tracking-tight text-white font-sans mt-0.5">
+            Raster to SVG Vectorizer
+          </h1>
+          <p className="text-xs text-zinc-400 font-sans mt-0.5 max-w-2xl">
+            Convert pixel graphics, logos, scans, and sketches into crisp, infinitely scalable SVG vector paths with live thresholding.
+          </p>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
-          Raster to SVG Vectorizer
-        </h1>
-        <p className="text-zinc-400 text-sm max-w-xl mx-auto">
-          Convert pixel graphics, logos, scans, and sketches into crisp, infinitely scalable SVG vector paths in real-time.
-        </p>
+
+        <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
+          <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
+            Bézier Curve Engine
+          </span>
+          <span className="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold">
+            Real-Time
+          </span>
+        </div>
       </div>
 
       {!file ? (
-        <div className="w-full max-w-2xl">
+        <div className="w-full">
           <NeoDropzone onDrop={handleDrop} />
         </div>
       ) : (

@@ -193,18 +193,31 @@ export default function ScreenRecordPage() {
   };
 
   return (
-    <div className="w-full max-w-4xl flex flex-col items-center gap-8 font-sans">
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-zinc-300 text-xs font-mono">
-          <Video size={13} />
-          <span>High-Frame-Rate Display & Audio MediaRecorder API</span>
+    <div className="w-full max-w-5xl flex flex-col gap-6 font-sans">
+      {/* Workbench Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-4">
+        <div>
+          <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
+            <span>Hardware</span>
+            <span>/</span>
+            <span className="text-zinc-300">Display Capture</span>
+          </div>
+          <h1 className="text-xl font-bold tracking-tight text-white font-sans mt-0.5">
+            Screen & Camera Studio Recorder
+          </h1>
+          <p className="text-xs text-zinc-400 font-sans mt-0.5 max-w-2xl">
+            Capture desktop applications, browser tabs, webcams, and synchronized system audio up to 60 FPS directly in memory.
+          </p>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
-          Screen & Window Studio Recorder
-        </h1>
-        <p className="text-zinc-400 text-sm max-w-xl mx-auto">
-          Capture desktop applications, browser tabs, webcams, and synchronized system audio up to 60 FPS directly in memory with zero cloud uploads.
-        </p>
+
+        <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
+          <span className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
+            VP9 / Opus Hardware Stream
+          </span>
+          <span className="px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-semibold">
+            60 FPS
+          </span>
+        </div>
       </div>
 
       <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs">
