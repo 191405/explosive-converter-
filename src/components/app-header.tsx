@@ -22,6 +22,12 @@ export function AppHeader() {
   }, [pathname]);
 
   useEffect(() => {
+    const handleOpenSidebar = () => setDrawerOpen(true);
+    window.addEventListener("open-sidebar", handleOpenSidebar);
+    return () => window.removeEventListener("open-sidebar", handleOpenSidebar);
+  }, []);
+
+  useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
