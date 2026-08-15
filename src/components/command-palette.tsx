@@ -19,16 +19,25 @@ import {
   Binary,
   Archive,
   Terminal,
+  Type,
+  Key,
+  Network,
+  Clock,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const TOOLS = [
   { href: "/metadata", label: "Metadata & Steganography Inspector", icon: ShieldCheck, category: "Forensics & Vectors" },
   { href: "/vectorize", label: "Raster to SVG Vectorizer", icon: Shapes, category: "Forensics & Vectors" },
+  { href: "/hex-diff", label: "Binary Hex & Shannon Entropy Inspector", icon: Binary, category: "Forensics & Vectors" },
   { href: "/ocr", label: "Client-Side Document OCR", icon: ScanText, category: "Forensics & Vectors" },
   { href: "/dsp", label: "Spatial Audio DSP & Stem Isolator", icon: Radio, category: "Spatial Audio & Video" },
+  { href: "/subtitles", label: "Subtitle & Caption Synchronizer", icon: Clock, category: "Spatial Audio & Video" },
   { href: "/animator", label: "Animated WebP & GIF Diff", icon: Film, category: "Spatial Audio & Video" },
+  { href: "/crypto-vault", label: "Cryptographic Key & JWK Vault", icon: Key, category: "Code & Security" },
+  { href: "/diagram-mesh", label: "Architecture Diagram & Vector Mesh", icon: Network, category: "Code & Security" },
   { href: "/data-morph", label: "Universal Code & AST Morph", icon: Binary, category: "Data & Documents" },
+  { href: "/font-lab", label: "Font Subsetter & Glyph Studio", icon: Type, category: "Data & Documents" },
   { href: "/archive", label: "Archive Inspector & Repacker", icon: Archive, category: "Data & Documents" },
   { href: "/compress", label: "Video Compressor", icon: FileDown, category: "Core Tools" },
   { href: "/image", label: "Image Transcoder", icon: ImageIcon, category: "Core Tools" },

@@ -24,6 +24,10 @@ import {
   Image as ImageIcon,
   Film,
   Video,
+  Type,
+  Key,
+  Network,
+  Clock,
 } from "lucide-react";
 
 export function AppHeader() {
@@ -34,23 +38,28 @@ export function AppHeader() {
     { href: "/metadata", label: "Forensics" },
     { href: "/vectorize", label: "Vectorizer" },
     { href: "/dsp", label: "Spatial DSP" },
-    { href: "/compress", label: "Compress" },
-    { href: "/data-morph", label: "AST Morph" },
-    { href: "/pdf", label: "PDF Studio" },
+    { href: "/hex-diff", label: "Hex / Entropy" },
+    { href: "/crypto-vault", label: "Crypto Vault" },
+    { href: "/font-lab", label: "Font Studio" },
   ];
 
   const ALL_TOOLS = [
     { href: "/dsp", label: "Spatial Audio DSP", icon: Radio, category: "Audio" },
     { href: "/audio", label: "Audio Transcoder", icon: Music, category: "Audio" },
     { href: "/trim", label: "Waveform Slicer", icon: Scissors, category: "Audio" },
+    { href: "/subtitles", label: "Subtitle Synchronizer", icon: Clock, category: "Audio" },
     { href: "/vectorize", label: "SVG Vectorizer", icon: Shapes, category: "Forensics" },
     { href: "/metadata", label: "Metadata & Stego", icon: ShieldCheck, category: "Forensics" },
+    { href: "/hex-diff", label: "Hex & Entropy Disasm", icon: Binary, category: "Forensics" },
     { href: "/ocr", label: "Document OCR", icon: ScanText, category: "Forensics" },
     { href: "/compress", label: "Video Compressor", icon: FileDown, category: "Media" },
     { href: "/image", label: "Image Transcoder", icon: ImageIcon, category: "Media" },
     { href: "/animator", label: "Animated WebP/GIF", icon: Film, category: "Media" },
     { href: "/record", label: "Display Recorder", icon: Video, category: "Media" },
+    { href: "/font-lab", label: "Font Subsetter Studio", icon: Type, category: "Documents" },
     { href: "/pdf", label: "PDF Document Studio", icon: FileText, category: "Documents" },
+    { href: "/crypto-vault", label: "Crypto & JWK Vault", icon: Key, category: "Code" },
+    { href: "/diagram-mesh", label: "Architecture Diagrams", icon: Network, category: "Code" },
     { href: "/data-morph", label: "Code AST Morpher", icon: Binary, category: "Code" },
     { href: "/archive", label: "Archive Studio", icon: Archive, category: "Containers" },
   ];

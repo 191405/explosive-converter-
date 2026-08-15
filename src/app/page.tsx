@@ -29,6 +29,11 @@ import {
   Search,
   Settings2,
   Maximize2,
+  Type,
+  Key,
+  Network,
+  Activity,
+  Clock,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { emitLog } from "@/lib/engine/orchestrator";
@@ -205,11 +210,11 @@ export default function Home() {
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-1 sm:pb-0">
           {(
             [
-              { id: "all", label: "All Workstations (12)" },
-              { id: "forensics", label: "Forensics & Vectors" },
-              { id: "audio", label: "Audio & DSP" },
-              { id: "code", label: "Code & Data" },
-              { id: "media", label: "Video & Documents" },
+              { id: "all", label: "All Workstations (17)" },
+              { id: "forensics", label: "Forensics & Security" },
+              { id: "audio", label: "Audio & Captions" },
+              { id: "code", label: "Code & Diagrams" },
+              { id: "media", label: "Video, Fonts & Docs" },
             ] as const
           ).map((cat) => (
             <button
@@ -742,6 +747,181 @@ export default function Home() {
 
             <Link href="/animator" className="neu-btn text-center py-2 text-xs font-medium text-zinc-300 hover:text-white">
               Launch Animation Studio
+            </Link>
+          </div>
+        )}
+
+        {/* ── Tile 13: Binary Hex & Shannon Entropy Inspector ── */}
+        {(activeCategory === "all" || activeCategory === "forensics") && (
+          <div className="neu-tile p-5 flex flex-col justify-between gap-4 group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 rounded-xl neu-btn text-amber-400">
+                  <Binary size={18} />
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#090a0d] border border-white/[0.04] text-zinc-400">
+                  Entropy SIMD
+                </span>
+              </div>
+
+              <div>
+                <Link href="/hex-diff" className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                  <span>Binary Hex & Entropy Inspector</span>
+                  <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
+                </Link>
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  In-memory hex viewer, Shannon entropy distribution curve (detects hidden encrypted/packed payloads), and binary diffing.
+                </p>
+              </div>
+
+              <div className="neu-inset p-3 rounded-xl text-[10px] font-mono text-zinc-400 flex items-center justify-between">
+                <span>Analysis:</span>
+                <span className="text-amber-300 font-semibold">0.0 – 8.0 H(X) • SHA-256</span>
+              </div>
+            </div>
+
+            <Link href="/hex-diff" className="neu-btn text-center py-2 text-xs font-medium text-zinc-300 hover:text-white">
+              Launch Hex & Entropy Studio
+            </Link>
+          </div>
+        )}
+
+        {/* ── Tile 14: Font Subsetter & WOFF2 Studio ── */}
+        {(activeCategory === "all" || activeCategory === "media") && (
+          <div className="neu-tile p-5 flex flex-col justify-between gap-4 group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 rounded-xl neu-btn text-amber-400">
+                  <Type size={18} />
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#090a0d] border border-white/[0.04] text-zinc-400">
+                  OpenType.js
+                </span>
+              </div>
+
+              <div>
+                <Link href="/font-lab" className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                  <span>Font Subsetter & Glyph Studio</span>
+                  <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
+                </Link>
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Extract vector Bézier glyph curves to SVG and strip unused characters to slash font payloads by up to 90%.
+                </p>
+              </div>
+
+              <div className="neu-inset p-3 rounded-xl text-[10px] font-mono text-zinc-400 flex items-center justify-between">
+                <span>Engines:</span>
+                <span className="text-zinc-200 font-semibold">TTF • OTF • WOFF2 • SVG</span>
+              </div>
+            </div>
+
+            <Link href="/font-lab" className="neu-btn text-center py-2 text-xs font-medium text-zinc-300 hover:text-white">
+              Launch Font Studio
+            </Link>
+          </div>
+        )}
+
+        {/* ── Tile 15: Subtitle & Caption Synchronizer ── */}
+        {(activeCategory === "all" || activeCategory === "audio") && (
+          <div className="neu-tile p-5 flex flex-col justify-between gap-4 group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 rounded-xl neu-btn text-zinc-300">
+                  <Clock size={18} />
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#090a0d] border border-white/[0.04] text-zinc-400">
+                  SMPTE Timecode
+                </span>
+              </div>
+
+              <div>
+                <Link href="/subtitles" className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                  <span>Subtitle & Caption Synchronizer</span>
+                  <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
+                </Link>
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Millisecond time-shifting, framerate conversion (23.976 $\leftrightarrow$ 60 fps), reading speed CPS checks, and SRT/VTT/ASS export.
+                </p>
+              </div>
+
+              <div className="neu-inset p-3 rounded-xl text-[10px] font-mono text-zinc-400 flex items-center justify-between">
+                <span>Formats:</span>
+                <span className="text-zinc-200 font-semibold">SRT • WebVTT • ASS • TXT</span>
+              </div>
+            </div>
+
+            <Link href="/subtitles" className="neu-btn text-center py-2 text-xs font-medium text-zinc-300 hover:text-white">
+              Launch Caption Studio
+            </Link>
+          </div>
+        )}
+
+        {/* ── Tile 16: Cryptographic Key & JWK Studio ── */}
+        {(activeCategory === "all" || activeCategory === "forensics" || activeCategory === "code") && (
+          <div className="neu-tile p-5 flex flex-col justify-between gap-4 group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 rounded-xl neu-btn text-amber-400">
+                  <Key size={18} />
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#090a0d] border border-white/[0.04] text-zinc-400">
+                  WebCrypto
+                </span>
+              </div>
+
+              <div>
+                <Link href="/crypto-vault" className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                  <span>Cryptographic Key & JWK Studio</span>
+                  <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
+                </Link>
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  In-memory X.509 certificate inspector, PEM $\leftrightarrow$ DER $\leftrightarrow$ JWK transcoder, and ECDSA/RSA keypair generator.
+                </p>
+              </div>
+
+              <div className="neu-inset p-3 rounded-xl text-[10px] font-mono text-zinc-400 flex items-center justify-between">
+                <span>Security:</span>
+                <span className="text-emerald-400 font-semibold">100% In-Memory SubtleCrypto</span>
+              </div>
+            </div>
+
+            <Link href="/crypto-vault" className="neu-btn text-center py-2 text-xs font-medium text-zinc-300 hover:text-white">
+              Launch Crypto Vault
+            </Link>
+          </div>
+        )}
+
+        {/* ── Tile 17: Architecture Diagram & Vector Engine ── */}
+        {(activeCategory === "all" || activeCategory === "code") && (
+          <div className="neu-tile p-5 flex flex-col justify-between gap-4 group">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 rounded-xl neu-btn text-zinc-300">
+                  <Network size={18} />
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#090a0d] border border-white/[0.04] text-zinc-400">
+                  Mermaid Core
+                </span>
+              </div>
+
+              <div>
+                <Link href="/diagram-mesh" className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                  <span>Architecture Diagram & Vector Engine</span>
+                  <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
+                </Link>
+                <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  In-browser code-to-vector compiler. Convert Mermaid syntax to high-DPI PNGs, vector SVGs, and standalone HTML packages.
+                </p>
+              </div>
+
+              <div className="neu-inset p-3 rounded-xl text-[10px] font-mono text-zinc-400 flex items-center justify-between">
+                <span>Output:</span>
+                <span className="text-zinc-200 font-semibold">SVG • PNG 2x • HTML Bundle</span>
+              </div>
+            </div>
+
+            <Link href="/diagram-mesh" className="neu-btn text-center py-2 text-xs font-medium text-zinc-300 hover:text-white">
+              Launch Diagram Studio
             </Link>
           </div>
         )}

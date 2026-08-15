@@ -89,6 +89,36 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.8,
     },
+    {
+      url: `${baseUrl}/hex-diff`,
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/font-lab`,
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/subtitles`,
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/crypto-vault`,
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/diagram-mesh`,
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.9,
+    },
   ];
 
   return routes;
