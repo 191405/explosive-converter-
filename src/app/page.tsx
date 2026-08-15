@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
-  ChevronDown,
   Shield,
   Cpu,
   Check,
@@ -13,10 +13,6 @@ import {
   Minus,
   Zap,
   Menu,
-  Sparkles,
-  Lock,
-  HardDrive,
-  Workflow,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -55,12 +51,37 @@ export default function HomePage() {
     },
   ];
 
+  const heroContainer = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.05,
+      },
+    },
+  };
+
+  const heroItem = {
+    hidden: { opacity: 0, y: 22 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as const },
+    },
+  };
+
   return (
     <div className="flex flex-col w-full font-sans text-[var(--text-muted)]">
       {/* ──────────────────────────────────────────
           LAYER 1 — IMMERSIVE EXECUTIVE HERO
       ────────────────────────────────────────── */}
-      <section className="relative w-full min-h-[82vh] flex items-center justify-center overflow-hidden rounded-3xl mb-12 border border-black/[0.06] dark:border-white/[0.08] shadow-2xl">
+      <motion.section
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="relative w-full min-h-[82vh] flex items-center justify-center overflow-hidden rounded-3xl mb-12 border border-black/[0.06] dark:border-white/[0.08] shadow-2xl"
+      >
         {/* Background Artwork */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 scale-105"
@@ -70,43 +91,66 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-main)] via-[var(--bg-main)]/80 to-[var(--bg-main)]/30" />
         <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-main)]/70 via-transparent to-[var(--bg-main)]/70" />
 
-        {/* Hero Content */}
-        <div className="relative z-10 max-w-4xl mx-auto px-6 py-16 sm:py-24 text-center flex flex-col items-center gap-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/10 dark:bg-white/[0.08] border border-black/10 dark:border-white/15 text-xs font-mono text-[var(--text-main)] backdrop-blur-md shadow-sm">
+        {/* Hero Content with Staggered Framer Motion Reveal */}
+        <motion.div
+          variants={heroContainer}
+          initial="hidden"
+          animate="show"
+          className="relative z-10 max-w-4xl mx-auto px-6 py-16 sm:py-24 text-center flex flex-col items-center gap-6"
+        >
+          <motion.div
+            variants={heroItem}
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/10 dark:bg-white/[0.08] border border-black/10 dark:border-white/15 text-xs font-mono text-[var(--text-main)] backdrop-blur-md shadow-sm"
+          >
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             100% Client-Side WebAssembly SIMD
-          </div>
+          </motion.div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extralight tracking-[-0.03em] text-[var(--text-main)] leading-[1.08]">
+          <motion.h1
+            variants={heroItem}
+            className="text-4xl sm:text-6xl lg:text-7xl font-extralight tracking-[-0.03em] text-[var(--text-main)] leading-[1.08]"
+          >
             Convert. Process.
             <br />
             <span className="font-semibold text-[var(--text-main)]">Entirely Yours.</span>
-          </h1>
+          </motion.h1>
 
-          <p className="text-base sm:text-lg text-[var(--text-muted)] max-w-xl leading-relaxed font-light">
+          <motion.p
+            variants={heroItem}
+            className="text-base sm:text-lg text-[var(--text-muted)] max-w-xl leading-relaxed font-light"
+          >
             A private engineering studio that runs entirely in your browser memory.
             No cloud uploads. Zero data retention. Full offline execution across 19 workstations.
-          </p>
+          </motion.p>
 
-          <div className="flex flex-wrap items-center justify-center gap-3.5 pt-4">
-            <button
+          <motion.div
+            variants={heroItem}
+            className="flex flex-wrap items-center justify-center gap-3.5 pt-4"
+          >
+            <motion.button
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
               onClick={openSidebar}
-              className="neu-btn-primary h-12 flex items-center gap-2.5 px-8 rounded-xl text-sm font-semibold shadow-xl hover:scale-[1.02] transition-all cursor-pointer"
+              className="neu-btn-primary h-12 flex items-center gap-2.5 px-8 rounded-xl text-sm font-semibold shadow-xl cursor-pointer"
             >
               <Menu size={16} />
               <span>Explore Workstations</span>
-            </button>
+            </motion.button>
 
-            <button
+            <motion.button
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
               onClick={openCommandPalette}
               className="neu-btn h-12 flex items-center gap-2 px-6 rounded-xl text-[var(--text-main)] text-sm font-medium transition-all backdrop-blur-sm cursor-pointer"
             >
               <Search size={15} />
               <span>Quick Search (⌘K)</span>
-            </button>
-          </div>
-        </div>
-      </section>
+            </motion.button>
+          </motion.div>
+        </motion.div>
+      </motion.section>
 
       {/* ──────────────────────────────────────────
           LAYER 2 — TRUST STRIP
@@ -119,14 +163,22 @@ export default function HomePage() {
             { num: "19 Tools", desc: "accessible in sidebar directory" },
             { num: "PWA Offline", desc: "runs with zero internet connection" },
           ].map((stat, i) => (
-            <div key={i} className="neu-tile p-6 text-center">
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: i * 0.08 }}
+              whileHover={{ y: -4, scale: 1.02 }}
+              className="neu-tile p-6 text-center cursor-default transition-shadow hover:shadow-lg"
+            >
               <div className="text-2xl sm:text-3xl font-light text-[var(--text-main)] tracking-tight">
                 {stat.num}
               </div>
               <div className="mt-1.5 text-[11px] text-[var(--text-dim)] uppercase tracking-widest font-medium">
                 {stat.desc}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>
@@ -160,7 +212,15 @@ export default function HomePage() {
                 body: "Save your processed media instantly to disk. Memory buffers are immediately purged with zero residual cache.",
               },
             ].map((item, i) => (
-              <div key={i} className="neu-tile p-8 flex flex-col gap-4">
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: i * 0.12 }}
+                whileHover={{ y: -5, scale: 1.01 }}
+                className="neu-tile p-8 flex flex-col gap-4 cursor-default transition-shadow hover:shadow-xl"
+              >
                 <div className="w-10 h-10 neu-icon-raised text-xs font-mono text-[var(--text-main)] font-bold">
                   0{i + 1}
                 </div>
@@ -170,7 +230,7 @@ export default function HomePage() {
                 <p className="text-sm text-[var(--text-muted)] leading-relaxed font-light">
                   {item.body}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -192,7 +252,14 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* In-Browser approach */}
-            <div className="neu-tile p-8 flex flex-col gap-6">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              whileHover={{ y: -3 }}
+              className="neu-tile p-8 flex flex-col gap-6"
+            >
               <div className="flex items-center gap-3.5">
                 <div className="w-12 h-12 neu-icon-raised text-[var(--text-main)]">
                   <Shield size={22} />
@@ -223,10 +290,16 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* Cloud approach */}
-            <div className="neu-inset p-8 flex flex-col gap-6 opacity-75">
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="neu-inset p-8 flex flex-col gap-6 opacity-75"
+            >
               <div className="flex items-center gap-3.5">
                 <div className="w-12 h-12 neu-icon-inset text-[var(--text-dim)]">
                   <Cpu size={22} />
@@ -257,13 +330,13 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* ──────────────────────────────────────────
-          LAYER 5 — FAQ
+          LAYER 5 — FAQ (Framer Motion Height Accordion)
       ────────────────────────────────────────── */}
       <section
         id="faq"
@@ -275,30 +348,50 @@ export default function HomePage() {
           </h2>
 
           <div className="flex flex-col gap-4">
-            {faqItems.map((item, i) => (
-              <div key={i} className="neu-tile overflow-hidden">
-                <button
-                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between p-6 text-left cursor-pointer group"
-                >
-                  <span className="text-[15px] font-medium text-[var(--text-main)] transition-colors pr-4">
-                    {item.q}
-                  </span>
-                  <div className="w-8 h-8 neu-icon-raised shrink-0">
-                    {openFaq === i ? (
-                      <Minus size={14} className="text-[var(--text-dim)]" />
-                    ) : (
-                      <Plus size={14} className="text-[var(--text-dim)]" />
+            {faqItems.map((item, i) => {
+              const isOpen = openFaq === i;
+
+              return (
+                <div key={i} className="neu-tile overflow-hidden">
+                  <button
+                    onClick={() => setOpenFaq(isOpen ? null : i)}
+                    className="w-full flex items-center justify-between p-6 text-left cursor-pointer group"
+                  >
+                    <span className="text-[15px] font-medium text-[var(--text-main)] transition-colors pr-4">
+                      {item.q}
+                    </span>
+                    <div className="w-8 h-8 neu-icon-raised shrink-0 flex items-center justify-center">
+                      <motion.div
+                        animate={{ rotate: isOpen ? 180 : 0 }}
+                        transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                      >
+                        {isOpen ? (
+                          <Minus size={14} className="text-[var(--text-main)]" />
+                        ) : (
+                          <Plus size={14} className="text-[var(--text-dim)]" />
+                        )}
+                      </motion.div>
+                    </div>
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                        className="overflow-hidden border-t border-black/[0.04] dark:border-white/[0.03]"
+                      >
+                        <div className="px-6 pb-6 pt-2 text-sm text-[var(--text-muted)] leading-relaxed font-light">
+                          {item.a}
+                        </div>
+                      </motion.div>
                     )}
-                  </div>
-                </button>
-                {openFaq === i && (
-                  <div className="px-6 pb-6 pt-1 text-sm text-[var(--text-muted)] leading-relaxed font-light border-t border-black/[0.04] dark:border-white/[0.03]">
-                    {item.a}
-                  </div>
-                )}
-              </div>
-            ))}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

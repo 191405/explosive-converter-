@@ -16,6 +16,8 @@ export interface NeoDropzoneProps extends Omit<DropzoneOptions, "onDrop"> {
   currentCount?: number;
 }
 
+import { motion } from "framer-motion";
+
 export function NeoDropzone({
   onDropAccepted,
   onDrop: customOnDrop,
@@ -80,14 +82,21 @@ export function NeoDropzone({
   }, [customOnDrop, onDropAccepted]);
 
   return (
-    <div
+    <motion.div
       {...(getRootProps() as any)}
+      animate={{
+        scale: isDragActive ? 1.02 : 1,
+        borderColor: isDragActive ? "var(--text-main)" : "transparent",
+      }}
+      whileHover={{ y: -2 }}
+      whileTap={{ scale: 0.99 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
       className={`
         w-full max-w-3xl mx-auto p-8 sm:p-10 flex flex-col items-center justify-center
-        cursor-pointer transition-all duration-200 relative rounded-2xl select-none font-sans neu-inset
+        cursor-pointer transition-colors duration-200 relative rounded-2xl select-none font-sans neu-inset
         ${
           isDragActive
-            ? "border-2 border-[var(--text-main)] shadow-2xl scale-[1.01]"
+            ? "shadow-2xl ring-2 ring-[var(--text-main)]/20"
             : "hover:border-[var(--border-active)]"
         }
       `}
@@ -95,15 +104,17 @@ export function NeoDropzone({
       <input {...getInputProps()} />
 
       <div className="flex flex-col items-center gap-3.5 text-center">
-        <div
+        <motion.div
+          animate={isDragActive ? { y: [-2, 2, -2], scale: 1.15 } : { y: 0, scale: 1 }}
+          transition={{ repeat: isDragActive ? Infinity : 0, duration: 1.2 }}
           className={`p-3.5 rounded-xl neu-btn transition-colors ${
             isDragActive
-              ? "text-[var(--text-main)] active scale-110"
+              ? "text-[var(--text-main)] active"
               : "text-[var(--text-main)]"
           }`}
         >
           {icon || <FileUp size={22} className="text-[var(--text-main)]" />}
-        </div>
+        </motion.div>
 
         <div className="flex flex-col gap-1">
           <h3 className="text-sm sm:text-base font-semibold text-[var(--text-main)] tracking-tight font-sans">
@@ -141,6 +152,6 @@ export function NeoDropzone({
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

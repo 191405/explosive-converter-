@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Zap,
   Music,
@@ -319,9 +320,13 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       {/* ── Category Accordion Navigation ── */}
       <div className="flex-1 overflow-y-auto p-3 space-y-3 scrollbar-thin">
         {filteredCategories.length === 0 ? (
-          <div className="text-center py-8 px-4 text-xs text-[var(--text-dim)] font-mono">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-8 px-4 text-xs text-[var(--text-dim)] font-mono"
+          >
             No matching tools found for "{searchQuery}"
-          </div>
+          </motion.div>
         ) : (
           filteredCategories.map((category) => {
             const isCategoryOpen = openCategories[category.id] ?? true;
@@ -334,7 +339,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 className="rounded-xl border border-black/[0.06] dark:border-white/[0.06] bg-[var(--bg-tile)] overflow-hidden transition-all shadow-sm"
               >
                 {/* Accordion Dropdown Tab Header */}
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => toggleCategory(category.id)}
                   className={`w-full px-3 py-2.5 flex items-center justify-between text-left transition-colors cursor-pointer ${
                     hasActiveTool
@@ -353,67 +359,93 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/5 dark:bg-white/[0.05] text-[var(--text-dim)]">
                       {category.items.length}
                     </span>
-                    <ChevronDown
-                      size={14}
-                      className={`text-[var(--text-dim)] transition-transform duration-200 ${
-                        isCategoryOpen ? "rotate-180 text-[var(--text-main)]" : ""
-                      }`}
-                    />
+                    <motion.div
+                      animate={{ rotate: isCategoryOpen ? 180 : 0 }}
+                      transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <ChevronDown
+                        size={14}
+                        className={isCategoryOpen ? "text-[var(--text-main)]" : "text-[var(--text-dim)]"}
+                      />
+                    </motion.div>
                   </div>
-                </button>
+                </motion.button>
 
-                {/* Dropdown Items List */}
-                {isCategoryOpen && (
-                  <div className="p-1.5 pt-0.5 flex flex-col gap-1 border-t border-black/[0.04] dark:border-white/[0.04]">
-                    {category.items.map((tool) => {
-                      const isActive = pathname === tool.href;
-                      const ToolIcon = tool.icon;
+                {/* Dropdown Items List with Framer Motion Height Physics */}
+                <AnimatePresence initial={false}>
+                  {isCategoryOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                      className="overflow-hidden border-t border-black/[0.04] dark:border-white/[0.04]"
+                    >
+                      <div className="p-1.5 pt-1 flex flex-col gap-1">
+                        {category.items.map((tool) => {
+                          const isActive = pathname === tool.href;
+                          const ToolIcon = tool.icon;
 
-                      return (
-                        <Link
-                          key={tool.href}
-                          href={tool.href}
-                          onClick={onClose}
-                          className={`group flex items-start gap-2.5 p-2 rounded-lg text-xs transition-all ${
-                            isActive
-                              ? "bg-black/[0.08] dark:bg-white/10 text-[var(--text-main)] font-medium border border-black/10 dark:border-white/20 shadow-sm"
-                              : "text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
-                          }`}
-                        >
-                          <div
-                            className={`p-1.5 rounded-md shrink-0 mt-0.5 transition-colors ${
-                              isActive
-                                ? "bg-black/10 dark:bg-white/20 text-[var(--text-main)]"
-                                : "bg-black/5 dark:bg-white/[0.04] text-[var(--text-dim)] group-hover:text-[var(--text-main)]"
-                            }`}
-                          >
-                            <ToolIcon size={13} />
-                          </div>
-
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between gap-1">
-                              <span className="font-semibold text-[var(--text-main)] truncate">
-                                {tool.label}
-                              </span>
-                              <span
-                                className={`text-[9px] font-mono font-bold px-1 rounded shrink-0 ${
+                          return (
+                            <Link
+                              key={tool.href}
+                              href={tool.href}
+                              onClick={onClose}
+                            >
+                              <motion.div
+                                whileHover={{ x: 3, scale: 1.01 }}
+                                whileTap={{ scale: 0.98 }}
+                                transition={{ type: "spring", stiffness: 450, damping: 30 }}
+                                className={`group relative flex items-start gap-2.5 p-2 rounded-lg text-xs transition-colors cursor-pointer ${
                                   isActive
-                                    ? "bg-black/10 dark:bg-white/20 text-[var(--text-main)]"
-                                    : "bg-black/5 dark:bg-white/[0.04] text-[var(--text-dim)]"
+                                    ? "bg-black/[0.08] dark:bg-white/10 text-[var(--text-main)] font-medium border border-black/10 dark:border-white/20 shadow-sm"
+                                    : "text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
                                 }`}
                               >
-                                {tool.tag}
-                              </span>
-                            </div>
-                            <p className="text-[10px] text-[var(--text-dim)] truncate mt-0.5 font-sans">
-                              {tool.sublabel}
-                            </p>
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                )}
+                                {isActive && (
+                                  <motion.div
+                                    layoutId="active-tool-indicator"
+                                    className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-[var(--text-main)] rounded-r-full"
+                                  />
+                                )}
+
+                                <div
+                                  className={`p-1.5 rounded-md shrink-0 mt-0.5 transition-colors ${
+                                    isActive
+                                      ? "bg-black/10 dark:bg-white/20 text-[var(--text-main)]"
+                                      : "bg-black/5 dark:bg-white/[0.04] text-[var(--text-dim)] group-hover:text-[var(--text-main)]"
+                                  }`}
+                                >
+                                  <ToolIcon size={13} />
+                                </div>
+
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center justify-between gap-1">
+                                    <span className="font-semibold text-[var(--text-main)] truncate">
+                                      {tool.label}
+                                    </span>
+                                    <span
+                                      className={`text-[9px] font-mono font-bold px-1 rounded shrink-0 ${
+                                        isActive
+                                          ? "bg-black/10 dark:bg-white/20 text-[var(--text-main)]"
+                                          : "bg-black/5 dark:bg-white/[0.04] text-[var(--text-dim)]"
+                                      }`}
+                                    >
+                                      {tool.tag}
+                                    </span>
+                                  </div>
+                                  <p className="text-[10px] text-[var(--text-dim)] truncate mt-0.5 font-sans">
+                                    {tool.sublabel}
+                                  </p>
+                                </div>
+                              </motion.div>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             );
           })
@@ -423,7 +455,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       {/* ── Sidebar Footer / Quick Tools ── */}
       <div className="p-3 bg-[var(--bg-tile)] border-t border-black/[0.08] dark:border-white/[0.08] flex flex-col gap-2">
         <div className="grid grid-cols-2 gap-2">
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => {
               if (onClose) onClose();
               window.dispatchEvent(new Event("toggle-console-drawer"));
@@ -432,9 +466,11 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           >
             <Terminal size={12} className="text-[var(--text-main)]" />
             <span>Terminal</span>
-          </button>
+          </motion.button>
 
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => {
               if (onClose) onClose();
               document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
@@ -443,7 +479,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           >
             <Search size={12} className="text-[var(--text-dim)]" />
             <span>Search ⌘K</span>
-          </button>
+          </motion.button>
         </div>
 
         <div className="flex items-center justify-between px-1 text-[10px] font-mono text-[var(--text-dim)] pt-1 border-t border-black/[0.04] dark:border-white/[0.04]">
