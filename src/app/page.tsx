@@ -18,188 +18,125 @@ import {
   Binary,
   Archive,
   ArrowRight,
-  Cpu,
+  Sparkles,
   Layers,
-  Terminal,
-  Activity,
   HardDrive,
   FileUp,
   Sliders,
   CheckCircle2,
+  Lock,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { emitLog } from "@/lib/engine/orchestrator";
 
-interface ToolSpec {
+interface ToolItem {
   href: string;
   title: string;
-  code: string;
   description: string;
   icon: any;
-  engine: string;
   formats: string;
   tag: string;
-  badgeColor?: string;
+  highlight?: boolean;
 }
 
-interface RackCategory {
-  title: string;
-  code: string;
-  summary: string;
-  tools: ToolSpec[];
-}
-
-const STUDIO_RACKS: RackCategory[] = [
+const TOOLS_LIST: ToolItem[] = [
   {
-    title: "Forensics, Vectors & OCR",
-    code: "01-SEC",
-    summary: "Deep binary header inspection, Bézier curve vectorization, and client-side optical character recognition.",
-    tools: [
-      {
-        href: "/metadata",
-        title: "Metadata & Stego Scrubber",
-        code: "META-01",
-        description: "Scrub GPS & hardware identifiers, inspect EXIF markers, and visualize LSB steganography bitplanes.",
-        icon: ShieldCheck,
-        engine: "In-Memory Header Parser",
-        formats: "JPG, PNG, TIFF, MP4, WebP",
-        tag: "RAW EXIF",
-      },
-      {
-        href: "/vectorize",
-        title: "Raster to SVG Vectorizer",
-        code: "VEC-02",
-        description: "Convert pixel images, sketches, and scans into infinitely scalable, smooth SVG vector paths.",
-        icon: Shapes,
-        engine: "Bézier Boundary Tracer",
-        formats: "PNG, JPG, BMP, Scans",
-        tag: "VECTOR",
-      },
-      {
-        href: "/ocr",
-        title: "Neural Document OCR",
-        code: "OCR-03",
-        description: "Extract text layers, bounding box coordinates, and searchable PDFs directly in browser RAM.",
-        icon: ScanText,
-        engine: "Tesseract WASM SIMD",
-        formats: "PNG, JPG, PDF, TIFF",
-        tag: "NEURAL",
-      },
-    ],
+    href: "/metadata",
+    title: "Metadata & Steganography",
+    description: "Deep-scan binary headers for GPS, camera tracking markers, and inspect LSB bitplane steganography.",
+    icon: ShieldCheck,
+    formats: "JPG, PNG, MP4, WebP",
+    tag: "Forensics",
+    highlight: true,
   },
   {
-    title: "Spatial Audio & Animated Media",
-    code: "02-DSP",
-    summary: "Real-time WebAudio Biquad filter matrix, vocal stem phase cancellation, and frame-diffing optimization.",
-    tools: [
-      {
-        href: "/dsp",
-        title: "Spatial DSP & Stem Isolator",
-        code: "DSP-01",
-        description: "Stereo phase cancellation for vocal cut / isolation, 3D binaural panning, and 8-band parametric EQ.",
-        icon: Radio,
-        engine: "WebAudio Biquad Node Matrix",
-        formats: "WAV, MP3, AAC, FLAC, OGG",
-        tag: "48kHz DSP",
-      },
-      {
-        href: "/animator",
-        title: "Animated WebP/GIF Diff",
-        code: "DIFF-02",
-        description: "Generate lightweight animations with temporal delta deduplication and 256-color palette dithering.",
-        icon: Film,
-        engine: "FFmpeg WASM PaletteGen",
-        formats: "MP4, WebM, MOV, GIF",
-        tag: "DELTA DIFF",
-      },
-      {
-        href: "/audio",
-        title: "Audio Stream Converter",
-        code: "AUD-03",
-        description: "Extract audio streams from video files or transcode between audio formats with custom bitrates.",
-        icon: Music,
-        engine: "libmp3lame / opus",
-        formats: "MP3, WAV, AAC, FLAC, OGG",
-        tag: "CODEC",
-      },
-      {
-        href: "/trim",
-        title: "Waveform PCM Slicer",
-        code: "PCM-04",
-        description: "Interactive visual waveform cutting with millisecond precision and lossless client-side PCM export.",
-        icon: Scissors,
-        engine: "AudioBuffer PCM Slicer",
-        formats: "MP3, WAV, AAC, FLAC",
-        tag: "PCM 16-BIT",
-      },
-    ],
+    href: "/vectorize",
+    title: "Raster to SVG Vectorizer",
+    description: "Convert pixel images, logos, and sketches into crisp, infinitely scalable Bézier vector curves.",
+    icon: Shapes,
+    formats: "PNG, JPG, BMP",
+    tag: "Vector",
   },
   {
-    title: "Code, Containers & Document Studio",
-    code: "03-IO",
-    summary: "AST schema transformations, in-memory archive repacking, video compression, and PDF manipulation.",
-    tools: [
-      {
-        href: "/data-morph",
-        title: "Universal Code AST Morph",
-        code: "AST-01",
-        description: "Bi-directional instant conversion between JSON, YAML, TOML, CSV, XML, and TypeScript interfaces.",
-        icon: Binary,
-        engine: "AST Parser & Serializer",
-        formats: "JSON, YAML, CSV, TS, XML",
-        tag: "AST SCHEMA",
-      },
-      {
-        href: "/archive",
-        title: "In-Memory Archive Studio",
-        code: "ARC-02",
-        description: "Inspect nested directory catalogs, extract selective files, and pack in-memory ZIP/TAR archives.",
-        icon: Archive,
-        engine: "Fflate In-Memory Stream",
-        formats: "ZIP, TAR, GZ, ZSTD",
-        tag: "STREAM IO",
-      },
-      {
-        href: "/compress",
-        title: "H.264 Video Compressor",
-        code: "x264-03",
-        description: "Reduce video bitrate using H.264 encoding with Constant Rate Factor (CRF) and preset speed tuning.",
-        icon: FileDown,
-        engine: "FFmpeg WASM (libx264)",
-        formats: "MP4, MOV, MKV, WebM",
-        tag: "libx264",
-      },
-      {
-        href: "/image",
-        title: "Pro Canvas Transcoder",
-        code: "IMG-04",
-        description: "Batch transcode image formats, adjust compression quality, and apply proportional dimension scaling.",
-        icon: ImageIcon,
-        engine: "HTML5 Canvas Engine",
-        formats: "PNG, JPG, WEBP, BMP",
-        tag: "CANVAS",
-      },
-      {
-        href: "/pdf",
-        title: "PDF Document Studio",
-        code: "PDF-05",
-        description: "Split document page ranges, merge multiple PDF files, and reorder document structures locally.",
-        icon: FileText,
-        engine: "PDF-Lib Core",
-        formats: "PDF",
-        tag: "PDF-LIB",
-      },
-      {
-        href: "/record",
-        title: "Screen & Hardware Capture",
-        code: "REC-06",
-        description: "Capture application windows, full displays, or webcams with synchronized microphone audio.",
-        icon: Video,
-        engine: "MediaRecorder API",
-        formats: "WebM, MP4 (VP9 / Opus)",
-        tag: "DISPLAY",
-      },
-    ],
+    href: "/ocr",
+    title: "Neural Document OCR",
+    description: "Extract clean text layers and bounding coordinates directly in browser RAM with Tesseract WASM.",
+    icon: ScanText,
+    formats: "PNG, JPG, PDF",
+    tag: "Neural",
+  },
+  {
+    href: "/dsp",
+    title: "Spatial Audio & Stem Isolator",
+    description: "Real-time WebAudio Biquad filter matrix, vocal center phase cancellation, and 3D spatial panning.",
+    icon: Radio,
+    formats: "WAV, MP3, FLAC, AAC",
+    tag: "Spatial DSP",
+    highlight: true,
+  },
+  {
+    href: "/animator",
+    title: "Animated WebP / GIF Diff",
+    description: "Temporal delta deduplication and color palette dithering to produce lightweight animations.",
+    icon: Film,
+    formats: "MP4, WebM, MOV, GIF",
+    tag: "Animation",
+  },
+  {
+    href: "/data-morph",
+    title: "Universal Code AST Morph",
+    description: "Instant bi-directional schema conversion between JSON, YAML, TOML, CSV, XML, and TypeScript types.",
+    icon: Binary,
+    formats: "JSON, YAML, CSV, TS",
+    tag: "AST Schema",
+  },
+  {
+    href: "/archive",
+    title: "In-Memory Archive Studio",
+    description: "Inspect multi-level archive directories, extract files selectively, and repack in-memory ZIP/TAR archives.",
+    icon: Archive,
+    formats: "ZIP, TAR, GZ",
+    tag: "Stream IO",
+  },
+  {
+    href: "/compress",
+    title: "H.264 Video Compressor",
+    description: "CRF quality tuning and speed presets to reduce video file sizes locally with FFmpeg WASM.",
+    icon: FileDown,
+    formats: "MP4, MOV, WebM, MKV",
+    tag: "libx264",
+  },
+  {
+    href: "/audio",
+    title: "Audio Stream Converter",
+    description: "Transcode bitrates, sample rates (44.1k/48k/96k), and extract raw audio tracks from video files.",
+    icon: Music,
+    formats: "MP3, WAV, FLAC, AAC",
+    tag: "Codec",
+  },
+  {
+    href: "/trim",
+    title: "Waveform PCM Slicer",
+    description: "Interactive visual waveform slicing with millisecond precision and lossless client PCM export.",
+    icon: Scissors,
+    formats: "MP3, WAV, AAC",
+    tag: "PCM 16-Bit",
+  },
+  {
+    href: "/image",
+    title: "Canvas Image Transcoder",
+    description: "Batch transcode image formats, adjust compression levels, and resize dimensions with GPU acceleration.",
+    icon: ImageIcon,
+    formats: "PNG, JPG, WebP, AVIF",
+    tag: "Canvas GPU",
+  },
+  {
+    href: "/pdf",
+    title: "PDF Document Studio",
+    description: "Merge multiple documents, extract specific page ranges, and rotate page orientations in-memory.",
+    icon: FileText,
+    formats: "PDF",
+    tag: "PDF-Lib",
   },
 ];
 
@@ -237,7 +174,7 @@ export default function Home() {
       return [
         { label: "Spatial DSP & Stem Isolator", href: "/dsp", icon: Radio },
         { label: "Waveform PCM Slicer", href: "/trim", icon: Scissors },
-        { label: "Transcode Bitrate & Sample Rate", href: "/audio", icon: Music },
+        { label: "Transcode Audio Stream", href: "/audio", icon: Music },
       ];
     }
     if (name.endsWith(".json") || name.endsWith(".yaml") || name.endsWith(".yml") || name.endsWith(".csv") || name.endsWith(".xml")) {
@@ -259,74 +196,62 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col w-full gap-8 max-w-6xl mx-auto font-sans pb-16">
-      {/* ── Studio Command Header & Telemetry Summary ── */}
-      <section className="w-full flex flex-col gap-4 border-b border-white/[0.08] pb-6 pt-2 select-none">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-zinc-500">
-              <span className="text-amber-400 font-bold">EXPLOSIVE STUDIO</span>
-              <span>//</span>
-              <span>WASM SIMD INSTRUMENTATION RACK</span>
-            </div>
-            <h1 className="text-xl sm:text-2xl font-bold font-mono tracking-tight text-white mt-1">
-              Industrial Media & Data Engineering Suite
-            </h1>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => window.dispatchEvent(new Event("open-system-tour"))}
-              className="btn-studio-secondary flex items-center gap-1.5"
-            >
-              <Cpu size={13} className="text-amber-400" />
-              <span>ARCHITECTURE GUIDE</span>
-            </button>
-            <button
-              onClick={() => window.dispatchEvent(new Event("open-feedback-modal"))}
-              className="btn-studio-secondary flex items-center gap-1.5"
-            >
-              <span>FEEDBACK</span>
-            </button>
-          </div>
+    <div className="flex flex-col w-full gap-10 max-w-5xl mx-auto font-sans pb-20">
+      {/* ── Hero Section ── */}
+      <section className="text-center space-y-3 pt-4 sm:pt-6">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-zinc-300 text-xs font-mono">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+          <span>WebAssembly SIMD • Zero-Server Local Processing</span>
         </div>
+
+        <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-white max-w-2xl mx-auto leading-tight">
+          The In-Browser Media & File Engineering Studio
+        </h1>
+
+        <p className="text-zinc-400 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
+          High-performance media transcoding, forensic header inspection, vectorization, and document tools running locally on your hardware.
+        </p>
       </section>
 
-      {/* ── Universal Multi-Format Ingest Deck ── */}
-      <section className="w-full studio-panel p-5 flex flex-col gap-4">
-        <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 text-xs font-mono">
-          <div className="flex items-center gap-2">
-            <HardDrive size={14} className="text-amber-400" />
-            <span className="font-bold text-white uppercase tracking-wider">Universal File Ingest Deck</span>
-          </div>
-          <span className="text-[10px] text-zinc-500">100% CLIENT-SIDE IN-MEMORY DISPATCH</span>
-        </div>
-
+      {/* ── Universal Dropdeck ── */}
+      <section className="w-full">
         {!analyzedFile ? (
-          <label className="w-full border border-dashed border-white/[0.12] hover:border-amber-400/60 hover:bg-[#11131a] transition-all rounded p-6 sm:p-8 flex flex-col items-center justify-center gap-2.5 cursor-pointer bg-[#0a0b0f] select-none">
+          <label className="w-full border border-dashed border-white/[0.12] hover:border-amber-400/50 hover:bg-white/[0.02] transition-all rounded-2xl p-8 sm:p-10 flex flex-col items-center justify-center gap-3.5 cursor-pointer bg-[#0c0d13]/80 backdrop-blur-md shadow-xl select-none group">
             <input type="file" onChange={handleUniversalIngest} className="hidden" />
-            <div className="p-2.5 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300">
-              <FileUp size={20} className="text-amber-400" />
+            <div className="p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-zinc-300 group-hover:text-amber-400 group-hover:bg-amber-400/10 transition-colors">
+              <FileUp size={24} />
             </div>
-            <div className="text-center">
-              <span className="font-mono text-xs font-bold text-zinc-200 block uppercase tracking-wider">
-                Drop any file to analyze container and route to workstations
+
+            <div className="text-center space-y-1">
+              <span className="text-sm font-medium text-white block">
+                Drop any file to inspect container and launch workstation
               </span>
-              <span className="font-mono text-[10px] text-zinc-500 block mt-0.5">
-                Video, Audio, Images, Scans, PDFs, JSON/YAML, and Archives supported
+              <span className="text-xs text-zinc-500 block">
+                Supports Video, Audio, Scans, Images, PDFs, Data schemas, and Archives (up to 2 GB)
               </span>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-1.5 mt-2">
+              {["MP4/MOV", "WAV/MP3", "PNG/JPG", "PDF", "JSON/YAML", "ZIP/TAR"].map((fmt) => (
+                <span
+                  key={fmt}
+                  className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/[0.04] border border-white/[0.06] text-zinc-400"
+                >
+                  {fmt}
+                </span>
+              ))}
             </div>
           </label>
         ) : (
-          <div className="p-4 bg-[#11131a] border border-white/[0.08] rounded flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono text-xs">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded bg-amber-400 text-black font-bold">
-                <HardDrive size={18} />
+          <div className="p-5 bg-[#0c0d13] border border-white/[0.12] rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
+            <div className="flex items-center gap-3.5">
+              <div className="p-3 rounded-xl bg-amber-400 text-black font-bold">
+                <HardDrive size={20} />
               </div>
               <div>
-                <span className="text-white font-bold block">{analyzedFile.name}</span>
-                <span className="text-[10px] text-zinc-400">
-                  {(analyzedFile.size / 1024).toFixed(1)} KB • {analyzedFile.type || "binary payload"}
+                <span className="text-sm font-semibold text-white block">{analyzedFile.name}</span>
+                <span className="text-xs text-zinc-400 font-mono">
+                  {(analyzedFile.size / 1024).toFixed(1)} KB • {analyzedFile.type || "Binary Container"}
                 </span>
               </div>
             </div>
@@ -338,79 +263,72 @@ export default function Home() {
                   <button
                     key={route.href}
                     onClick={() => router.push(route.href)}
-                    className="btn-studio-accent flex items-center gap-1.5"
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-white text-black font-medium text-xs hover:bg-zinc-200 transition-colors shadow cursor-pointer"
                   >
-                    <Icon size={12} />
+                    <Icon size={13} />
                     <span>{route.label}</span>
                   </button>
                 );
               })}
               <button
                 onClick={() => setAnalyzedFile(null)}
-                className="px-2.5 py-1 text-[10px] text-zinc-500 hover:text-white"
+                className="px-3 py-2 text-xs text-zinc-500 hover:text-white transition-colors cursor-pointer"
               >
-                Reset
+                Change File
               </button>
             </div>
           </div>
         )}
       </section>
 
-      {/* ── Studio Racks Grid ── */}
-      <div className="w-full flex flex-col gap-8">
-        {STUDIO_RACKS.map((rack) => (
-          <section key={rack.code} className="flex flex-col gap-3">
-            <div className="flex items-center justify-between border-b border-white/[0.06] pb-2 font-mono text-xs">
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] text-amber-400 font-bold bg-amber-400/10 px-1.5 py-0.5 rounded border border-amber-400/20">
-                  {rack.code}
-                </span>
-                <h2 className="font-bold text-white uppercase tracking-wider">{rack.title}</h2>
-              </div>
-              <span className="text-[10px] text-zinc-500 hidden sm:inline">{rack.summary}</span>
-            </div>
+      {/* ── Studio Tools Matrix ── */}
+      <section className="space-y-4">
+        <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+          <h2 className="text-sm font-semibold text-white tracking-wide uppercase font-mono">
+            Engineering Workstations ({TOOLS_LIST.length})
+          </h2>
+          <span className="text-xs text-zinc-500 font-mono">100% In-Memory Execution</span>
+        </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {rack.tools.map((tool) => {
-                const Icon = tool.icon;
-                return (
-                  <Link
-                    key={tool.href}
-                    href={tool.href}
-                    className="group studio-panel p-4 flex flex-col justify-between gap-4 hover:border-amber-400/50 hover:bg-[#11131a] transition-all"
-                  >
-                    <div className="flex flex-col gap-2">
-                      <div className="flex items-center justify-between font-mono text-[10px]">
-                        <div className="p-2 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300 group-hover:text-amber-400 group-hover:bg-amber-400/10 transition-colors">
-                          <Icon size={16} />
-                        </div>
-                        <span className="bg-[#161922] text-zinc-400 px-1.5 py-0.5 rounded border border-white/[0.06] font-bold">
-                          {tool.tag}
-                        </span>
-                      </div>
-
-                      <div>
-                        <h3 className="text-xs font-mono font-bold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
-                          <span>{tool.title}</span>
-                          <ArrowRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
-                        </h3>
-                        <p className="text-[11px] text-zinc-400 mt-1 line-clamp-2 leading-relaxed">
-                          {tool.description}
-                        </p>
-                      </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          {TOOLS_LIST.map((tool) => {
+            const Icon = tool.icon;
+            return (
+              <Link
+                key={tool.href}
+                href={tool.href}
+                className="group p-5 rounded-xl bg-[#0c0d13]/70 hover:bg-[#11131a] border border-white/[0.07] hover:border-white/[0.18] transition-all flex flex-col justify-between gap-4 shadow-sm hover:shadow-md"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="p-2.5 rounded-lg bg-white/[0.04] border border-white/[0.07] text-zinc-300 group-hover:text-amber-400 group-hover:bg-amber-400/10 transition-colors">
+                      <Icon size={18} />
                     </div>
+                    <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.06] text-zinc-400">
+                      {tool.tag}
+                    </span>
+                  </div>
 
-                    <div className="pt-2 border-t border-white/[0.05] flex items-center justify-between font-mono text-[9px] text-zinc-500 uppercase">
-                      <span>{tool.engine}</span>
-                      <span className="text-zinc-400">{tool.formats}</span>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </section>
-        ))}
-      </div>
+                  <div>
+                    <h3 className="text-sm font-semibold text-white group-hover:text-amber-300 transition-colors flex items-center justify-between">
+                      <span>{tool.title}</span>
+                      <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 transition-opacity text-amber-400" />
+                    </h3>
+                    <p className="text-xs text-zinc-400 mt-1 leading-relaxed line-clamp-2 font-sans">
+                      {tool.description}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-white/[0.05] flex items-center justify-between text-[11px] font-mono text-zinc-500">
+                  <span>Supported Formats:</span>
+                  <span className="text-zinc-400">{tool.formats}</span>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
     </div>
   );
 }

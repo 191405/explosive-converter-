@@ -26,15 +26,16 @@ const SITE_URL = "https://explosivetools.dpdns.org";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Explosive Converter & Studio Suite — High-Performance File & Media Engineering",
+    default: "Explosive Tools — In-Browser Media & File Engineering Studio",
     template: "%s | Explosive Tools",
   },
   description:
-    "Industrial-grade media converter and document studio powered by WebAssembly SIMD and stream pipelines. Forensic metadata scrubbing, vector tracing, OCR, spatial audio DSP, video compression, PDF manipulation, and in-memory archive repacking.",
+    "High-performance client-side media converter and forensic engineering studio powered by WebAssembly SIMD. Audio DSP, H.264 video compression, OCR, raster-to-SVG vectorization, PDF manipulation, and in-memory archive repacking. 100% private.",
   keywords: [
+    "Explosive Tools",
+    "Explosive Converter",
     "file converter",
-    "media studio",
-    "webassembly converter",
+    "webassembly media converter",
     "metadata scrubber",
     "steganography inspector",
     "image vectorizer",
@@ -47,23 +48,27 @@ export const metadata: Metadata = {
     "pdf tools",
     "ffmpeg wasm",
     "private file tools",
-    "offline converter",
   ],
   authors: [{ name: "Explosive Tools" }],
   creator: "Explosive Tools",
   publisher: "Explosive Tools",
-  applicationName: "Explosive Studio Suite",
+  applicationName: "Explosive Tools",
   alternates: {
     canonical: "/",
   },
   icons: {
     icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
       { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/icon.svg", sizes: "192x192", type: "image/svg+xml" },
-      { url: "/icon.svg", sizes: "512x512", type: "image/svg+xml" },
     ],
-    apple: [{ url: "/icon.svg", sizes: "180x180", type: "image/svg+xml" }],
-    shortcut: ["/icon.svg"],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    shortcut: ["/favicon.ico"],
   },
   manifest: "/manifest.webmanifest",
   robots: {
@@ -82,12 +87,12 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     siteName: "Explosive Tools",
-    title: "Explosive Converter & Studio Suite",
+    title: "Explosive Tools — In-Browser Media & File Engineering Studio",
     description:
       "High-grade client-side WebAssembly media and document engineering suite with zero-server privacy.",
     images: [
       {
-        url: "/icon.svg",
+        url: "/icon-512.png",
         width: 512,
         height: 512,
         alt: "Explosive Tools Logo",
@@ -95,11 +100,11 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
-    card: "summary",
-    title: "Explosive Converter & Studio Suite",
+    card: "summary_large_image",
+    title: "Explosive Tools — In-Browser Media & File Engineering Studio",
     description:
       "High-performance in-browser media suite powered by WebAssembly SIMD.",
-    images: ["/icon.svg"],
+    images: ["/icon-512.png"],
   },
   verification: {
     google: "w4UVOlECyiP4Dmq5bhe59smLzIO1USAxJUl-UFRmMCI",
@@ -111,13 +116,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const jsonLd = {
+  const jsonLdWebSite = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Explosive Tools",
+    "alternateName": ["Explosive Converter", "Explosive Studio", "Explosive"],
+    "url": "https://explosivetools.dpdns.org",
+  };
+
+  const jsonLdApp = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "Explosive Converter",
+    "name": "Explosive Tools",
     "url": "https://explosivetools.dpdns.org",
-    "logo": "https://explosivetools.dpdns.org/icon.svg",
-    "image": "https://explosivetools.dpdns.org/icon.svg",
+    "logo": "https://explosivetools.dpdns.org/icon-512.png",
+    "image": "https://explosivetools.dpdns.org/icon-512.png",
     "description":
       "High-performance client-side WebAssembly media converter and document processing suite. Convert audio, compress video, transcode images, extract OCR, vectorize graphics, scrub metadata, and manipulate PDFs in memory.",
     "applicationCategory": "MultimediaApplication",
@@ -148,11 +161,17 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/icon.svg" />
+        <link rel="icon" href="/favicon.ico" sizes="48x48" />
+        <link rel="icon" href="/favicon-48x48.png" sizes="48x48" type="image/png" />
+        <link rel="icon" href="/favicon-96x96.png" sizes="96x96" type="image/png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebSite) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdApp) }}
         />
       </head>
       <body className="min-h-full flex flex-col bg-[#050507] text-[#f4f4f5] font-sans antialiased selection:bg-zinc-700 selection:text-white relative" suppressHydrationWarning>
