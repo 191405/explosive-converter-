@@ -1,7 +1,6 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { motion } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -12,41 +11,32 @@ export function ThemeToggle() {
   useEffect(() => setMounted(true), []);
 
   if (!mounted) {
-    return <div className="w-9 h-9 rounded-xl" />;
+    return <div className="w-9 h-9 rounded-xl opacity-0" />;
   }
 
   const isDark = resolvedTheme === "dark";
 
   return (
-    <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+    <button
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="relative flex items-center justify-center w-9 h-9 rounded-xl glass-panel text-foreground transition-colors overflow-hidden"
-      aria-label="Toggle theme"
+      className="neu-btn relative flex items-center justify-center w-9 h-9 rounded-xl text-[var(--text-main)] transition-all cursor-pointer overflow-hidden p-0"
+      aria-label="Toggle light/dark theme"
+      title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
     >
-      <motion.div
-        initial={false}
-        animate={{
-          y: isDark ? 0 : 30,
-          opacity: isDark ? 1 : 0,
-        }}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        className="absolute"
+      <div
+        className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${
+          isDark ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-50 pointer-events-none"
+        }`}
       >
-        <Moon size={16} />
-      </motion.div>
-      <motion.div
-        initial={false}
-        animate={{
-          y: isDark ? -30 : 0,
-          opacity: isDark ? 0 : 1,
-        }}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        className="absolute"
+        <Moon size={16} strokeWidth={2} />
+      </div>
+      <div
+        className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${
+          !isDark ? "opacity-100 rotate-0 scale-100 text-amber-500" : "opacity-0 rotate-90 scale-50 pointer-events-none"
+        }`}
       >
-        <Sun size={16} />
-      </motion.div>
-    </motion.button>
+        <Sun size={16} strokeWidth={2} className="text-zinc-900 dark:text-amber-500" />
+      </div>
+    </button>
   );
 }

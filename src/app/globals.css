@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ── Dark Neumorphic & Tactile Industrial Studio Design System ── */
-:root, .dark, .light {
+:root, .dark {
   --bg-main: #0a0b10;
   --bg-tile: #11131a;
   --bg-tile-elevated: #151822;
@@ -15,7 +15,7 @@
   --accent-steel: #7c8ba1;
   --accent-titanium: #d1d5db;
 
-  /* Refined Dual-Light Neumorphic Shadows for #11131a */
+  /* Dual-Light Neumorphic Shadows for Dark Mode (#11131a) */
   --neu-flat: 8px 8px 18px #050609, -8px -8px 18px #191c28;
   --neu-raised: 12px 12px 26px #040507, -12px -12px 26px #1d212f;
   --neu-inset: inset 3px 3px 7px #050609, inset -3px -3px 7px #1a1d29;
@@ -23,6 +23,37 @@
   --neu-convex: linear-gradient(145deg, #151822, #0d0f15);
   --neu-concave: linear-gradient(145deg, #0d0f15, #151822);
   --neu-card-bevel: inset 1px 1px 1px rgba(255, 255, 255, 0.08), inset -1px -1px 1px rgba(0, 0, 0, 0.6);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-active: rgba(255, 255, 255, 0.16);
+  --header-bg: rgba(8, 9, 13, 0.9);
+}
+
+/* ── Light Mode / Architectural Slate Porcelain System ── */
+.light {
+  --bg-main: #f1f3f7;
+  --bg-tile: #ffffff;
+  --bg-tile-elevated: #ffffff;
+  --bg-tile-inset: #e5e8f0;
+  
+  --text-main: #090d16;
+  --text-muted: #475569;
+  --text-dim: #94a3b8;
+
+  --accent-warm: #090d16;
+  --accent-steel: #475569;
+  --accent-titanium: #334155;
+
+  /* Dual-Light Neumorphic Shadows for Light Mode (#ffffff on #f1f3f7) */
+  --neu-flat: 6px 6px 14px #d0d5e2, -6px -6px 14px #ffffff;
+  --neu-raised: 10px 10px 22px #c2c9d8, -10px -10px 22px #ffffff;
+  --neu-inset: inset 3px 3px 6px #d0d5e2, inset -3px -3px 6px #ffffff;
+  --neu-pressed: inset 5px 5px 9px #c2c9d8, inset -5px -5px 9px #ffffff;
+  --neu-convex: linear-gradient(145deg, #ffffff, #edf0f6);
+  --neu-concave: linear-gradient(145deg, #edf0f6, #ffffff);
+  --neu-card-bevel: inset 1px 1px 1px rgba(255, 255, 255, 0.95), inset -1px -1px 1px rgba(0, 0, 0, 0.04);
+  --border-subtle: rgba(0, 0, 0, 0.07);
+  --border-active: rgba(0, 0, 0, 0.16);
+  --header-bg: rgba(241, 243, 247, 0.9);
 }
 
 @theme inline {
@@ -46,6 +77,52 @@ html, body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Light mode utility overrides for high contrast & crisp readability */
+.light .text-white {
+  color: #090d16 !important;
+}
+
+.light .text-zinc-200 {
+  color: #1e293b !important;
+}
+
+.light .text-zinc-300 {
+  color: #334155 !important;
+}
+
+.light .text-zinc-400 {
+  color: #475569 !important;
+}
+
+.light .text-zinc-500 {
+  color: #64748b !important;
+}
+
+.light .border-white\/\[0\.06\],
+.light .border-white\/\[0\.08\],
+.light .border-white\/\[0\.1\] {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.light .bg-white\/\[0\.02\],
+.light .bg-white\/\[0\.04\],
+.light .bg-white\/\[0\.05\],
+.light .bg-white\/\[0\.06\] {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+.light .bg-\[\#08090d\],
+.light .bg-\[\#0a0b10\],
+.light .bg-\[\#07080b\] {
+  background-color: var(--bg-main) !important;
+}
+
+.light .bg-\[\#11131a\],
+.light .bg-\[\#12141c\] {
+  background-color: var(--bg-tile) !important;
 }
 
 /* ── Tactile Neumorphic Tile Card ── */
@@ -53,7 +130,7 @@ html, body {
   background: var(--neu-convex);
   border-radius: 18px;
   box-shadow: var(--neu-flat), var(--neu-card-bevel);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   max-width: 100%;
@@ -61,23 +138,23 @@ html, body {
 
 .neu-tile:hover {
   transform: translateY(-3px);
-  box-shadow: var(--neu-raised), inset 1px 1px 1px rgba(255, 255, 255, 0.12), inset -1px -1px 1px rgba(0, 0, 0, 0.7);
-  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: var(--neu-raised), var(--neu-card-bevel);
+  border-color: var(--border-active);
 }
 
 .neu-tile-interactive {
   background: var(--neu-convex);
   border-radius: 18px;
   box-shadow: var(--neu-flat), var(--neu-card-bevel);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   max-width: 100%;
 }
 
 .neu-tile-interactive:hover {
   transform: translateY(-2px);
-  box-shadow: var(--neu-raised), inset 1px 1px 1px rgba(255, 255, 255, 0.14), inset -1px -1px 1px rgba(0, 0, 0, 0.7);
-  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: var(--neu-raised), var(--neu-card-bevel);
+  border-color: var(--border-active);
 }
 
 /* ── Neumorphic Inset Well / Display Screen ── */
@@ -85,7 +162,7 @@ html, body {
   background: var(--bg-tile-inset);
   box-shadow: var(--neu-inset);
   border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
   max-width: 100%;
 }
 
@@ -94,7 +171,7 @@ html, body {
   background: var(--bg-tile-inset);
   box-shadow: var(--neu-inset);
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -103,9 +180,9 @@ html, body {
 
 .neu-icon-raised {
   background: var(--neu-convex);
-  box-shadow: 4px 4px 10px #050609, -4px -4px 10px #191c28, inset 1px 1px 0px rgba(255, 255, 255, 0.08);
+  box-shadow: var(--neu-flat);
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -115,8 +192,8 @@ html, body {
 /* ── Neumorphic Buttons ── */
 .neu-btn {
   background: var(--neu-convex);
-  box-shadow: 5px 5px 12px #050609, -5px -5px 12px #191c28, var(--neu-card-bevel);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: var(--neu-flat);
+  border: 1px solid var(--border-subtle);
   border-radius: 12px;
   color: var(--text-main);
   font-weight: 600;
@@ -126,16 +203,16 @@ html, body {
 }
 
 .neu-btn:hover {
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.16);
+  color: var(--text-main);
+  border-color: var(--border-active);
   transform: translateY(-1px);
-  box-shadow: 7px 7px 16px #040507, -7px -7px 16px #1c202e, inset 1px 1px 1px rgba(255, 255, 255, 0.12);
+  box-shadow: var(--neu-raised);
 }
 
 .neu-btn:active, .neu-btn.active {
   box-shadow: var(--neu-pressed);
   background: var(--bg-tile-inset);
-  border-color: rgba(255, 255, 255, 0.02);
+  border-color: var(--border-subtle);
   transform: translateY(1px);
 }
 
@@ -162,6 +239,18 @@ html, body {
   transform: translateY(1px);
 }
 
+.light .neu-btn-primary {
+  background: #090d16;
+  color: #ffffff;
+  box-shadow: 5px 5px 12px #c2c9d8, -5px -5px 12px #ffffff;
+  border: 1px solid #090d16;
+}
+
+.light .neu-btn-primary:hover {
+  background: #1e293b;
+  box-shadow: 7px 7px 18px #b4bcd0, -7px -7px 18px #ffffff;
+}
+
 /* ── Tactile Slider ── */
 input[type="range"].neu-slider {
   appearance: none;
@@ -181,7 +270,7 @@ input[type="range"].neu-slider::-webkit-slider-thumb {
   height: 20px;
   border-radius: 50%;
   background: var(--neu-convex);
-  box-shadow: 2px 2px 6px #050608, -2px -2px 6px #1c202c;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2), -2px -2px 6px rgba(255, 255, 255, 0.8);
   border: 2px solid var(--accent-warm);
   cursor: ew-resize;
   transition: transform 0.1s ease;
@@ -205,9 +294,14 @@ input[type="range"].neu-slider::-webkit-slider-thumb:hover {
 
 /* Mobile Screen Breakpoint Tweaks */
 @media (max-width: 640px) {
-  :root, .dark, .light {
+  :root, .dark {
     --neu-flat: 4px 4px 8px #06070a, -4px -4px 8px #1a1d26;
     --neu-raised: 5px 5px 10px #050608, -5px -5px 10px #1c202c;
+  }
+
+  .light {
+    --neu-flat: 3px 3px 6px #d0d5e2, -3px -3px 6px #ffffff;
+    --neu-raised: 5px 5px 10px #c2c9d8, -5px -5px 10px #ffffff;
   }
 
   .neu-tile {
@@ -228,10 +322,9 @@ input[type="range"].neu-slider::-webkit-slider-thumb:hover {
   background: var(--bg-main);
 }
 ::-webkit-scrollbar-thumb {
-  background: #1a1d26;
+  background: var(--border-active);
   border-radius: 3px;
-  box-shadow: var(--neu-flat);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #262b38;
+  background: var(--text-dim);
 }

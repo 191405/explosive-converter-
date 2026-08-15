@@ -145,7 +145,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full dark`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full`}
       suppressHydrationWarning
     >
       <head>
@@ -162,8 +162,8 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdApp) }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-[#07080b] text-[#f0f2f5] font-sans antialiased selection:bg-zinc-700 selection:text-white" suppressHydrationWarning>
-        <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" enableSystem={false}>
+      <body className="min-h-full flex flex-col font-sans antialiased selection:bg-zinc-700 selection:text-white" suppressHydrationWarning>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={true}>
           <div className="flex flex-col min-h-screen w-full">
             <AppHeader />
             <main className="flex-1 flex flex-col items-center px-3 sm:px-6 pt-20 pb-16 w-full">
@@ -176,7 +176,7 @@ export default function RootLayout({
           <OnboardingTutorial />
           <FeedbackModal />
           <CookieConsent />
-          <Toaster position="bottom-right" theme="dark" richColors />
+          <Toaster position="bottom-right" richColors />
         </ThemeProvider>
       </body>
     </html>
