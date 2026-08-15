@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDropzone, type DropzoneOptions, type FileRejection } from "react-dropzone";
-import { motion, AnimatePresence } from "framer-motion";
-import { UploadCloud } from "lucide-react";
+import { Upload, FileUp, Clipboard, ShieldCheck, HardDrive } from "lucide-react";
 import { toast } from "sonner";
 
 export interface NeoDropzoneProps extends Omit<DropzoneOptions, "onDrop"> {
@@ -11,16 +10,20 @@ export interface NeoDropzoneProps extends Omit<DropzoneOptions, "onDrop"> {
   onDrop?: (acceptedFiles: File[], fileRejections: FileRejection[]) => void;
   label?: string;
   sublabel?: string;
+  acceptedFormatsList?: string[];
   icon?: React.ReactNode;
+  maxSizeMB?: number;
   currentCount?: number;
 }
 
 export function NeoDropzone({
   onDropAccepted,
   onDrop: customOnDrop,
-  label = "Drop files here or browse",
-  sublabel,
+  label = "Drop files to load into memory",
+  sublabel = "Or click to browse from device. Paste files with Ctrl+V / ⌘V",
+  acceptedFormatsList,
   icon,
+  maxSizeMB = 2048,
   currentCount,
   ...props
 }: NeoDropzoneProps) {
@@ -34,10 +37,9 @@ export function NeoDropzone({
         onDropAccepted(acceptedFiles);
       }
       if (fileRejections.length > 0) {
-        console.warn("Rejected files:", fileRejections);
         const reason = fileRejections[0]?.errors[0]?.message || "Unsupported file format.";
         toast.error("File rejected", {
-          description: `${reason} Please check the supported formats.`,
+          description: `${reason} Please check the format specifications.`,
         });
       }
     },
@@ -49,62 +51,103 @@ export function NeoDropzone({
     ...props,
   });
 
+  // Support Ctrl+V / Cmd+V paste directly onto the page
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") return;
+
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      const pastedFiles: File[] = [];
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].kind === "file") {
+          const file = items[i].getAsFile();
+          if (file) pastedFiles.push(file);
+        }
+      }
+
+      if (pastedFiles.length > 0) {
+        if (customOnDrop) customOnDrop(pastedFiles, []);
+        else if (onDropAccepted) onDropAccepted(pastedFiles);
+        toast.success(`Pasted ${pastedFiles.length} file(s) from clipboard`);
+      }
+    };
+
+    window.addEventListener("paste", handlePaste);
+    return () => window.removeEventListener("paste", handlePaste);
+  }, [customOnDrop, onDropAccepted]);
+
   return (
-    <motion.div
+    <div
       {...(getRootProps() as any)}
-      whileHover={{ scale: 1.005 }}
-      whileTap={{ scale: 0.995 }}
       className={`
-        w-full max-w-2xl mx-auto p-8 sm:p-12 flex flex-col items-center justify-center
-        cursor-pointer transition-all duration-200 relative overflow-hidden rounded-2xl
-        border-2 border-dashed
+        w-full max-w-3xl mx-auto p-8 sm:p-10 flex flex-col items-center justify-center
+        cursor-pointer transition-all duration-150 relative rounded-xl border border-dashed
+        select-none font-sans
         ${
           isDragActive
-            ? "border-text-primary bg-text-primary/[0.08] shadow-lg"
-            : "border-border-subtle bg-bg-surface/60 hover:border-border-focus hover:bg-bg-surface"
+            ? "border-amber-400/80 bg-amber-400/[0.04] shadow-xl"
+            : "border-white/[0.12] bg-[#0a0a0d] hover:border-white/[0.25] hover:bg-[#0f0f14]"
         }
       `}
     >
       <input {...getInputProps()} />
-      
-      {/* Animated glow on drag */}
-      <AnimatePresence>
-        {isDragActive && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-gradient-to-b from-text-primary/[0.06] to-transparent pointer-events-none"
-          />
+
+      <div className="flex flex-col items-center gap-3 text-center">
+        <div
+          className={`p-3 rounded-xl border transition-colors ${
+            isDragActive
+              ? "bg-amber-400 text-black border-amber-400"
+              : "bg-white/[0.04] text-zinc-300 border-white/[0.08]"
+          }`}
+        >
+          <FileUp size={22} strokeWidth={1.75} />
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <h3 className="text-sm sm:text-base font-semibold text-white tracking-tight">
+            {isDragActive ? "Release to load into in-memory engine" : label}
+          </h3>
+          <p className="text-xs text-zinc-400 font-mono max-w-md">{sublabel}</p>
+        </div>
+
+        {/* Format indicators and limits */}
+        <div className="flex flex-wrap items-center justify-center gap-2 pt-2 text-[10px] font-mono text-zinc-500">
+          <span className="flex items-center gap-1 bg-white/[0.03] px-2 py-0.5 rounded border border-white/[0.05]">
+            <HardDrive size={11} className="text-zinc-400" />
+            <span>Up to {maxSizeMB >= 1024 ? `${maxSizeMB / 1024} GB` : `${maxSizeMB} MB`}</span>
+          </span>
+          <span className="flex items-center gap-1 bg-white/[0.03] px-2 py-0.5 rounded border border-white/[0.05]">
+            <ShieldCheck size={11} className="text-emerald-400" />
+            <span>Zero Network Upload</span>
+          </span>
+          <span className="flex items-center gap-1 bg-white/[0.03] px-2 py-0.5 rounded border border-white/[0.05]">
+            <Clipboard size={11} className="text-zinc-400" />
+            <span>⌘V Paste Supported</span>
+          </span>
+        </div>
+
+        {acceptedFormatsList && acceptedFormatsList.length > 0 && (
+          <div className="flex flex-wrap items-center justify-center gap-1 pt-1">
+            {acceptedFormatsList.map((fmt) => (
+              <span
+                key={fmt}
+                className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-white/[0.05] text-zinc-400 border border-white/[0.06]"
+              >
+                {fmt}
+              </span>
+            ))}
+          </div>
         )}
-      </AnimatePresence>
 
-      <motion.div
-        animate={{ y: isDragActive ? -4 : 0 }}
-        className={`mb-3 p-3 rounded-2xl transition-colors duration-200 ${
-          isDragActive
-            ? "bg-text-primary text-bg-base"
-            : "bg-text-primary/[0.04] text-text-primary/70 border border-border-subtle"
-        }`}
-      >
-        {icon || <UploadCloud size={28} strokeWidth={1.75} />}
-      </motion.div>
-
-      <h3 className="text-base sm:text-lg font-bold tracking-tight text-text-primary text-center">
-        {isDragActive ? "Release to process files" : label}
-      </h3>
-
-      {sublabel && (
-        <p className="text-xs text-text-tertiary mt-1.5 font-mono text-center max-w-md px-2">
-          {sublabel}
-        </p>
-      )}
-
-      {typeof currentCount === "number" && currentCount > 0 && (
-        <span className="mt-3 text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-text-primary/10 text-text-primary border border-border-subtle">
-          {currentCount} file{currentCount !== 1 ? "s" : ""} selected
-        </span>
-      )}
-    </motion.div>
+        {typeof currentCount === "number" && currentCount > 0 && (
+          <div className="mt-2 text-[11px] font-mono font-semibold px-3 py-1 rounded bg-white text-black">
+            {currentCount} file{currentCount !== 1 ? "s" : ""} staged in memory
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

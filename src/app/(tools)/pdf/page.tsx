@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { NeoDropzone } from "@/components/dropzone";
 import { PDFDocument, degrees } from "pdf-lib";
-import { motion, AnimatePresence } from "framer-motion";
-import { Merge, Scissors, RotateCw, FileDown, Trash2, FileText, X } from "lucide-react";
+import { Merge, Scissors, RotateCw, FileDown, Trash2, FileText, Download, CheckCircle2, Layers } from "lucide-react";
+import { emitLog } from "@/lib/engine/orchestrator";
 import { toast } from "sonner";
 
 function formatBytes(bytes: number): string {
@@ -18,9 +18,9 @@ function formatBytes(bytes: number): string {
 type PDFMode = "merge" | "split" | "rotate";
 
 const modes: { value: PDFMode; label: string; icon: typeof Merge; desc: string }[] = [
-  { value: "merge", label: "Merge", icon: Merge, desc: "Combine multiple PDFs into one file" },
-  { value: "split", label: "Split / Extract", icon: Scissors, desc: "Extract specific pages from a PDF" },
-  { value: "rotate", label: "Rotate Pages", icon: RotateCw, desc: "Rotate all pages by 90°, 180° or 270°" },
+  { value: "merge", label: "Merge Documents", icon: Merge, desc: "Combine multiple PDF files into one single document" },
+  { value: "split", label: "Split / Extract Pages", icon: Scissors, desc: "Extract specific page numbers or ranges (e.g. 1-3, 5)" },
+  { value: "rotate", label: "Rotate Orientation", icon: RotateCw, desc: "Rotate document page orientations by 90°, 180° or 270°" },
 ];
 
 export default function PDFTool() {
@@ -42,7 +42,6 @@ export default function PDFTool() {
     setFiles((prev) => [...prev, ...acceptedFiles]);
     setDownloadUrl(null);
 
-    // For split/rotate, read page count of first file
     if ((mode === "split" || mode === "rotate") && acceptedFiles.length > 0) {
       try {
         const buf = await acceptedFiles[0].arrayBuffer();
@@ -65,10 +64,11 @@ export default function PDFTool() {
     setTotalPages(null);
   };
 
-  // ── Merge ──
   const mergePDFs = async () => {
     if (files.length < 2) return;
     setIsProcessing(true);
+    emitLog(`Merging ${files.length} PDF documents in memory...`, "info", "WASM_CORE");
+
     try {
       const mergedPdf = await PDFDocument.create();
       for (const file of files) {
@@ -80,282 +80,250 @@ export default function PDFTool() {
       const bytes = await mergedPdf.save();
       const blob = new Blob([bytes as any], { type: "application/pdf" });
       setResultSize(blob.size);
-      setResultName("merged-output.pdf");
+      setResultName("merged-document.pdf");
       setDownloadUrl(URL.createObjectURL(blob));
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to merge. Ensure all files are valid PDFs.");
+      emitLog(`Merge completed. Document size: ${formatBytes(blob.size)}`, "info", "WASM_CORE");
+      toast.success("PDFs merged successfully!");
+    } catch {
+      toast.error("Failed to merge PDFs. Ensure all files are valid.");
     } finally {
       setIsProcessing(false);
     }
   };
 
-  // ── Split / Extract ──
   const splitPDF = async () => {
     if (files.length === 0) return;
     setIsProcessing(true);
+    emitLog(`Extracting page range [${pageRange}] from [${files[0].name}]...`, "info", "WASM_CORE");
+
     try {
       const buf = await files[0].arrayBuffer();
       const srcPdf = await PDFDocument.load(buf);
       const total = srcPdf.getPageCount();
 
-      // Parse page range like "1-3,5,7-9"
-      const indices: number[] = [];
-      pageRange.split(",").forEach((part) => {
-        const trimmed = part.trim();
-        if (trimmed.includes("-")) {
-          const [start, end] = trimmed.split("-").map(Number);
-          for (let i = Math.max(1, start); i <= Math.min(total, end); i++) {
-            indices.push(i - 1); // 0-indexed
+      const pageIndices: number[] = [];
+      const parts = pageRange.split(",").map((s) => s.trim());
+      for (const part of parts) {
+        if (part.includes("-")) {
+          const [startStr, endStr] = part.split("-");
+          const s = Math.max(1, parseInt(startStr, 10));
+          const e = Math.min(total, parseInt(endStr, 10));
+          for (let i = s; i <= e; i++) {
+            if (!pageIndices.includes(i - 1)) pageIndices.push(i - 1);
           }
         } else {
-          const n = parseInt(trimmed);
-          if (n >= 1 && n <= total) indices.push(n - 1);
+          const p = parseInt(part, 10);
+          if (p >= 1 && p <= total && !pageIndices.includes(p - 1)) {
+            pageIndices.push(p - 1);
+          }
         }
-      });
+      }
 
-      if (indices.length === 0) {
-        toast.error("No valid pages in range. Use format: 1-3,5,7-9");
+      if (pageIndices.length === 0) {
+        toast.error(`Invalid page range. Document has ${total} pages.`);
         setIsProcessing(false);
         return;
       }
 
-      const newPdf = await PDFDocument.create();
-      const copiedPages = await newPdf.copyPages(srcPdf, indices);
-      copiedPages.forEach((p) => newPdf.addPage(p));
+      const outPdf = await PDFDocument.create();
+      const pages = await outPdf.copyPages(srcPdf, pageIndices);
+      pages.forEach((p) => outPdf.addPage(p));
 
-      const bytes = await newPdf.save();
+      const bytes = await outPdf.save();
       const blob = new Blob([bytes as any], { type: "application/pdf" });
       setResultSize(blob.size);
-      setResultName(`extracted-pages.pdf`);
+      setResultName(`extracted-pages-${files[0].name}`);
       setDownloadUrl(URL.createObjectURL(blob));
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to extract pages.");
+      emitLog(`Extraction complete. ${pages.length} pages extracted.`, "info", "WASM_CORE");
+      toast.success(`Extracted ${pages.length} pages.`);
+    } catch {
+      toast.error("Extraction failed.");
     } finally {
       setIsProcessing(false);
     }
   };
 
-  // ── Rotate ──
   const rotatePDF = async () => {
     if (files.length === 0) return;
     setIsProcessing(true);
+    emitLog(`Rotating [${files[0].name}] by ${rotateAngle}°...`, "info", "WASM_CORE");
+
     try {
       const buf = await files[0].arrayBuffer();
       const pdf = await PDFDocument.load(buf);
-      pdf.getPages().forEach((page) => {
-        page.setRotation(degrees((page.getRotation().angle + rotateAngle) % 360));
-      });
+      const total = pdf.getPageCount();
+
+      for (let i = 0; i < total; i++) {
+        const page = pdf.getPage(i);
+        const currentRot = page.getRotation().angle;
+        page.setRotation(degrees((currentRot + rotateAngle) % 360));
+      }
+
       const bytes = await pdf.save();
       const blob = new Blob([bytes as any], { type: "application/pdf" });
       setResultSize(blob.size);
-      setResultName(`rotated-${rotateAngle}.pdf`);
+      setResultName(`rotated-${files[0].name}`);
       setDownloadUrl(URL.createObjectURL(blob));
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to rotate pages.");
+      emitLog(`Rotated ${total} pages by ${rotateAngle}°.`, "info", "WASM_CORE");
+      toast.success(`Rotated ${total} pages by ${rotateAngle}°.`);
+    } catch {
+      toast.error("Rotation failed.");
     } finally {
       setIsProcessing(false);
     }
   };
 
-  const handleAction = () => {
-    if (mode === "merge") mergePDFs();
-    else if (mode === "split") splitPDF();
-    else if (mode === "rotate") rotatePDF();
-  };
-
-  const canAct =
-    (mode === "merge" && files.length >= 2) ||
-    ((mode === "split" || mode === "rotate") && files.length >= 1);
-
-  const totalInputSize = files.reduce((sum, f) => sum + f.size, 0);
-
   return (
-    <div className="w-full max-w-4xl flex flex-col items-center gap-10">
-      {/* Header */}
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl sm:text-5xl font-black text-glow tracking-tight">PDF Studio</h1>
-        <p className="text-text-primary/50 font-light text-lg">Merge, split, extract & rotate PDFs — entirely in your browser.</p>
+    <div className="w-full max-w-4xl flex flex-col items-center gap-8 font-sans">
+      <div className="text-center space-y-2">
+        <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-zinc-300 text-xs font-mono">
+          <FileText size={13} />
+          <span>PDF-Lib In-Memory Document Manipulator</span>
+        </div>
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+          PDF Studio & Document Synthesizer
+        </h1>
+        <p className="text-zinc-400 text-sm max-w-xl mx-auto">
+          Merge documents, extract custom page ranges, and rotate orientations locally in browser RAM with zero file uploads.
+        </p>
       </div>
 
-      {/* Mode Selector */}
-      <div className="glass-panel p-1.5 flex flex-wrap justify-center gap-1 w-full max-w-xl">
+      {/* Mode Switcher */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full max-w-2xl font-mono text-xs">
         {modes.map((m) => {
           const Icon = m.icon;
-          const active = mode === m.value;
+          const isActive = mode === m.value;
           return (
-            <motion.button
+            <button
               key={m.value}
-              whileTap={{ scale: 0.97 }}
               onClick={() => {
                 setMode(m.value);
                 setDownloadUrl(null);
-                if (m.value === "merge") { setTotalPages(null); }
               }}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm transition-all flex-1 min-w-[100px] justify-center ${
-                active ? "bg-text-primary text-bg-base font-semibold shadow-lg" : "text-text-primary/50 hover:text-text-primary font-medium hover:bg-text-primary/[0.05]"
+              className={`p-3 rounded-xl border flex flex-col items-start gap-1.5 transition-all text-left cursor-pointer ${
+                isActive
+                  ? "bg-white text-black font-semibold border-white shadow"
+                  : "bg-[#0c0c10] border-white/[0.08] text-zinc-400 hover:text-white hover:bg-[#121218]"
               }`}
             >
-              <Icon size={16} strokeWidth={active ? 2 : 1.5} />
-              {m.label}
-            </motion.button>
+              <div className="flex items-center gap-2">
+                <Icon size={15} />
+                <span>{m.label}</span>
+              </div>
+              <span className={`text-[10px] line-clamp-1 ${isActive ? "text-zinc-700" : "text-zinc-500"}`}>
+                {m.desc}
+              </span>
+            </button>
           );
         })}
       </div>
 
-      {/* Mode Description */}
-      <AnimatePresence mode="wait">
-        <motion.p
-          key={mode}
-          initial={{ opacity: 0, y: 5 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -5 }}
-          className="text-sm text-text-primary/40 text-center font-mono tracking-wide"
-        >
-          {modes.find((m) => m.value === mode)?.desc}
-        </motion.p>
-      </AnimatePresence>
-
       {/* Dropzone */}
-      <NeoDropzone
-        onDropAccepted={handleDrop}
-        accept={{ "application/pdf": [".pdf"] }}
-        multiple={mode === "merge"}
-        label={mode === "merge" ? "Drop PDF files here" : "Drop a PDF file"}
-        sublabel={mode === "merge" ? "Add 2+ PDFs to merge" : "Select one PDF to process"}
-        icon={<FileText size={40} strokeWidth={1.5} />}
-      />
+      <div className="w-full max-w-2xl">
+        <NeoDropzone
+          onDropAccepted={handleDrop}
+          accept={{ "application/pdf": [".pdf"] }}
+          multiple={mode === "merge"}
+          acceptedFormatsList={["PDF"]}
+          label={mode === "merge" ? "Drop multiple PDFs to combine" : "Drop single PDF document"}
+          sublabel="100% Client-side in-memory document parsing"
+        />
+      </div>
 
-      {/* File list */}
+      {/* File List & Parameters */}
       {files.length > 0 && (
-        <div className="w-full max-w-2xl glass-panel p-6 flex flex-col gap-6">
-          <div className="flex items-center justify-between border-b border-text-primary/[0.05] pb-4">
-            <h3 className="font-semibold text-lg tracking-tight">
-              {files.length} file{files.length !== 1 ? "s" : ""}{" "}
-              <span className="text-text-primary/40 font-mono text-xs ml-2">{formatBytes(totalInputSize)}</span>
-            </h3>
-            <button onClick={clearAll} className="text-xs text-text-primary/40 hover:text-text-primary transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-md hover:bg-text-primary/[0.05]">
-              <Trash2 size={14} /> Clear all
+        <div className="w-full max-w-2xl bg-[#0c0c10] border border-white/[0.08] rounded-xl p-5 flex flex-col gap-4 font-mono text-xs">
+          <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+            <span className="text-zinc-300 font-semibold">
+              Selected Document{files.length > 1 ? "s" : ""} ({files.length})
+            </span>
+            <button onClick={clearAll} className="text-zinc-500 hover:text-red-400 transition-colors">
+              Clear All
             </button>
           </div>
 
-          {/* Page info for split/rotate */}
-          {totalPages && (mode === "split" || mode === "rotate") && (
-            <div className="bg-text-primary/[0.03] border border-text-primary/[0.05] px-4 py-3 rounded-lg text-sm text-text-primary/60 flex items-center gap-2">
-              <FileText size={16} className="text-text-primary/40" />
-              Document has <span className="text-text-primary font-semibold">{totalPages}</span> pages
-            </div>
-          )}
-
-          <motion.div layout className="flex flex-col gap-2 max-h-48 overflow-y-auto pr-2">
-            <AnimatePresence>
-              {files.map((file, index) => (
-                <motion.div
-                  layout
-                  initial={{ opacity: 0, scale: 0.98, y: 5 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95, x: -10 }}
-                  key={`${file.name}-${index}`}
-                  className="bg-text-primary/[0.02] border border-text-primary/[0.04] flex items-center justify-between px-4 py-3 rounded-lg hover:bg-text-primary/[0.04] transition-colors"
-                >
-                  <div className="flex items-center gap-4 min-w-0">
-                    <div className="p-2 rounded bg-text-primary/[0.05] text-text-primary/70 shrink-0">
-                      <FileText size={16} />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium truncate">{file.name}</p>
-                      <p className="text-[11px] text-text-primary/40 font-mono mt-0.5">{formatBytes(file.size)}</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => removeFile(index)}
-                    className="text-text-primary/30 hover:text-text-primary hover:bg-text-primary/10 p-1.5 rounded-md transition-all shrink-0"
-                  >
-                    <X size={16} />
+          <div className="divide-y divide-white/[0.04]">
+            {files.map((f, i) => (
+              <div key={i} className="flex items-center justify-between py-2 text-zinc-300">
+                <span className="truncate max-w-xs">{f.name}</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-zinc-500 tabular-nums">{formatBytes(f.size)}</span>
+                  <button onClick={() => removeFile(i)} className="text-zinc-500 hover:text-red-400">
+                    <Trash2 size={13} />
                   </button>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </motion.div>
+                </div>
+              </div>
+            ))}
+          </div>
 
-          {/* Split-specific: page range input */}
+          {/* Mode-specific configuration inputs */}
           {mode === "split" && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              className="flex flex-col sm:flex-row items-center gap-4 bg-text-primary/[0.02] p-4 rounded-lg border border-text-primary/[0.04]"
-            >
-              <label className="text-sm text-text-primary/60 whitespace-nowrap font-medium">Pages to extract:</label>
+            <div className="pt-2 flex flex-col gap-2 border-t border-white/[0.06]">
+              <div className="flex justify-between items-center text-zinc-400">
+                <span>Page Range (Total Pages: {totalPages ?? "..."})</span>
+                <span className="text-white font-bold">{pageRange}</span>
+              </div>
               <input
                 type="text"
                 value={pageRange}
                 onChange={(e) => setPageRange(e.target.value)}
-                placeholder="e.g. 1-3,5,7-9"
-                className="input-base px-4 py-2 w-full sm:w-48 text-sm outline-none placeholder:text-text-primary/20"
+                placeholder="e.g. 1-3, 5"
+                className="input-base px-3 py-2 w-full"
               />
-            </motion.div>
+            </div>
           )}
 
-          {/* Rotate-specific: angle picker */}
           {mode === "rotate" && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              className="flex items-center justify-between gap-4 bg-text-primary/[0.02] p-4 rounded-lg border border-text-primary/[0.04]"
-            >
-              <span className="text-sm text-text-primary/60 font-medium">Rotation Angle:</span>
-              <div className="flex p-1 rounded-lg bg-text-primary/40 border border-text-primary/[0.05]">
-                {([90, 180, 270] as const).map((angle) => (
+            <div className="pt-2 flex items-center justify-between border-t border-white/[0.06]">
+              <span className="text-zinc-400">Rotation Angle</span>
+              <div className="flex gap-1.5">
+                {([90, 180, 270] as const).map((deg) => (
                   <button
-                    key={angle}
-                    onClick={() => setRotateAngle(angle)}
-                    className={`px-4 py-1.5 text-sm font-semibold rounded-md transition-all ${
-                      rotateAngle === angle
-                        ? "bg-text-primary text-bg-base shadow-sm"
-                        : "text-text-primary/50 hover:text-text-primary hover:bg-text-primary/[0.05]"
+                    key={deg}
+                    onClick={() => setRotateAngle(deg)}
+                    className={`px-3 py-1 rounded border text-xs ${
+                      rotateAngle === deg ? "bg-white text-black font-bold border-white" : "bg-white/[0.03] text-zinc-400 border-white/[0.06]"
                     }`}
                   >
-                    {angle}°
+                    +{deg}°
                   </button>
                 ))}
               </div>
-            </motion.div>
+            </div>
           )}
 
-          {/* Action bar */}
-          <div className="flex flex-col sm:flex-row items-center gap-4 pt-4">
-            {!downloadUrl ? (
-              <button
-                onClick={handleAction}
-                disabled={!canAct || isProcessing}
-                className="btn-primary px-8 py-3 w-full sm:w-auto flex items-center justify-center gap-2 text-sm"
+          {/* Execute Button */}
+          <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between">
+            <button
+              onClick={() => {
+                if (mode === "merge") mergePDFs();
+                else if (mode === "split") splitPDF();
+                else if (mode === "rotate") rotatePDF();
+              }}
+              disabled={isProcessing || (mode === "merge" && files.length < 2)}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-md bg-white text-black font-semibold text-xs hover:bg-zinc-200 transition-all cursor-pointer shadow disabled:opacity-30"
+            >
+              <FileDown size={14} />
+              <span>
+                {isProcessing
+                  ? "Processing Document..."
+                  : mode === "merge"
+                  ? `Merge ${files.length} PDFs`
+                  : mode === "split"
+                  ? "Extract Specified Pages"
+                  : `Rotate Pages +${rotateAngle}°`}
+              </span>
+            </button>
+
+            {downloadUrl && (
+              <a
+                href={downloadUrl}
+                download={resultName}
+                className="flex items-center gap-2 px-4 py-2 rounded-md bg-emerald-500 text-black font-semibold text-xs hover:bg-emerald-400 transition-colors shadow"
               >
-                {isProcessing ? (
-                  <>
-                    <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-                    Processing…
-                  </>
-                ) : (
-                  <>
-                    {mode === "merge" && <Merge size={16} />}
-                    {mode === "split" && <Scissors size={16} />}
-                    {mode === "rotate" && <RotateCw size={16} />}
-                    {mode === "merge" ? "Merge PDFs" : mode === "split" ? "Extract Pages" : "Rotate All Pages"}
-                  </>
-                )}
-              </button>
-            ) : (
-              <a href={downloadUrl} download={resultName} className="w-full sm:w-auto">
-                <button className="btn-primary px-8 py-3 w-full flex items-center justify-center gap-2 text-sm bg-text-primary text-bg-base">
-                  <FileDown size={16} />
-                  Download Result <span className="opacity-60 font-mono text-[10px] ml-1">({formatBytes(resultSize)})</span>
-                </button>
+                <Download size={14} />
+                <span>Download ({formatBytes(resultSize)})</span>
               </a>
-            )}
-            {mode === "merge" && !downloadUrl && files.length < 2 && (
-              <span className="text-xs text-text-primary/40">Add at least 2 files</span>
             )}
           </div>
         </div>

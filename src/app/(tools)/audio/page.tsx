@@ -1,33 +1,35 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Music, FileAudio, Download, X, Volume2, Play, Pause, Sparkles } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Music, Download, RefreshCw, Volume2, Play, Pause, Disc, ArrowRight, CheckCircle2 } from "lucide-react";
 import { NeoDropzone } from "@/components/dropzone";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
+import { emitLog } from "@/lib/engine/orchestrator";
+import { updateTelemetry } from "@/lib/engine/telemetry";
+import { toast } from "sonner";
 
 function formatBytes(bytes: number, decimals = 1) {
   if (!+bytes) return "0 Bytes";
   const k = 1024;
   const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB"];
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 }
 
 type AudioFormat = "mp3" | "wav" | "aac" | "flac" | "ogg" | "m4a";
 type Bitrate = "128k" | "192k" | "256k" | "320k";
-type SampleRate = "44100" | "48000";
+type SampleRate = "44100" | "48000" | "96000";
 
 export default function AudioConvertPage() {
   const [ready, setReady] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [format, setFormat] = useState<AudioFormat>("mp3");
   const [bitrate, setBitrate] = useState<Bitrate>("256k");
-  const [sampleRate, setSampleRate] = useState<SampleRate>("44100");
+  const [sampleRate, setSampleRate] = useState<SampleRate>("48000");
   const [channels, setChannels] = useState<"2" | "1">("2");
-  
+
   const [progress, setProgress] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
@@ -38,29 +40,35 @@ export default function AudioConvertPage() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const ffmpegRef = useRef<FFmpeg | null>(null);
 
-  // Lazy-load FFmpeg on mount
-  useState(() => {
+  useEffect(() => {
     const load = async () => {
       try {
+        emitLog("Initializing FFmpeg 0.12 WASM Audio Codec Engine (libmp3lame/opus/flac)...", "info", "WASM_CORE");
         const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
         const ffmpeg = new FFmpeg();
         ffmpegRef.current = ffmpeg;
 
-        ffmpeg.on("progress", ({ progress }) => {
-          setProgress(progress);
+        ffmpeg.on("progress", ({ progress: p }) => {
+          setProgress(Math.round(p * 100));
+        });
+
+        ffmpeg.on("log", ({ message }) => {
+          emitLog(message, "stdout", "WASM_CORE");
         });
 
         await ffmpeg.load({
           coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
           wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
         });
+
         setReady(true);
-      } catch (err) {
-        console.error("FFmpeg load failed:", err);
+        emitLog("Audio Transcoding Core initialized in browser RAM", "info", "WASM_CORE");
+      } catch (err: any) {
+        emitLog(`Audio engine load failure: ${err.message}`, "error", "WASM_CORE");
       }
     };
-    if (typeof window !== "undefined") load();
-  });
+    load();
+  }, []);
 
   const togglePlay = () => {
     if (!audioRef.current) return;
@@ -80,14 +88,17 @@ export default function AudioConvertPage() {
     setDownloadUrl(null);
     setIsPlaying(false);
 
+    updateTelemetry({ engineStatus: "processing", activeJobName: `Audio Transcode (${file.name})` });
+    emitLog(`Starting audio transcode: [${file.name}] -> [${format.toUpperCase()}] @ ${bitrate}`, "info", "WASM_CORE");
+
     try {
       const ffmpeg = ffmpegRef.current;
-      await ffmpeg.writeFile(file.name, await fetchFile(file));
+      await ffmpeg.writeFile("audio_in", await fetchFile(file));
 
       const baseName = file.name.substring(0, file.name.lastIndexOf(".")) || file.name;
-      const outFilename = `${baseName}_converted.${format}`;
+      const outFilename = `${baseName}.${format}`;
 
-      const args: string[] = ["-i", file.name, "-vn"]; // -vn: disable video recording/extract audio only
+      const args: string[] = ["-i", "audio_in", "-vn"];
 
       if (format === "mp3") {
         args.push("-c:a", "libmp3lame", "-b:a", bitrate, "-ar", sampleRate, "-ac", channels);
@@ -102,277 +113,222 @@ export default function AudioConvertPage() {
       }
 
       args.push(outFilename);
-
       await ffmpeg.exec(args);
 
       const data = await ffmpeg.readFile(outFilename);
-      const mimeMap: Record<AudioFormat, string> = {
-        mp3: "audio/mpeg",
-        wav: "audio/wav",
-        aac: "audio/aac",
-        flac: "audio/flac",
-        ogg: "audio/ogg",
-        m4a: "audio/mp4",
-      };
-
-      const blob = new Blob([data as any], { type: mimeMap[format] || "audio/mpeg" });
+      const mimeType = format === "wav" ? "audio/wav" : format === "mp3" ? "audio/mp3" : format === "flac" ? "audio/flac" : "audio/aac";
+      const blob = new Blob([data as any], { type: mimeType });
       const url = URL.createObjectURL(blob);
 
       setResultSize(blob.size);
       setOutputName(outFilename);
       setDownloadUrl(url);
-    } catch (error) {
-      console.error("Audio conversion failed:", error);
+      setProgress(100);
+
+      emitLog(`Transcode finished. Output file size: ${formatBytes(blob.size)}`, "info", "WASM_CORE");
+      toast.success(`Converted to ${format.toUpperCase()} successfully!`);
+    } catch (err: any) {
+      emitLog(`Audio transcode failed: ${err.message}`, "error", "WASM_CORE");
+      toast.error("Audio conversion failed");
     } finally {
       setIsProcessing(false);
+      updateTelemetry({ engineStatus: "idle", activeJobName: null });
     }
-  };
-
-  const handleReset = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
-    setFile(null);
-    setDownloadUrl(null);
-    setIsPlaying(false);
-    setProgress(0);
   };
 
   return (
-    <div className="w-full max-w-4xl flex flex-col items-center gap-10">
-      {/* Header */}
-      <div className="text-center space-y-2 sm:space-y-4">
-        <h1 className="text-3xl sm:text-5xl font-black text-glow tracking-tight flex items-center justify-center gap-2.5">
-          <Music className="w-7 h-7 sm:w-11 sm:h-11" strokeWidth={1.75} />
-          Audio Converter
+    <div className="w-full max-w-4xl flex flex-col items-center gap-8 font-sans">
+      <div className="text-center space-y-2">
+        <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-zinc-300 text-xs font-mono">
+          <Music size={13} />
+          <span>Multi-Stream Audio Transcoder & Video Extractor</span>
+        </div>
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+          Audio Converter & Stream Extractor
         </h1>
-        <p className="text-text-primary/50 font-light text-sm sm:text-lg max-w-2xl mx-auto px-2">
-          Rip audio from video or convert between high-res audio formats with zero uploads.
+        <p className="text-zinc-400 text-sm max-w-xl mx-auto">
+          Extract audio streams from video files or transcode audio between MP3, WAV, AAC, FLAC, and OGG with custom bitrates and sample rates.
         </p>
       </div>
 
-      {!ready ? (
-        <div className="glass-panel p-6 sm:p-8 rounded-xl flex flex-col items-center gap-4 animate-pulse max-w-md w-full">
-          <svg className="animate-spin text-text-primary/50" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-          </svg>
-          <p className="text-text-primary/50 font-medium tracking-wide text-xs sm:text-sm">Loading FFmpeg WASM Audio Engine...</p>
+      {!file ? (
+        <div className="w-full max-w-2xl">
+          <NeoDropzone
+            onDropAccepted={(files) => setFile(files[0])}
+            accept={{ "audio/*": [".mp3", ".wav", ".aac", ".flac", ".ogg", ".m4a", ".wma"], "video/*": [".mp4", ".mov", ".mkv", ".webm", ".avi"] }}
+            multiple={false}
+            acceptedFormatsList={["MP3", "WAV", "AAC", "FLAC", "OGG", "M4A", "MP4", "MKV"]}
+            label="Drop audio file or video stream"
+            sublabel="Extract audio or transcode formats directly in browser memory"
+          />
         </div>
       ) : (
-        <>
-          {/* Main Controls Panel */}
-          <div className="w-full max-w-xl glass-panel p-4 sm:p-6 flex flex-col gap-4 sm:gap-6">
-            {/* Format Selector */}
-            <div>
-              <div className="flex justify-between items-center mb-2.5">
-                <label className="text-[11px] sm:text-xs font-semibold text-text-primary/50 uppercase tracking-widest">
-                  Target Format
-                </label>
-                <span className="text-[10px] font-mono text-text-primary/40 uppercase">
-                  {format === "wav" || format === "flac" ? "Lossless" : "Compressed"}
-                </span>
-              </div>
-              <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 bg-text-primary/[0.03] p-1 rounded-lg border border-text-primary/[0.05]">
-                {(["mp3", "wav", "aac", "flac", "ogg", "m4a"] as AudioFormat[]).map((f) => (
+        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs">
+          {/* Controls */}
+          <div className="md:col-span-1 bg-[#0c0c10] border border-white/[0.08] rounded-xl p-5 flex flex-col gap-5">
+            <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+              <span className="text-zinc-300 font-semibold uppercase tracking-wider">Codec Parameters</span>
+              <button
+                onClick={() => {
+                  setFile(null);
+                  setDownloadUrl(null);
+                }}
+                className="text-zinc-500 hover:text-white"
+              >
+                Change File
+              </button>
+            </div>
+
+            {/* Target format */}
+            <div className="flex flex-col gap-2">
+              <span className="text-zinc-400">Target Container</span>
+              <div className="grid grid-cols-3 gap-1.5">
+                {(["mp3", "wav", "aac", "flac", "ogg", "m4a"] as const).map((fmt) => (
                   <button
-                    key={f}
-                    onClick={() => setFormat(f)}
-                    className={`py-2 text-xs font-semibold rounded-md transition-all uppercase tracking-wider ${
-                      format === f
-                        ? "bg-text-primary text-bg-base shadow-md"
-                        : "text-text-primary/40 hover:text-text-primary hover:bg-text-primary/[0.05]"
+                    key={fmt}
+                    onClick={() => setFormat(fmt)}
+                    className={`py-1.5 rounded border uppercase text-[10px] transition-colors ${
+                      format === fmt
+                        ? "bg-white text-black font-bold border-white shadow"
+                        : "bg-white/[0.03] text-zinc-400 border-white/[0.06] hover:bg-white/[0.06]"
                     }`}
                   >
-                    {f}
+                    {fmt}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Quality & Bitrate Options */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-text-primary/[0.05]">
-              {/* Bitrate (if lossy) */}
-              {format !== "wav" && format !== "flac" && (
-                <div className="flex flex-col gap-2">
-                  <span className="text-[11px] font-semibold text-text-primary/50 uppercase tracking-widest">
-                    Bitrate
-                  </span>
-                  <select
-                    value={bitrate}
-                    onChange={(e) => setBitrate(e.target.value as Bitrate)}
-                    className="input-base px-3 py-2 text-xs font-mono outline-none cursor-pointer bg-bg-surface"
-                  >
-                    <option value="128k" className="bg-bg-surface">128 kbps</option>
-                    <option value="192k" className="bg-bg-surface">192 kbps</option>
-                    <option value="256k" className="bg-bg-surface">256 kbps</option>
-                    <option value="320k" className="bg-bg-surface">320 kbps</option>
-                  </select>
+            {/* Bitrate (if lossy) */}
+            {format !== "wav" && format !== "flac" && (
+              <div className="flex flex-col gap-2">
+                <span className="text-zinc-400">Bitrate Density</span>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {(["128k", "192k", "256k", "320k"] as const).map((b) => (
+                    <button
+                      key={b}
+                      onClick={() => setBitrate(b)}
+                      className={`py-1.5 rounded border text-[10px] transition-colors ${
+                        bitrate === b
+                          ? "bg-white text-black font-bold border-white"
+                          : "bg-white/[0.03] text-zinc-400 border-white/[0.06]"
+                      }`}
+                    >
+                      {b.replace("k", " kbps")}
+                    </button>
+                  ))}
                 </div>
-              )}
-
-              {/* Sample Rate */}
-              <div className="flex flex-col gap-2">
-                <span className="text-[11px] font-semibold text-text-primary/50 uppercase tracking-widest">
-                  Sample Rate
-                </span>
-                <select
-                  value={sampleRate}
-                  onChange={(e) => setSampleRate(e.target.value as SampleRate)}
-                  className="input-base px-3 py-2 text-xs font-mono outline-none cursor-pointer bg-bg-surface"
-                >
-                  <option value="44100" className="bg-bg-surface">44.1 kHz</option>
-                  <option value="48000" className="bg-bg-surface">48.0 kHz</option>
-                </select>
               </div>
+            )}
 
-              {/* Channels */}
-              <div className="flex flex-col gap-2">
-                <span className="text-[11px] font-semibold text-text-primary/50 uppercase tracking-widest">
-                  Channels
-                </span>
-                <select
-                  value={channels}
-                  onChange={(e) => setChannels(e.target.value as "2" | "1")}
-                  className="input-base px-3 py-2 text-xs font-mono outline-none cursor-pointer bg-bg-surface"
+            {/* Sample Rate */}
+            <div className="flex flex-col gap-2">
+              <span className="text-zinc-400">Sample Rate</span>
+              <select
+                value={sampleRate}
+                onChange={(e) => setSampleRate(e.target.value as SampleRate)}
+                className="bg-black/50 border border-white/[0.1] rounded px-2.5 py-1.5 text-xs text-zinc-200 outline-none"
+              >
+                <option value="48000">48,000 Hz (Pro Audio Master)</option>
+                <option value="44100">44,100 Hz (Standard CD Quality)</option>
+                <option value="96000">96,000 Hz (High Resolution)</option>
+              </select>
+            </div>
+
+            {/* Channels */}
+            <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
+              <span className="text-zinc-400">Topology</span>
+              <div className="flex gap-1.5">
+                <button
+                  onClick={() => setChannels("2")}
+                  className={`px-2.5 py-1 rounded text-[10px] border ${
+                    channels === "2" ? "bg-white text-black font-bold border-white" : "bg-white/[0.03] text-zinc-400 border-white/[0.06]"
+                  }`}
                 >
-                  <option value="2" className="bg-bg-surface">Stereo</option>
-                  <option value="1" className="bg-bg-surface">Mono</option>
-                </select>
+                  Stereo
+                </button>
+                <button
+                  onClick={() => setChannels("1")}
+                  className={`px-2.5 py-1 rounded text-[10px] border ${
+                    channels === "1" ? "bg-white text-black font-bold border-white" : "bg-white/[0.03] text-zinc-400 border-white/[0.06]"
+                  }`}
+                >
+                  Mono Downmix
+                </button>
               </div>
+            </div>
+
+            {/* Action */}
+            <div className="flex flex-col gap-2 pt-3 border-t border-white/[0.06]">
+              <button
+                onClick={convertAudio}
+                disabled={isProcessing || !ready}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-white text-black font-semibold text-xs hover:bg-zinc-200 transition-all cursor-pointer shadow disabled:opacity-30"
+              >
+                {isProcessing ? <RefreshCw size={14} className="animate-spin" /> : <Music size={14} />}
+                <span>{isProcessing ? `Transcoding (${progress}%)...` : "Start Audio Transcode"}</span>
+              </button>
             </div>
           </div>
 
-          {/* Upload Dropzone */}
-          {!file ? (
-            <NeoDropzone
-              onDropAccepted={(files) => setFile(files[0])}
-              accept={{
-                "audio/*": [".mp3", ".wav", ".aac", ".flac", ".ogg", ".m4a", ".wma", ".opus"],
-                "video/*": [".mp4", ".mkv", ".mov", ".webm", ".avi", ".flv", ".wmv"],
-              }}
-              multiple={false}
-              label="Drop audio or video file here"
-              sublabel={`Extracts or converts directly to ${format.toUpperCase()}`}
-              icon={<FileAudio size={40} strokeWidth={1.5} />}
-            />
-          ) : (
-            <div className="w-full max-w-2xl glass-panel p-6 flex flex-col gap-6">
-              {/* File Info Bar */}
-              <div className="flex items-center justify-between border-b border-text-primary/[0.05] pb-4">
-                <div className="flex items-center gap-4 min-w-0">
-                  <div className="p-2.5 rounded-lg bg-text-primary/[0.05] text-text-primary/70 shrink-0">
-                    <FileAudio size={22} />
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="font-semibold text-base tracking-tight truncate max-w-[220px] sm:max-w-md">
-                      {file.name}
-                    </h3>
-                    <div className="flex items-center gap-3 text-[11px] text-text-primary/40 font-mono mt-0.5">
-                      <span>{formatBytes(file.size)}</span>
-                      <span>•</span>
-                      <span className="uppercase text-text-primary/60">{file.name.split(".").pop()}</span>
-                    </div>
-                  </div>
-                </div>
-                {!isProcessing && !downloadUrl && (
-                  <button
-                    onClick={handleReset}
-                    className="text-text-primary/40 hover:text-text-primary p-2 rounded-md hover:bg-text-primary/[0.05] transition-colors"
-                  >
-                    <X size={18} />
-                  </button>
-                )}
-              </div>
-
-              {/* Progress Bar */}
-              {isProcessing && (
-                <div className="flex flex-col gap-2 bg-text-primary/[0.02] p-4 rounded-lg border border-text-primary/[0.05]">
-                  <div className="flex justify-between text-xs font-semibold uppercase tracking-widest text-text-primary/50">
-                    <span className="flex items-center gap-2">
-                      <Sparkles size={14} className="animate-spin text-text-primary" />
-                      Converting Audio Track
-                    </span>
-                    <span className="text-text-primary font-mono">{Math.round(progress * 100)}%</span>
-                  </div>
-                  <div className="w-full h-2 progress-track">
-                    <div
-                      className="progress-fill"
-                      style={{ width: `${Math.max(0, Math.min(100, progress * 100))}%` }}
-                    />
-                  </div>
-                  <p className="text-[10px] font-mono text-text-primary/30 text-center mt-2">
-                    Running WebAssembly audio decoders locally in your browser.
-                  </p>
-                </div>
-              )}
-
-              {/* Conversion Action / Result */}
-              <div className="pt-2">
-                {!downloadUrl ? (
-                  <button
-                    onClick={convertAudio}
-                    disabled={isProcessing}
-                    className="btn-primary px-8 py-3.5 w-full sm:w-auto flex items-center justify-center gap-2 text-sm mx-auto shadow-lg"
-                  >
-                    {isProcessing ? (
-                      <>
-                        <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-                        </svg>
-                        Processing WASM Stream...
-                      </>
-                    ) : (
-                      <>
-                        <Music size={16} /> Extract / Convert to {format.toUpperCase()}
-                      </>
-                    )}
-                  </button>
-                ) : (
-                  <div className="flex flex-col gap-4">
-                    {/* Audio Player Preview */}
-                    <audio
-                      ref={audioRef}
-                      src={downloadUrl}
-                      onEnded={() => setIsPlaying(false)}
-                      className="hidden"
-                    />
-
-                    <div className="bg-[#34d399]/5 border border-[#34d399]/15 p-4 rounded-xl flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <button
-                          onClick={togglePlay}
-                          className="w-10 h-10 rounded-full bg-text-primary text-bg-base flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-transform cursor-pointer"
-                        >
-                          {isPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} className="ml-0.5" fill="currentColor" />}
-                        </button>
-                        <div>
-                          <p className="text-sm font-semibold text-[#34d399] tracking-tight">Audio Ready for Download</p>
-                          <p className="text-[11px] text-text-primary/50 font-mono mt-0.5">
-                            {outputName} • {formatBytes(resultSize)}
-                          </p>
-                        </div>
-                      </div>
-                      <span className="text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-md bg-text-primary/5 border border-text-primary/10 font-mono">
-                        {format.toUpperCase()}
-                      </span>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row gap-3">
-                      <button onClick={handleReset} className="btn-secondary px-6 py-3 flex-1 text-sm">
-                        Convert Another File
-                      </button>
-                      <a href={downloadUrl} download={outputName} className="flex-1">
-                        <button className="btn-primary px-6 py-3 w-full flex items-center justify-center gap-2 text-sm bg-text-primary text-bg-base">
-                          <Download size={16} /> Download {format.toUpperCase()}
-                        </button>
-                      </a>
-                    </div>
-                  </div>
-                )}
-              </div>
+          {/* Inspection Column */}
+          <div className="md:col-span-2 bg-[#09090c] border border-white/[0.08] rounded-xl p-5 flex flex-col justify-between min-h-[380px]">
+            <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+              <span className="text-zinc-300 font-semibold">{file.name}</span>
+              <span className="text-zinc-500 tabular-nums">{formatBytes(file.size)}</span>
             </div>
-          )}
-        </>
+
+            {downloadUrl ? (
+              <div className="p-5 bg-[#0e0e14] border border-emerald-500/30 rounded-xl flex flex-col gap-4">
+                <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+                  <CheckCircle2 size={18} />
+                  <span>Audio Transcoding Complete</span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 pt-2 border-t border-white/[0.06]">
+                  <div>
+                    <span className="text-[10px] text-zinc-500 block">Output Container</span>
+                    <span className="text-zinc-200 font-bold uppercase">{format}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-zinc-500 block">Output File Size</span>
+                    <span className="text-emerald-400 tabular-nums font-bold">{formatBytes(resultSize)}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 pt-2">
+                  <audio ref={audioRef} src={downloadUrl} onEnded={() => setIsPlaying(false)} className="hidden" />
+                  <button
+                    onClick={togglePlay}
+                    className="flex items-center gap-1.5 px-3 py-2 rounded bg-white/[0.08] text-white hover:bg-white/[0.12] transition-colors"
+                  >
+                    {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+                    <span>{isPlaying ? "Pause Preview" : "Play Preview"}</span>
+                  </button>
+
+                  <a
+                    href={downloadUrl}
+                    download={outputName}
+                    className="inline-flex items-center gap-2 px-5 py-2 rounded-md bg-emerald-500 text-black font-semibold text-xs hover:bg-emerald-400 transition-colors shadow"
+                  >
+                    <Download size={14} />
+                    <span>Download {format.toUpperCase()}</span>
+                  </a>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center flex-1 gap-3 text-zinc-500 py-10">
+                <Disc size={36} className="text-zinc-700" />
+                <span>Configure codec parameters and sample rate on the left.</span>
+              </div>
+            )}
+
+            <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between text-[10px] text-zinc-500">
+              <span>libmp3lame / opus / pcm_s16le</span>
+              <span>100% In-Memory RAM Buffer</span>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

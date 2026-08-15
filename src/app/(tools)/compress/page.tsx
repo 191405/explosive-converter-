@@ -1,19 +1,21 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
-import { motion } from "framer-motion";
-import { FileDown, FileVideo, X, Download } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { FileDown, Video, Download, RefreshCw, Sliders, CheckCircle2, ArrowRight, Gauge, Layers } from "lucide-react";
 import { NeoDropzone } from "@/components/dropzone";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
+import { emitLog } from "@/lib/engine/orchestrator";
+import { updateTelemetry } from "@/lib/engine/telemetry";
+import { toast } from "sonner";
 
 function formatBytes(bytes: number, decimals = 1) {
-  if (!+bytes) return '0 Bytes'
-  const k = 1024
-  const dm = decimals < 0 ? 0 : decimals
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+  if (!+bytes) return "0 Bytes";
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 }
 
 export default function VideoCompressPage() {
@@ -24,91 +26,185 @@ export default function VideoCompressPage() {
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [resultSize, setResultSize] = useState(0);
 
-  const [crf, setCrf] = useState(28);
+  // Compression Parameters
+  const [crf, setCrf] = useState(28); // 0-51 (18=Visually Lossless, 28=Default, 35=Small)
   const [preset, setPreset] = useState<"ultrafast" | "fast" | "medium" | "slow">("fast");
+  const [scale, setScale] = useState<"original" | "1080" | "720" | "480">("original");
+  const [audioCodec, setAudioCodec] = useState<"copy" | "aac">("copy");
 
   const ffmpegRef = useRef<FFmpeg | null>(null);
-  
-  // Auto-load FFmpeg on mount
-  useState(() => {
-    const load = async () => {
-      const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
-      const ffmpeg = new FFmpeg();
-      ffmpegRef.current = ffmpeg;
-      
-      ffmpeg.on("progress", ({ progress }) => {
-        setProgress(progress);
-      });
 
-      await ffmpeg.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
-      });
-      setReady(true);
+  useEffect(() => {
+    const loadEngine = async () => {
+      try {
+        emitLog("Initializing FFmpeg 0.12 WASM libx264 core...", "info", "WASM_CORE");
+        const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
+        const ffmpeg = new FFmpeg();
+        ffmpegRef.current = ffmpeg;
+
+        ffmpeg.on("progress", ({ progress: p }) => {
+          const pct = Math.round(p * 100);
+          setProgress(pct);
+        });
+
+        ffmpeg.on("log", ({ message }) => {
+          emitLog(message, "stdout", "WASM_CORE");
+        });
+
+        await ffmpeg.load({
+          coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
+          wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
+        });
+
+        setReady(true);
+        emitLog("FFmpeg WASM Core loaded and ready for encoding", "info", "WASM_CORE");
+      } catch (err: any) {
+        emitLog(`Failed to load FFmpeg: ${err.message}`, "error", "WASM_CORE");
+        toast.error("Failed to load WebAssembly video core");
+      }
     };
-    if (typeof window !== "undefined") load();
-  });
+
+    loadEngine();
+  }, []);
 
   const compressVideo = async () => {
     if (!file || !ffmpegRef.current) return;
     setIsProcessing(true);
     setProgress(0);
     setDownloadUrl(null);
-    
-    const ffmpeg = ffmpegRef.current;
-    await ffmpeg.writeFile(file.name, await fetchFile(file));
+    setResultSize(0);
 
-    // Basic compression: libx264, set CRF and Preset
-    const ext = file.name.split('.').pop() || 'mp4';
-    const outputName = `output.${ext}`;
-    
-    await ffmpeg.exec([
-      "-i", file.name,
-      "-vcodec", "libx264",
-      "-crf", crf.toString(),
-      "-preset", preset,
-      outputName
-    ]);
+    const startTime = performance.now();
+    updateTelemetry({ engineStatus: "processing", activeJobName: `H.264 Compress (${file.name})` });
+    emitLog(`Starting H.264 compression on [${file.name}] (${formatBytes(file.size)})`, "info", "WASM_CORE");
 
-    const data = await ffmpeg.readFile(outputName);
-    const blob = new Blob([data as any], { type: `video/${ext}` });
-    const url = URL.createObjectURL(blob);
-    
-    setResultSize(blob.size);
-    setDownloadUrl(url);
-    setIsProcessing(false);
+    try {
+      const ffmpeg = ffmpegRef.current;
+      await ffmpeg.writeFile("input_video", await fetchFile(file));
+
+      const args = ["-i", "input_video", "-vcodec", "libx264", "-crf", crf.toString(), "-preset", preset];
+
+      if (scale === "1080") args.push("-vf", "scale=-2:1080");
+      else if (scale === "720") args.push("-vf", "scale=-2:720");
+      else if (scale === "480") args.push("-vf", "scale=-2:480");
+
+      if (audioCodec === "copy") {
+        args.push("-c:a", "copy");
+      } else {
+        args.push("-c:a", "aac", "-b:a", "128k");
+      }
+
+      args.push("output.mp4");
+
+      emitLog(`Running FFmpeg: ffmpeg ${args.join(" ")}`, "debug", "WASM_CORE");
+      await ffmpeg.exec(args);
+
+      const data = await ffmpeg.readFile("output.mp4");
+      const blob = new Blob([data as any], { type: "video/mp4" });
+      const url = URL.createObjectURL(blob);
+
+      const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
+      setResultSize(blob.size);
+      setDownloadUrl(url);
+      setProgress(100);
+
+      const savings = Math.round((1 - blob.size / file.size) * 100);
+      emitLog(
+        `Compression complete in ${elapsed}s: ${formatBytes(file.size)} -> ${formatBytes(blob.size)} (${savings > 0 ? `${savings}% reduced` : "optimized"})`,
+        "info",
+        "WASM_CORE"
+      );
+      toast.success(`Video compressed! Saved ${savings > 0 ? `${savings}%` : "0%"}`);
+    } catch (err: any) {
+      emitLog(`Compression failed: ${err.message}`, "error", "WASM_CORE");
+      toast.error("Video compression failed");
+    } finally {
+      setIsProcessing(false);
+      updateTelemetry({ engineStatus: "idle", activeJobName: null });
+    }
+  };
+
+  const getCrfLabel = (val: number) => {
+    if (val <= 19) return "Near Lossless (Master Quality)";
+    if (val <= 24) return "High Definition (Low Compression)";
+    if (val <= 29) return "Balanced (Recommended)";
+    if (val <= 36) return "Aggressive (High Compression)";
+    return "Ultra Compressed (Minimal File Size)";
   };
 
   return (
-    <div className="w-full max-w-4xl flex flex-col items-center gap-10">
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl sm:text-5xl font-black text-glow tracking-tight">Video Compress</h1>
-        <p className="text-text-primary/50 font-light text-lg">Shrink video files directly in your browser. No server required.</p>
+    <div className="w-full max-w-4xl flex flex-col items-center gap-8 font-sans">
+      {/* Header */}
+      <div className="text-center space-y-2">
+        <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-zinc-300 text-xs font-mono">
+          <Video size={13} />
+          <span>FFmpeg 0.12 WASM Core • libx264 Encoder</span>
+        </div>
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
+          Hardware-Accelerated Video Compressor
+        </h1>
+        <p className="text-zinc-400 text-sm max-w-xl mx-auto">
+          Reduce MP4, MOV, MKV, and WebM video bitrates using libx264 with granular Constant Rate Factor (CRF), custom resolution scaling, and zero server uploads.
+        </p>
       </div>
 
-      {!ready ? (
-        <div className="glass-panel p-8 rounded-xl flex flex-col items-center gap-4 animate-pulse max-w-md w-full">
-          <svg className="animate-spin text-text-primary/50" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-          <p className="text-text-primary/50 font-medium tracking-wide text-sm">Loading FFmpeg WASM Core...</p>
+      {!file ? (
+        <div className="w-full max-w-2xl">
+          <NeoDropzone
+            onDropAccepted={(files) => setFile(files[0])}
+            accept={{ "video/*": [".mp4", ".mov", ".avi", ".webm", ".mkv"] }}
+            multiple={false}
+            acceptedFormatsList={["MP4", "MOV", "WEBM", "MKV", "AVI"]}
+            label="Drop video stream to compress"
+            sublabel="Directly encoded in browser memory via multi-threaded libx264"
+          />
         </div>
       ) : (
-        <>
-          {/* Settings Panel */}
-          <div className="w-full max-w-xl glass-panel p-6 flex flex-col gap-6">
-            <div className="flex flex-col gap-3">
-              <div className="flex justify-between text-xs font-semibold uppercase tracking-widest">
-                <span className="text-text-primary/50">Compression Preset</span>
-                <span className="text-text-primary">{preset}</span>
+        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Controls Column */}
+          <div className="md:col-span-1 bg-[#0c0c10] border border-white/[0.08] rounded-xl p-5 flex flex-col gap-5 font-mono text-xs">
+            <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+              <span className="text-zinc-300 font-semibold uppercase tracking-wider">Parameters</span>
+              <button
+                onClick={() => {
+                  setFile(null);
+                  setDownloadUrl(null);
+                }}
+                className="text-zinc-500 hover:text-white"
+              >
+                Change File
+              </button>
+            </div>
+
+            {/* CRF Quality Slider */}
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between items-center">
+                <span className="text-zinc-400">CRF Value</span>
+                <span className="text-white font-bold tabular-nums">CRF {crf}</span>
               </div>
-              <div className="flex bg-text-primary/[0.03] p-1.5 rounded-lg border border-text-primary/[0.05]">
-                {["ultrafast", "fast", "medium", "slow"].map((p) => (
+              <input
+                type="range"
+                min="16"
+                max="42"
+                value={crf}
+                onChange={(e) => setCrf(Number(e.target.value))}
+                className="w-full accent-white"
+              />
+              <span className="text-[10px] text-zinc-500">{getCrfLabel(crf)}</span>
+            </div>
+
+            {/* Encoding Preset */}
+            <div className="flex flex-col gap-2">
+              <span className="text-zinc-400">Encoder Preset</span>
+              <div className="grid grid-cols-2 gap-1.5">
+                {(["ultrafast", "fast", "medium", "slow"] as const).map((p) => (
                   <button
                     key={p}
-                    onClick={() => setPreset(p as any)}
-                    className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all uppercase tracking-wider ${
+                    onClick={() => setPreset(p)}
+                    className={`py-1.5 rounded border uppercase text-[10px] transition-colors ${
                       preset === p
-                        ? "bg-text-primary text-bg-base shadow-md"
-                        : "text-text-primary/40 hover:text-text-primary hover:bg-text-primary/[0.05]"
+                        ? "bg-white text-black font-bold border-white shadow"
+                        : "bg-white/[0.03] text-zinc-400 border-white/[0.06] hover:bg-white/[0.06]"
                     }`}
                   >
                     {p}
@@ -117,121 +213,110 @@ export default function VideoCompressPage() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-3">
-              <div className="flex justify-between text-xs font-semibold uppercase tracking-widest">
-                <span className="text-text-primary/50">Video Quality (CRF)</span>
-                <span className="text-text-primary">{crf}</span>
-              </div>
-              <input
-                type="range"
-                min="0"
-                max="51"
-                step="1"
-                value={crf}
-                onChange={(e) => setCrf(Number(e.target.value))}
-                className="w-full accent-white h-1.5 bg-text-primary/10 rounded-full appearance-none cursor-pointer"
-              />
-              <div className="flex justify-between text-[10px] text-text-primary/30 uppercase tracking-widest font-semibold">
-                <span>Lossless (Large)</span>
-                <span>Balanced</span>
-                <span>Low Quality (Small)</span>
-              </div>
+            {/* Resolution Scaler */}
+            <div className="flex flex-col gap-2">
+              <span className="text-zinc-400">Resolution Scale</span>
+              <select
+                value={scale}
+                onChange={(e) => setScale(e.target.value as any)}
+                className="bg-black/50 border border-white/[0.1] rounded px-2.5 py-1.5 text-xs text-zinc-200 outline-none"
+              >
+                <option value="original">Original Dimensions (100%)</option>
+                <option value="1080">Scale to 1080p (Full HD)</option>
+                <option value="720">Scale to 720p (HD)</option>
+                <option value="480">Scale to 480p (SD Web)</option>
+              </select>
+            </div>
+
+            {/* Audio Passthrough */}
+            <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
+              <span className="text-zinc-400">Audio Track</span>
+              <button
+                onClick={() => setAudioCodec(audioCodec === "copy" ? "aac" : "copy")}
+                className="px-2 py-1 rounded bg-white/[0.05] border border-white/[0.08] text-zinc-300 text-[10px]"
+              >
+                {audioCodec === "copy" ? "Lossless Passthrough" : "AAC 128k"}
+              </button>
+            </div>
+
+            {/* Process Action */}
+            <div className="flex flex-col gap-2 pt-3 border-t border-white/[0.06]">
+              <button
+                onClick={compressVideo}
+                disabled={isProcessing || !ready}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-white text-black font-semibold text-xs hover:bg-zinc-200 transition-all cursor-pointer shadow disabled:opacity-30"
+              >
+                {isProcessing ? <RefreshCw size={14} className="animate-spin" /> : <FileDown size={14} />}
+                <span>{isProcessing ? `Encoding (${progress}%)...` : "Start Video Compression"}</span>
+              </button>
+
+              {isProcessing && (
+                <div className="w-full bg-white/[0.06] rounded-full h-1.5 overflow-hidden mt-1">
+                  <div
+                    className="bg-emerald-400 h-full transition-all duration-200"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+              )}
             </div>
           </div>
 
-          {!file ? (
-            <NeoDropzone
-              onDropAccepted={(files) => setFile(files[0])}
-              accept={{ "video/*": [".mp4", ".mov", ".avi", ".webm", ".mkv"] }}
-              multiple={false}
-              label="Drop a video file here"
-              sublabel="MP4, MOV, AVI, WEBM, MKV supported"
-              icon={<FileVideo size={40} strokeWidth={1.5} />}
-            />
-          ) : (
-            <div className="w-full max-w-2xl glass-panel p-6 flex flex-col gap-6">
-              <div className="flex items-center justify-between border-b border-text-primary/[0.05] pb-4">
-                <div className="flex items-center gap-4">
-                  <div className="p-2 rounded bg-text-primary/[0.05] text-text-primary/70">
-                    <FileVideo size={20} />
+          {/* Stats & Inspection Column */}
+          <div className="md:col-span-2 bg-[#09090c] border border-white/[0.08] rounded-xl p-5 flex flex-col justify-between min-h-[380px] font-mono text-xs">
+            <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+              <span className="text-zinc-300 font-semibold">{file.name}</span>
+              <span className="text-zinc-500 tabular-nums">{formatBytes(file.size)}</span>
+            </div>
+
+            {/* Result Comparison */}
+            {downloadUrl ? (
+              <div className="p-5 bg-[#0e0e14] border border-emerald-500/30 rounded-xl flex flex-col gap-4">
+                <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+                  <CheckCircle2 size={18} />
+                  <span>Compression Finished Successfully</span>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2 border-t border-white/[0.06]">
+                  <div>
+                    <span className="text-[10px] text-zinc-500 block">Original Size</span>
+                    <span className="text-zinc-300 tabular-nums font-semibold">{formatBytes(file.size)}</span>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg tracking-tight truncate max-w-[200px] sm:max-w-xs">{file.name}</h3>
-                    <p className="text-[11px] text-text-primary/40 font-mono mt-0.5">{formatBytes(file.size)}</p>
+                    <span className="text-[10px] text-zinc-500 block">Compressed Size</span>
+                    <span className="text-emerald-400 tabular-nums font-bold">{formatBytes(resultSize)}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-zinc-500 block">Data Reduction</span>
+                    <span className="text-amber-300 tabular-nums font-bold">
+                      {Math.max(0, Math.round((1 - resultSize / file.size) * 100))}% Saved
+                    </span>
                   </div>
                 </div>
-                {!isProcessing && !downloadUrl && (
-                  <button onClick={() => setFile(null)} className="text-text-primary/40 hover:text-text-primary p-2 rounded-md hover:bg-text-primary/[0.05] transition-colors">
-                    <X size={16} />
-                  </button>
-                )}
-              </div>
 
-              {/* Progress Bar */}
-              {isProcessing && (
-                <div className="flex flex-col gap-2 bg-text-primary/[0.02] p-4 rounded-lg border border-text-primary/[0.05]">
-                  <div className="flex justify-between text-xs font-semibold uppercase tracking-widest text-text-primary/50">
-                    <span>Compressing</span>
-                    <span className="text-text-primary">{Math.round(progress * 100)}%</span>
-                  </div>
-                  <div className="w-full h-2 progress-track">
-                    <div
-                      className="progress-fill"
-                      style={{ width: `${Math.max(0, Math.min(100, progress * 100))}%` }}
-                    />
-                  </div>
-                  <p className="text-[10px] font-mono text-text-primary/30 text-center mt-2">This happens in your browser and may take a while.</p>
-                </div>
-              )}
-
-              {/* Action bar */}
-              <div className="pt-2">
-                {!downloadUrl ? (
-                  <button
-                    onClick={compressVideo}
-                    disabled={isProcessing}
-                    className="btn-primary px-8 py-3 w-full sm:w-auto flex items-center justify-center gap-2 text-sm mx-auto"
+                <div className="pt-2">
+                  <a
+                    href={downloadUrl}
+                    download={`compressed-${file.name.replace(/\.[^/.]+$/, "")}.mp4`}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-emerald-500 text-black font-semibold text-xs hover:bg-emerald-400 transition-colors shadow"
                   >
-                    {isProcessing ? (
-                      <>
-                        <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-                        Compressing...
-                      </>
-                    ) : (
-                      <>
-                        <FileDown size={16} /> Compress Video
-                      </>
-                    )}
-                  </button>
-                ) : (
-                  <div className="flex flex-col gap-4">
-                    <div className="bg-[#34d399]/5 border border-[#34d399]/10 p-4 rounded-lg flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-semibold text-[#34d399] tracking-tight">Compression Complete</p>
-                        <p className="text-[11px] text-text-primary/50 font-mono mt-1">
-                          Original: {formatBytes(file.size)} → New: {formatBytes(resultSize)}
-                        </p>
-                      </div>
-                      <span className="text-lg font-black text-text-primary/90 bg-text-primary/5 px-3 py-1.5 rounded-lg border border-text-primary/10 shadow-inner">
-                        -{Math.round((1 - resultSize / file.size) * 100)}%
-                      </span>
-                    </div>
-                    <div className="flex flex-col sm:flex-row gap-3">
-                      <button onClick={() => { setFile(null); setDownloadUrl(null); }} className="btn-secondary px-6 py-3 flex-1 text-sm">
-                        Compress Another
-                      </button>
-                      <a href={downloadUrl} download={`compressed_${file.name}`} className="flex-1">
-                        <button className="btn-primary px-6 py-3 w-full flex items-center justify-center gap-2 text-sm bg-text-primary text-bg-base">
-                          <Download size={16} /> Download Result
-                        </button>
-                      </a>
-                    </div>
-                  </div>
-                )}
+                    <Download size={14} />
+                    <span>Download Compressed MP4 ({formatBytes(resultSize)})</span>
+                  </a>
+                </div>
               </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center flex-1 gap-3 text-zinc-500 py-10">
+                <Video size={36} className="text-zinc-700" />
+                <span>Ready to transcode. Configure CRF and preset on the left.</span>
+              </div>
+            )}
+
+            <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between text-[10px] text-zinc-500">
+              <span>H.264 Main Profile</span>
+              <span>100% Client-Side RAM Buffer</span>
             </div>
-          )}
-        </>
+          </div>
+        </div>
       )}
     </div>
   );
